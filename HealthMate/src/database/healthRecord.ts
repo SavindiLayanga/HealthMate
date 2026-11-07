@@ -60,4 +60,18 @@ export class HealthRecordRepository{
     );
     return record || null;
   }
+
+  //READ : fetch all health records for a specific date
+  static async getByDate(date: string): Promise<HealthRecord[]> {
+    const db = await getDatabase();
+    if(!db){
+      return webRecords.filter(record => record.date === date);
+    }
+
+    const records = await db.getallAsync<HealthRecord>(
+      'SELECT id, date, steps, calories, water FROM health_records WHERE date = ? ORDER BY id DESC',
+      [date.trim()]
+    );
+    return records;
+  }
 }
