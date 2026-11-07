@@ -114,7 +114,7 @@ const updateRecord = async (record: HealthRecord): Promise<boolean> => {
   try{
     const success = await HealthRecordRepository.update(record);
     if (success) {
-      setSelectRecord(null);
+      setSelectedRecord(null);
       await refreshRecords();
     }
     return success;
