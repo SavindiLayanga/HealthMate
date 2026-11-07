@@ -106,4 +106,23 @@ export class HealthRecordRepository{
     );
     return result.changes > 0;
   }
+  // DELETE: delete a health record by id
+  static async delete(id: number): Promise<boolean> {
+    const db = await getDatabase();
+
+    if(!db){
+      const initialLen = webRecords.length;
+      const filtered = webRecords.filter((r) => r.id !== id);
+      webRecords.length = 0;
+      webRecords.push(...filtered);
+      return filtered.length < initialLen;
+    }
+
+    // id ekata adala record eka SQLite eken gannawa
+    const result = await db.runAsync(
+      'DELETE FROM health_records WHERE id = ?',
+      [id]
+    );
+    return result.changes > 0;
+  }
 }
