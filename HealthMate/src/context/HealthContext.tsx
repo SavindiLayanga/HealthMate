@@ -51,7 +51,14 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       setIsLoading(true);
       const all = await HealthRecordRepository.getAll();
       setRecords(all);
-
+  
+      // aply current search filter
+      if (searchQuery.trim()) {
+        const filtered = await HealthRecordRepository.searchByDate(searchQuery);
+        setFilterRecords(filtered);
+      }else {
+        setFilterRecords(all);
+      }
     
     }
 }
