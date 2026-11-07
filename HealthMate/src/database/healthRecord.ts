@@ -1,0 +1,31 @@
+import { getDatabase, webRecords } from "./database";
+import { HealthRecord, NewHealthRecord } from "../types";
+
+let nextId = 10;
+
+export class HealthRecordRepository{
+  static async create(record: NewHealthRecord): Promise<HealthRecord> {
+    const db = await getDatabase();
+
+    if(!db){
+      const newRec:HealthRecord = {
+        id: nextId++,
+        Date: record.date.trim(),
+        steps: Math.round(record.steps),
+        calories: Math.round(record.calories),
+        water: Math.round(record.water),   
+      };
+      webRecords.unshift(newRec);
+      return newRec.id;
+    }
+
+    //SQLite INSERT query with parameterized statement
+    const result= await db.runAsync(
+      'INSERT INTO health_records (date, steps, calories, water) VALUES (?, ?, ?, ?)',
+      [record.date.trim(), Math.round(record.steps), Math.round(record.calories), Math.round(record.water)]
+    );
+
+    //returns the auto generated primary key id
+    return result.lastInsertRowId;
+  }
+}
