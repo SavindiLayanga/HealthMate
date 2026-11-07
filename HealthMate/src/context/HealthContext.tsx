@@ -149,5 +149,50 @@ const quickAddWater = async (amountMl: number = 250): Promise<void> => {
   }
 };
 
+// Reset database with fresh dummy data
+const resetWithDummyData = async (): Promise<void> => {
+  try{
+    await resetDatabaseWithDummyData();
+    await refreshRecords();
+  }catch (error) {
+    console.error('Failed to reset database with dummy data:', error);
+  }finally{
+    setIsLoading(false);
+  }
+};
+const updateGoals = (newGoals: DailyGoals) => {
+  setGoals(newGoals);
+};
+return (
+  <HealthContext.Provider
+    value={{
+      records,
+      filteredRecords,
+      searchQuery,
+      setSearchQuery,
+      todaySummary, 
+      overallSummary,
+      isLoading,
+      selectRecord,
+      goals,
+      updateGoals,
+      refreshRecords,
+      addRecord,
+      updateRecord,
+      deleteRecord,
+      quickAddWater,
+      resetWithDummyData
+    }}
+  >
+    {children}
+  </HealthContext.Provider>
+);
+};
 
+export function useHealthContext(): HealthContextType {
+  const context = useContext(HealthContext);
+  if (!context) {
+    throw new Error('useHealthContext must be used within a HealthProvider');
+  }
+  return context;
 }
