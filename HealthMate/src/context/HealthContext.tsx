@@ -109,5 +109,19 @@ const addRecord = async (newRecord: NewHealthRecord):Promise<boolean> =>{
   }
 };
 
+//UPDATE: Update an existing record
+const updateRecord = async (record: HealthRecord): Promise<boolean> => {
+  try{
+    const success = await HealthRecordRepository.update(record);
+    if (success) {
+      setSelectRecord(null);
+      await refreshRecords();
+    }
+    return success;
+  }catch (error) {
+    console.error('Failed to update record:', error);
+    return false;
+  }
+};
 
 }
