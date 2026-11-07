@@ -138,5 +138,16 @@ const deleteRecord = async (id: number): Promise<boolean> => {
   }
 };
 
+//Quick add water for today
+const quickAddWater = async (amountMl: number = 250): Promise<void> => {
+  try{
+    const today = getTodayDateString();
+    await HealthRecordRepository.quickAddWater(today, amountMl);
+    await refreshRecords();
+  }catch (error) {
+    console.error('Failed to quick add water:', error); 
+  }
+};
+
 
 }
