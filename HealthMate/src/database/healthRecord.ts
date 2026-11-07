@@ -125,4 +125,44 @@ export class HealthRecordRepository{
     );
     return result.changes > 0;
   }
+
+  // SEARCH & FILTERS : search record by date substring
+  static async searchByDate(query: string): Promise<HealthRecord[]> {
+    const trimmed = query.trim();
+    if (!trimmed) {
+      return this.getAll();
+  }
+
+  const db = await getDatabase();
+  if (!db) {
+      return webRecords.filter((r) => r.date.includes(trimmed));
+  }
+
+  //LIKE operation eke date filter kirima SQLite eken
+  const records = await db.getallAsync<HealthRecord>('SELECT id, date, steps, calories, water FROM health_records WHERE date LIKE ? ORDER BY date DESC, id DESC', 
+    [`%${trimmed}%`]
+  );
+  return records;
+}
+
+// AGGREGATE SUMMARY :calculate total steps, calories and water for a special date
+
+static async getSummaryByDate(date: string): Promise<HealthSummary> {
+  const db = await getDatabase();
+  if (!db) {
+      const match = webRecords.filter((r) => r.date === date.trim());
+      const totalSteps = match.reduce((sum, r) => sum + r.steps, 0);
+      const totalCalories = match.reduce((sum, r) => sum + r.calories, 0);
+      const totalWater = match.reduce((sum, r) => sum + r.water, 0);
+      return {
+          totalSteps: totalSteps || 6500,
+          totalCalories: totalCalories || 400,
+          totalWater: totalWater || 2000,
+          recordCount: match.length || 1,
+      };
+    }
+
+    
+  }
+
 }
