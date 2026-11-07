@@ -1,4 +1,4 @@
-import { getDatabase, webRecords } from "./database";
+import { getDatabase, webRecords ,getInitialSampleData} from "./database";
 import { HealthRecord, NewHealthRecord } from "../types";
 
 let nextId = 10;
@@ -28,4 +28,23 @@ export class HealthRecordRepository{
     //returns the auto generated primary key id
     return result.lastInsertRowId;
   }
+
+  //2. READ : fetch all health records sorted newest first
+
+  static async getAll(): Promise<HealthRecord[]> {
+    const db = await getDatabase();
+
+    if(!db){
+      if (webRecords.length === 0) {
+        webRecords.push(...getInitialSampleData());
+      }
+      return [...webRecords].sort((a, b) => b.date.localeCompare(a.date));
+    }
+
+    const records = await db.getallAsync<HealthRecord>(
+      'SELECT id, date, steps, calories, water FROM health_records ORDER BY date DESC, id DESC'
+    );
+    return records;
+  }
+
 }
