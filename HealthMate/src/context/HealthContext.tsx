@@ -71,5 +71,17 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     }
   }, [searchQuery]);
 
-    
+    // initialize SQLite schema and seed if empty
+  useEffect(() => {
+    async function setup(){
+      try{
+        await initDatabase();
+        await refreshRecords();
+      }catch (err) {
+        console.error('Database setup failed:', err);
+      }
+    }
+    setup();
+  },[]);
+  
 }
