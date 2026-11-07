@@ -47,4 +47,17 @@ export class HealthRecordRepository{
     return records;
   }
 
+  // 2. READ : getch single record by primary key id
+  static async getById(id: number): Promise<HealthRecord | null> {
+    const db = await getDatabase();
+    if(!db){
+      return webRecords.find(record => record.id === id) || null;
+    }
+
+    const record = await db.getAsync<HealthRecord>(
+      'SELECT id, date, steps, calories, water FROM health_records WHERE id = ?',
+      [id]
+    );
+    return record || null;
+  }
 }
