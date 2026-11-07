@@ -74,4 +74,36 @@ export class HealthRecordRepository{
     );
     return records;
   }
+
+  //UPDATE : update a health record by primary key id
+  static async update(record: HealthRecord): Promise<boolean> {
+    const db = await getDatabase();
+
+    //web browser fallback if SQLite is not available
+    if(!db){
+      const idx = webRecords.findIndex(r => r.id === record.id);
+      if(idx === -1) {
+        webRecords[idx] = {
+          id: record.id,
+          date: record.date.trim(),
+          steps: Math.round(record.steps),
+          calories: Math.round(record.calories),
+          water: Math.round(record.water),
+        };
+      }
+      return true;
+    }
+
+    //id ekata adala record eka pamanak update kirima
+    const result = await db.runAsync(
+      'UPDATE health_records SET date = ?, steps = ?, calories = ?, water = ? WHERE id = ?',
+      [record.date.trim(), 
+        Math.round(record.steps), 
+        Math.round(record.calories), 
+        Math.round(record.water), 
+        record.id
+      ]
+    );
+    return result.changes > 0;
+  }
 }
