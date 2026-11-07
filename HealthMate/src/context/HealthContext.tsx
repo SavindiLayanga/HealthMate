@@ -83,5 +83,17 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     }
     setup();
   },[]);
-  
+
+  //update filtered records when search query changes
+  useEffect(() => {
+    async function filter() {
+      if (!searchQuery.trim()) {
+        setFilterRecords(records);
+      } else {
+        const filtered = await HealthRecordRepository.searchByDate(searchQuery);
+        setFilterRecords(filtered);
+      }
+    }
+    filter();
+}, [searchQuery, records]);
 }
