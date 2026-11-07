@@ -96,4 +96,18 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     }
     filter();
 }, [searchQuery, records]);
+
+//CREATE: adds a new record
+const addRecord = async (newRecord: NewHealthRecord):Promise<boolean> =>{
+  try{
+    await HealthRecordRepository.create(newRecord);
+    await refreshRecords();
+    return true;
+  }catch (error) {
+    console.error('Faild to add record', error);
+    return false;
+  }
+};
+
+
 }
