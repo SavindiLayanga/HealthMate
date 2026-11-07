@@ -124,4 +124,19 @@ const updateRecord = async (record: HealthRecord): Promise<boolean> => {
   }
 };
 
+// DELETE: Delete a record by id
+const deleteRecord = async (id: number): Promise<boolean> => {
+  try{
+    const success = await HealthRecordRepository.delete(id);
+    if (success) {
+      await refreshRecords();
+    }
+    return success;
+  }catch (error) {
+    console.error('Failed to delete record:', error);
+    return false;
+  }
+};
+
+
 }
