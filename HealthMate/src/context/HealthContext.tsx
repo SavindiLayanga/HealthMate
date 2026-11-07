@@ -59,6 +59,17 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       }else {
         setFilterRecords(all);
       }
-    
+
+      // Calculate today summary
+      const today = getTodayDateString();
+      const todayStatus = await HealthRecordRepository.getOverallSummary();
+      setOverallSummary(overall);
+    }catch (error) {
+      console.error('Failed to load health records from SQLite:', error);
+    }finally{
+      setIsLoading(false);
     }
+  }, [searchQuery]);
+
+    
 }
