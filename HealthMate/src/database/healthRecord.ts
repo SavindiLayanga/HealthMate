@@ -162,7 +162,7 @@ static async getSummarForDateate: string): Promise<HealthSummary> {
       };
     }
 
-    const summary = await db.getFirstAsync<{
+    const result= await db.getFirstAsync<{
       totalSteps: number | null;
       totalCalories: number | null;
       totalWater: number | null;
