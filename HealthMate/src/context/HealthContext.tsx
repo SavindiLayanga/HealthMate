@@ -167,7 +167,7 @@ return (
   <HealthContext.Provider
     value={{
       records,
-      filteredRecords,
+      filterRecords,
       searchQuery,
       setSearchQuery,
       todaySummary, 
