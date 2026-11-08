@@ -43,7 +43,7 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     recordCount: 0,
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [selectRecord | setSelectRecord]= useState<HealthRecord | null>(null);
+  const [selectRecord, setSelectRecord] = useState<HealthRecord | null>(null);
   const [goals, setGoals] = useState<DailyGoals>(DEFAULT_GOALS);  
 
   const refreshRecords = useCallback(async () => {
