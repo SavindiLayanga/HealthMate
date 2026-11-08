@@ -13,7 +13,8 @@ interface HealthContextType {
   todaySummary: HealthSummary;  
   overallSummary: HealthSummary;
   isLoading: boolean;
-  selectedRecord: (react: HealthRecord | null) => void;
+  selectedRecord: HealthRecord | null;
+  setSelectedRecord: (react: HealthRecord | null) => void;
   goals: DailyGoals;
   updateGoals: (goals: DailyGoals) => void;
   refreshRecords: () => Promise<void>;
@@ -28,7 +29,7 @@ const HealthContext = createContext<HealthContextType | undefined>(undefined);
 
 export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {  
   const [records, setRecords] = useState<HealthRecord[]>([]);
-  const [filterRecords, setFilteredRecords] = useState<HealthRecord[]>([]);
+  const [filteredRecords, setFilteredRecords] = useState<HealthRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [todaySummary, setTodaySummary] = useState<HealthSummary>({
     totalSteps: 0,
