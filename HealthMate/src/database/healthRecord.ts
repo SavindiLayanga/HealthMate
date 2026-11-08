@@ -54,7 +54,7 @@ export class HealthRecordRepository{
       return webRecords.find(record => record.id === id) || null;
     }
 
-    const record = await db.getAsync<HealthRecord>(
+    const record = await db.getFirstAsync<HealthRecord>(
       'SELECT id, date, steps, calories, water FROM health_records WHERE id = ?',
       [id]
     );
