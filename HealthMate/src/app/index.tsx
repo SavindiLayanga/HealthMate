@@ -31,12 +31,12 @@ export default function DashboardScreen() {
         {/* 3. Today date box */}
         <View style={styles.dateCard}>
           <View style={styles.dateCardLeft}>
+
             <View style={styles.calenderBadge}>
               <Ionicons name="calendar" size={16} color="#10B981" />
               <Text style={styles.dateText}> Sunday, Nov 08 2026</Text>
             </View>
           </View>
-        </View>
 
          {/* 3. Water Button */}
          <TouchableOpacity
@@ -47,6 +47,7 @@ export default function DashboardScreen() {
           <Ionicons name="water" size={16} color="#FFFFFF" />
           <Text style={styles.quickWaterBtnText}> +250 ml</Text>
          </TouchableOpacity>
+         </View>
      </ScrollView>
     </SafeAreaView>
   );
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E5E7EB',
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2},
