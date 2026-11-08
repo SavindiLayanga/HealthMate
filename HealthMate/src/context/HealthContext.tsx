@@ -62,6 +62,9 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
       // Calculate today summary
       const today = getTodayDateString();
+      const todayStats = await HealthRecordRepository.getSummaryForDate(today);
+      setTodaySummary(todayStats);
+
       const todayStatus = await HealthRecordRepository.getOverallSummary();
       setOverallSummary(overall);
     }catch (error) {
