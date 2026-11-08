@@ -1,5 +1,5 @@
 import { getDatabase, webRecords ,getInitialSampleData} from "./database";
-import { HealthRecord, NewHealthRecord } from "../types";
+import { HealthRecord, NewHealthRecord, HealthSummary } from "../types";
 
 let nextId = 10;
 
