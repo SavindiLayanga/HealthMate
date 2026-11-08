@@ -20,7 +20,7 @@ interface HealthContextType {
   addRecord: (record: NewHealthRecord) => Promise<boolean>;
   updateRecord: (record: HealthRecord) => Promise<boolean>;
   deleteRecord: (id: number) => Promise<boolean>;
-  quickAddWater: (amount: number) => Promise<void>;
+  quickAddWater: (amountML?: number) => Promise<void>;
   resetWithDummyData: () => Promise<void>;
 }
 
