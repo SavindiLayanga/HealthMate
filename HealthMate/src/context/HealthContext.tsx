@@ -13,7 +13,7 @@ interface HealthContextType {
   todaySummary: HealthSummary;  
   overallSummary: HealthSummary;
   isLoading: boolean;
-  selectRecord: (react: HealthRecord | null);
+  selectRecord: (react: HealthRecord | null) => void;
   goals: DailyGoals;
   updateGoals: (goals: DailyGoals) => void;
   refreshRecords: () => Promise<void>;
