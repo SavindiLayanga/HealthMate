@@ -147,7 +147,7 @@ export class HealthRecordRepository{
 
 // AGGREGATE SUMMARY :calculate total steps, calories and water for a special date
 
-static async getSummaryByDate(date: string): Promise<HealthSummary> {
+static async getSummarForDateate: string): Promise<HealthSummary> {
   const db = await getDatabase();
   if (!db) {
       const match = webRecords.filter((r) => r.date === date.trim());
@@ -224,7 +224,7 @@ static async getSummaryByDate(date: string): Promise<HealthSummary> {
           water: amountML,
         });
       }
-      retirn;
+      return;
     }
 
     const todayRec = await db.getFirstAsync<HealthRecord>(
