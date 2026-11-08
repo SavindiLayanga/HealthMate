@@ -194,7 +194,7 @@ return (
 );
 };
 
-export function useHealthContext(): HealthContextType {
+export function useHealth(): HealthContextType {
   const context = useContext(HealthContext);
   if (!context) {
     throw new Error('useHealthContext must be used within a HealthProvider');
