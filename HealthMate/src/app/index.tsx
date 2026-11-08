@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { THEME } from '../constants/theme';
@@ -20,12 +20,17 @@ export default function DashboardScreen() {
         </View>
       </View>
 
-      
-      <View style={styles.body}>
-        <Text style={styles.placeholderText}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+
+        <View style={styles.subTopicContainer}>
+         <Text style={styles.subTopicTitle}>
+          Track Your Daily Health Activities
+         </Text>
+        </View>
+         <Text style={styles.placeholderText}>
           Helloooo saviii 
-        </Text>
-      </View>
+         </Text>
+     </ScrollView>
     </SafeAreaView>
   );
 }
@@ -82,5 +87,22 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: THEME.colors.textSecondary,
     textAlign: 'center',
+  },
+  subTopicContainer: {
+    paddingHorizontal: 20,
+    marginTop: 16,
+    marginBottom:12,
+  },
+  subTopicTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: THEME.colors.textPrimary,
+    letterSpacing: -0.3,
+  },
+  subTopicSubtitle: {
+    fontSize: 13,
+    color: THEME.colors.textSecondary,
+    marginTop: 4,
+    lineHeight:18
   },
 });
