@@ -37,6 +37,16 @@ export default function DashboardScreen() {
             </View>
           </View>
         </View>
+
+         {/* 3. Water Button */}
+         <TouchableOpacity
+           style={styles.quickWaterBtn}
+           onPress={() => alert("Water added!")}
+            activeOpacity={0.8}
+         >
+          <Ionicons name="water" size={16} color="#FFFFFF" />
+          <Text style={styles.quickWaterBtnText}> +250 ml</Text>
+         </TouchableOpacity>
      </ScrollView>
     </SafeAreaView>
   );
