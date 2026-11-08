@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { THEME } from '../constants/theme';
@@ -7,7 +7,7 @@ import { THEME } from '../constants/theme';
 export default function DashboardScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      {/* Top Header with Heart Logo & HealthMate Title */}
+      {/* 1. Top Header with Heart Logo & HealthMate Title */}
       <View style={styles.header}>
         <View style={styles.logoContainer}>
           <View style={styles.heartIconWrapper}>
@@ -21,15 +21,22 @@ export default function DashboardScreen() {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
-
+          {/* 2. sub topic */}
         <View style={styles.subTopicContainer}>
          <Text style={styles.subTopicTitle}>
           Track Your Daily Health Activities
          </Text>
         </View>
-         <Text style={styles.placeholderText}>
-          Helloooo saviii 
-         </Text>
+         
+        {/* 3. Today date box */}
+        <View style={styles.dateCard}>
+          <View style={styles.dateCardLeft}>
+            <View style={styles.calenderBadge}>
+              <Ionicons name="calendar" size={16} color="#10B981" />
+              <Text style={styles.dateText}> Sunday, Nov 08 2026</Text>
+            </View>
+          </View>
+        </View>
      </ScrollView>
     </SafeAreaView>
   );
@@ -104,5 +111,42 @@ const styles = StyleSheet.create({
     color: THEME.colors.textSecondary,
     marginTop: 4,
     lineHeight:18
+  },
+  dateCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    marginHorizontal: 20,
+    marginBottom: 18,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2},
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  dateCardLeft: {
+    flex: 1,
+  },
+  calenderBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 4,
+  },
+  calenderBadgeText: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#10B981',
+    letterSpacing: 0.5,
+  },
+  dateText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#1F2937',
   },
 });
