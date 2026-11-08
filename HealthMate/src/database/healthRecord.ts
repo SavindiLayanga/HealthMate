@@ -41,7 +41,7 @@ export class HealthRecordRepository{
       return [...webRecords].sort((a, b) => b.date.localeCompare(a.date));
     }
 
-    const records = await db.getallAsync<HealthRecord>(
+    const records = await db.getAllAsync<HealthRecord>(
       'SELECT id, date, steps, calories, water FROM health_records ORDER BY date DESC, id DESC'
     );
     return records;
@@ -68,7 +68,7 @@ export class HealthRecordRepository{
       return webRecords.filter(record => record.date === date);
     }
 
-    const records = await db.getallAsync<HealthRecord>(
+    const records = await db.getAllAsync<HealthRecord>(
       'SELECT id, date, steps, calories, water FROM health_records WHERE date = ? ORDER BY id DESC',
       [date.trim()]
     );
@@ -139,7 +139,7 @@ export class HealthRecordRepository{
   }
 
   //LIKE operation eke date filter kirima SQLite eken
-  const records = await db.getallAsync<HealthRecord>('SELECT id, date, steps, calories, water FROM health_records WHERE date LIKE ? ORDER BY date DESC, id DESC', 
+  const records = await db.getAllAsync<HealthRecord>('SELECT id, date, steps, calories, water FROM health_records WHERE date LIKE ? ORDER BY date DESC, id DESC', 
     [`%${trimmed}%`]
   );
   return records;
