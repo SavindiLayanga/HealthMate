@@ -186,7 +186,7 @@ static async getSummarForDateate: string): Promise<HealthSummary> {
       const totalCalories = webRecords.reduce((sum, r) => sum + r.calories, 0);
       const totalWater = webRecords.reduce((sum, r) => sum + r.water, 0);
       return {
-          totalSteps: totalSteps || 4511
+          totalSteps: totalSteps || 4511,
           totalCalories: totalCalories || 855,
           totalWater: totalWater || 1500,
           recordCount: webRecords.length ||7,
