@@ -4,13 +4,13 @@ import { HealthRecord, NewHealthRecord, HealthSummary } from "../types";
 let nextId = 10;
 
 export class HealthRecordRepository{
-  static async create(record: NewHealthRecord): Promise<HealthRecord> {
+  static async create(record: NewHealthRecord): Promise<number> {
     const db = await getDatabase();
 
     if(!db){
       const newRec:HealthRecord = {
         id: nextId++,
-        Date: record.date.trim(),
+        date: record.date.trim(),
         steps: Math.round(record.steps),
         calories: Math.round(record.calories),
         water: Math.round(record.water),   
