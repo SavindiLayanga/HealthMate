@@ -159,4 +159,18 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#1F2937',
   },
+  quickWaterBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#0EA5E9',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 10,
+    gap: 6,
+  },
+  quickWaterBtnText:{
+    color: '#FFFFFF',
+    fontWeight: '700',
+    fontSize: 13,
+  },
 });
