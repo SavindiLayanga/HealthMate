@@ -82,7 +82,7 @@ export class HealthRecordRepository{
     //web browser fallback if SQLite is not available
     if(!db){
       const idx = webRecords.findIndex(r => r.id === record.id);
-      if(idx === -1) {
+      if(idx !== -1) {
         webRecords[idx] = {
           id: record.id,
           date: record.date.trim(),
