@@ -13,11 +13,11 @@ interface HealthContextType {
   todaySummary: HealthSummary;  
   overallSummary: HealthSummary;
   isLoading: boolean;
-  selectRecord: (react: HealthRecord | null) => void;
+  selectedRecord: (react: HealthRecord | null) => void;
   goals: DailyGoals;
   updateGoals: (goals: DailyGoals) => void;
   refreshRecords: () => Promise<void>;
-  addRecord: (record: NewHealthRecord) => Promise<void>;
+  addRecord: (record: NewHealthRecord) => Promise<boolean>;
   updateRecord: (record: HealthRecord) => Promise<boolean>;
   deleteRecord: (id: number) => Promise<boolean>;
   quickAddWater: (amount: number) => Promise<void>;
@@ -28,7 +28,7 @@ const HealthContext = createContext<HealthContextType | undefined>(undefined);
 
 export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {  
   const [records, setRecords] = useState<HealthRecord[]>([]);
-  const [filterRecords, setFilterRecords] = useState<HealthRecord[]>([]);
+  const [filterRecords, setFilteredRecords] = useState<HealthRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [todaySummary, setTodaySummary] = useState<HealthSummary>({
     totalSteps: 0,
@@ -43,7 +43,7 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     recordCount: 0,
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [selectRecord, setSelectRecord] = useState<HealthRecord | null>(null);
+  const [selectedRecord, setSelectedRecord] = useState<HealthRecord | null>(null);
   const [goals, setGoals] = useState<DailyGoals>(DEFAULT_GOALS);  
 
   const refreshRecords = useCallback(async () => {
@@ -55,9 +55,9 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       // aply current search filter
       if (searchQuery.trim()) {
         const filtered = await HealthRecordRepository.searchByDate(searchQuery);
-        setFilterRecords(filtered);
+        setFilteredRecords(filtered);
       }else {
-        setFilterRecords(all);
+        setFilteredRecords(all);
       }
 
       // Calculate today summary
@@ -92,10 +92,10 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   useEffect(() => {
     async function filter() {
       if (!searchQuery.trim()) {
-        setFilterRecords(records);
+        setFilteredRecords(records);
       } else {
         const filtered = await HealthRecordRepository.searchByDate(searchQuery);
-        setFilterRecords(filtered);
+        setFilteredRecords(filtered);
       }
     }
     filter();
@@ -171,13 +171,14 @@ return (
   <HealthContext.Provider
     value={{
       records,
-      filterRecords,
+      filteredRecords,
       searchQuery,
       setSearchQuery,
       todaySummary, 
       overallSummary,
       isLoading,
-      selectRecord,
+      selectedRecord,
+      setSelectedRecord,
       goals,
       updateGoals,
       refreshRecords,
