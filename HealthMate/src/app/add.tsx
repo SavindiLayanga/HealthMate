@@ -4,8 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function AddScreen(){
     return (
-        <SafeAreaView style={Styles.container}>
-            <Text style={Styles.text}> Add Entry Screen</Text>
+        <SafeAreaView style={styles.container}>
+            <Text style={styles.text}> Add Entry Screen</Text>
         </SafeAreaView>
     );
 }
