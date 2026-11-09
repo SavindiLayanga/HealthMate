@@ -90,6 +90,7 @@ export class HealthRecordRepository{
           calories: Math.round(record.calories),
           water: Math.round(record.water),
         };
+        return true;
       }
       return true;
     }
@@ -155,10 +156,10 @@ static async getSummaryForDate(date: string): Promise<HealthSummary> {
       const totalCalories = match.reduce((sum, r) => sum + r.calories, 0);
       const totalWater = match.reduce((sum, r) => sum + r.water, 0);
       return {
-          totalSteps: totalSteps || 6500,
-          totalCalories: totalCalories || 400,
-          totalWater: totalWater || 2000,
-          recordCount: match.length || 1,
+          totalSteps,
+          totalCalories,
+          totalWater,
+          recordCount: match.length,
       };
     }
 
@@ -172,10 +173,10 @@ static async getSummaryForDate(date: string): Promise<HealthSummary> {
       [date.trim()]
     );
     return{
-      totalSteps: result?.totalSteps || 6500,
-      totalCalories: result?.totalCalories || 400,
-      totalWater: result?.totalWater || 2000,
-      recordCount: result?.recordCount || 1,
+      totalSteps: count > 0 ? (result?.totalSteps || 0) : 0,
+      totalCalories: count > 0 ? (result?.totalCalories || 0) : 0,
+      totalWater: count > 0 ? (result?.totalWater || 0) : 0,
+      recordCount: count,
     };
   }
 
@@ -209,6 +210,7 @@ static async getSummaryForDate(date: string): Promise<HealthSummary> {
     };
   }
 
+  // quick add water for a special date
   static async quickAddWater(date: string, amountML: number = 250): Promise<void> {
     const db = await getDatabase();
     if (!db) {
