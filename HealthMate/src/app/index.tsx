@@ -54,6 +54,9 @@ export default function DashboardScreen() {
          <Text style={styles.subTopicTitle}>
           Track Your Daily Health Activities
          </Text>
+         <Text style={styles.subTopicSubtitle}>
+          Monitor your vital metrics and daily habits in real-time
+         </Text>
         </View>
          
         {/* 3. Today date box */}
