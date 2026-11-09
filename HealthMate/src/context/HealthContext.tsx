@@ -12,6 +12,9 @@ interface HealthContextType {
   setSearchQuery: (query: string) => void;
   todaySummary: HealthSummary;  
   overallSummary: HealthSummary;
+  selectedDate: string;
+  setSelectedDate: (date: string) =>void;
+  selectedDateSummary: HealthSummary;
   isLoading: boolean;
   selectedRecord: HealthRecord | null;
   setSelectedRecord: (react: HealthRecord | null) => void;
@@ -31,6 +34,10 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [records, setRecords] = useState<HealthRecord[]>([]);
   const [filteredRecords, setFilteredRecords] = useState<HealthRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
+
+  // default date ekata today thora ganima
+  const [selectedDate, setSelectedDate] = useState<string>(getTodayDateString());
+  
   const [todaySummary, setTodaySummary] = useState<HealthSummary>({
     totalSteps: 0,
     totalCalories: 0,
