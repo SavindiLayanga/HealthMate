@@ -62,6 +62,7 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [selectedRecord, setSelectedRecord] = useState<HealthRecord | null>(null);
   const [goals, setGoals] = useState<DailyGoals>(DEFAULT_GOALS);  
 
+  // data refreshing
   const refreshRecords = useCallback(async () => {
     try{
       setIsLoading(true);
@@ -81,6 +82,13 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       const todayStats = await HealthRecordRepository.getSummaryForDate(today);
       setTodaySummary(todayStats);
 
+      // Calculate selected day summary
+      const selectedStats =
+      selectedDate === today
+      ? todayStats
+      :await HealthRecordRepository.getSummaryForDate(selectedDate);
+      setSelectedDateSummary(selectedStats);
+      
       // Calculate overall summary
       const overall = await HealthRecordRepository.getOverallSummary();
       setOverallSummary(overall);
