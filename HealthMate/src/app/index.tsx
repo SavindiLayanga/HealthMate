@@ -1,4 +1,4 @@
-import React {useState } from 'react';
+import React, {useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -6,7 +6,7 @@ import { THEME } from '../constants/theme';
 import { useHealth } from '../context/HealthContext';
 import { CalendarModal } from '../components/CalendarModal';
 import {
-  formatDateWeekday,
+  formatDateWithWeekday,
   getDateRelativeBadge,
   getTodayDateString,
 } from '../utils/validation';
@@ -26,11 +26,11 @@ export default function DashboardScreen() {
   // calendar modal open/close state
   const [calendarModalVisible, setCalendarModalVisible] = useState(false);
 
-  const todayDate = getTodayFateString();
+  const todayDate = getTodayDateString();
 
   // quick water adding
   const handleQuickWater = async () => {
-    await quickAddWater(250, selectedDate);
+    await quickAddWater(250);
   };
 
   return (
