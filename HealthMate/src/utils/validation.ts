@@ -41,6 +41,21 @@ export function formatDisplayDate(dateString: string): string {
   });
 }
 
+// date card eke dinaya pennanna
+export function formatDateWithWeekday(dateString: string): string {
+  if (!isValidDate(dateString)) return dateString;
+  const [year, month, dat] = dateString.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+  return date.toLocaleDateString('en-US' ,{
+    weekday: 'long',
+    month: 'short',
+    day:'numeric',
+    year: 'numeric',
+  });
+}
+
+
+
 /**
  * Validates a health record entry form.
  * Returns an object with field-specific error messages.
