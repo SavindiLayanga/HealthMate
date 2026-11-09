@@ -35,10 +35,18 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [filteredRecords, setFilteredRecords] = useState<HealthRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  // default date ekata today thora ganima
+  // Today's date is selected by default 
   const [selectedDate, setSelectedDate] = useState<string>(getTodayDateString());
-  
+
   const [todaySummary, setTodaySummary] = useState<HealthSummary>({
+    totalSteps: 0,
+    totalCalories: 0,
+    totalWater: 0,
+    recordCount: 0,
+  });
+
+  // Summary for the selected day
+  const [selectedDateSummary, setSelectedDateSummary] = useState<HealthSummary>({
     totalSteps: 0,
     totalCalories: 0,
     totalWater: 0,
