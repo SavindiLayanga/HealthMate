@@ -8,16 +8,63 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  TextInput,
+  TextInputProps,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useHealth } from '../context/HealthContext';
-import { FormField } from '../components/FormField';
 import { CalendarModal } from '../components/CalendarModal';
 import { THEME } from '../constants/theme';
 import { validateHealthRecordForm, getTodayDateString } from '../utils/validation';
 import { FormErrors } from '../types';
+
+type FormFieldProps = {
+  label: string;
+  iconName: React.ComponentProps<typeof Ionicons>['name'];
+  iconColor: string;
+  value: string;
+  onChangeText?: (value: string) => void;
+  placeholder?: string;
+  keyboardType?: TextInputProps['keyboardType'];
+  editable?: boolean;
+  unit?: string;
+  error?: string;
+};
+
+function FormField({
+  label,
+  iconName,
+  iconColor,
+  value,
+  onChangeText,
+  placeholder,
+  keyboardType,
+  editable = true,
+  unit,
+  error,
+}: FormFieldProps) {
+  return (
+    <View style={styles.formField}>
+      <Text style={styles.formFieldLabel}>{label}</Text>
+      <View style={[styles.formFieldInputRow, error ? styles.formFieldInputError : null]}>
+        <Ionicons name={iconName} size={20} color={iconColor} />
+        <TextInput
+          style={styles.formFieldInput}
+          value={value}
+          onChangeText={onChangeText}
+          placeholder={placeholder}
+          keyboardType={keyboardType}
+          editable={editable}
+          placeholderTextColor={THEME.colors.textSecondary}
+        />
+        {unit ? <Text style={styles.formFieldUnit}>{unit}</Text> : null}
+      </View>
+      {error ? <Text style={styles.formFieldError}>{error}</Text> : null}
+    </View>
+  );
+}
 
 export default function AddRecordScreen() {
   const { addRecord, updateRecord, selectedRecord, setSelectedRecord, records } = useHealth();
@@ -211,14 +258,14 @@ export default function AddRecordScreen() {
             </View>
           </View>
 
-          {/* Steps Field */}
+                   {/* Steps Field */}
           <FormField
             label="Steps Walked"
             iconName="walk"
             iconColor={THEME.colors.steps}
             unit="steps"
             value={steps}
-            onChangeText={(t) => {
+            onChangeText={(t: string) => {
               setSteps(t);
               if (errors.steps) setErrors((prev) => ({ ...prev, steps: undefined }));
             }}
@@ -234,7 +281,7 @@ export default function AddRecordScreen() {
             iconColor={THEME.colors.calories}
             unit="kcal"
             value={calories}
-            onChangeText={(t) => {
+            onChangeText={(t: string) => {
               setCalories(t);
               if (errors.calories) setErrors((prev) => ({ ...prev, calories: undefined }));
             }}
@@ -250,7 +297,7 @@ export default function AddRecordScreen() {
             iconColor={THEME.colors.water}
             unit="ml"
             value={water}
-            onChangeText={(t) => {
+            onChangeText={(t: React.SetStateAction<string>) => {
               setWater(t);
               if (errors.water) setErrors((prev) => ({ ...prev, water: undefined }));
             }}
@@ -258,182 +305,122 @@ export default function AddRecordScreen() {
             keyboardType="number-pad"
             error={errors.water}
           />
-
-          {/* Action Buttons */}
-          <View style={styles.actions}>
-            <TouchableOpacity
-              style={[styles.saveBtn, isSubmitting ? styles.disabledBtn : null]}
-              onPress={handleSubmit}
-              disabled={isSubmitting}
-              activeOpacity={0.8}
-            >
-              <Ionicons
-                name={isEditMode ? 'checkmark-circle' : 'add-circle'}
-                size={20}
-                color="#FFFFFF"
-              />
-              <Text style={styles.saveBtnText}>
-                {isSubmitting
-                  ? 'Saving to SQLite...'
-                  : isEditMode
-                  ? 'Update Health Record'
-                  : 'Save Health Record'}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.resetBtn}
-              onPress={handleResetForm}
-              activeOpacity={0.8}
-            >
-              <Ionicons name="refresh" size={16} color={THEME.colors.textSecondary} />
-              <Text style={styles.resetBtnText}>Reset Form</Text>
-            </TouchableOpacity>
-          </View>
         </ScrollView>
       </KeyboardAvoidingView>
-
-      {/* Date Picker Modal */}
-      <CalendarModal
-        visible={calendarModalVisible}
-        selectedDate={date}
-        onSelectDate={(newDate) => {
-          setDate(newDate);
-          if (errors.date) setErrors((prev) => ({ ...prev, date: undefined }));
-        }}
-        onClose={() => setCalendarModalVisible(false)}
-        markedDates={records.map((r) => r.date)}
-      />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  formField: {
+    marginBottom: 16,
+  },
+  formFieldLabel: {
+    color: THEME.colors.textPrimary,
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  formFieldInputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: THEME.colors.surface,
+    borderWidth: 1,
+    borderColor: THEME.colors.textSecondary,
+    borderRadius: 12,
+    paddingHorizontal: 14,
+  },
+  formFieldInputError: {
+    borderColor: '#D9534F',
+  },
+  formFieldInput: {
+    flex: 1,
+    minHeight: 48,
+    color: THEME.colors.textPrimary,
+    fontSize: 15,
+  },
+  formFieldUnit: {
+    color: THEME.colors.textSecondary,
+    fontSize: 13,
+  },
+  formFieldError: {
+    color: '#D9534F',
+    fontSize: 12,
+    marginTop: 5,
+  },
   safeArea: {
     flex: 1,
-    backgroundColor: THEME.colors.surface,
+    backgroundColor: THEME.colors.background,
   },
   header: {
-    backgroundColor: THEME.colors.surface,
-    paddingHorizontal: 20,
-    paddingTop: 12,
-    paddingBottom: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: THEME.colors.border,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    ...THEME.elevation.card,
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
   },
   headerTitle: {
-    fontSize: 22,
-    fontWeight: '800',
     color: THEME.colors.textPrimary,
-    letterSpacing: -0.5,
+    fontSize: 22,
+    fontWeight: '700',
   },
   headerSubtitle: {
-    fontSize: 12,
     color: THEME.colors.textSecondary,
-    marginTop: 2,
+    fontSize: 13,
+    marginTop: 4,
   },
   cancelBtn: {
-    padding: 6,
+    padding: 8,
   },
   keyboardContainer: {
     flex: 1,
   },
   container: {
     flex: 1,
-    backgroundColor: THEME.colors.background,
   },
   contentContainer: {
-    padding: 16,
-    paddingBottom: 40,
+    padding: 20,
+    paddingBottom: 32,
   },
   infoBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: THEME.colors.primaryLight,
-    padding: 12,
-    borderRadius: THEME.borderRadius.md,
-    marginBottom: 16,
-    gap: 8,
+    backgroundColor: THEME.colors.surface,
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 20,
+    gap: 10,
   },
   infoText: {
     flex: 1,
-    fontSize: 12,
-    color: THEME.colors.primary,
-    lineHeight: 16,
-    fontWeight: '500',
+    color: THEME.colors.textSecondary,
+    fontSize: 13,
   },
   dateFieldWrapper: {
-    position: 'relative',
+    marginBottom: 16,
   },
   dateActionBtns: {
-    position: 'absolute',
-    right: 10,
-    top: 36,
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
+    justifyContent: 'flex-end',
+    gap: 10,
+    marginTop: 8,
   },
   calendarPickBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: THEME.colors.primaryLight,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: THEME.borderRadius.sm,
-    gap: 4,
+    gap: 5,
+    padding: 8,
   },
   todayBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: THEME.colors.surfaceVariant,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: THEME.borderRadius.sm,
-    gap: 4,
+    gap: 5,
+    padding: 8,
   },
   todayBtnText: {
-    fontSize: 12,
-    fontWeight: '700',
     color: THEME.colors.primary,
-  },
-  actions: {
-    marginTop: 10,
-    gap: 10,
-  },
-  saveBtn: {
-    backgroundColor: THEME.colors.primary,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 14,
-    borderRadius: THEME.borderRadius.md,
-    gap: 8,
-    ...THEME.elevation.card,
-  },
-  disabledBtn: {
-    opacity: 0.6,
-  },
-  saveBtnText: {
-    color: '#FFFFFF',
-    fontWeight: '700',
-    fontSize: 15,
-  },
-  resetBtn: {
-    backgroundColor: THEME.colors.surfaceVariant,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    borderRadius: THEME.borderRadius.md,
-    gap: 6,
-  },
-  resetBtnText: {
-    color: THEME.colors.textSecondary,
-    fontWeight: '600',
     fontSize: 13,
+    fontWeight: '600',
   },
 });
