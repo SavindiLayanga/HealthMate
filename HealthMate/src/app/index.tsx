@@ -222,6 +222,17 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#1F2937',
   },
+  pastDateNotice: {
+    fontSize: 11,
+    alignItems: 'center',
+    gap: 4,
+    marginTop: 4,
+  },
+  pastDateNoticeText: {
+    fontSize: 11,
+    color: "#F59E0B",
+    fontWeight: '600' 
+  },
   quickWaterBtn: {
     flexDirection: 'row',
     alignItems: 'center',
