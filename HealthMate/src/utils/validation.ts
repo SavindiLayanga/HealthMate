@@ -44,7 +44,7 @@ export function formatDisplayDate(dateString: string): string {
 // date card eke dinaya pennanna
 export function formatDateWithWeekday(dateString: string): string {
   if (!isValidDate(dateString)) return dateString;
-  const [year, month, dat] = dateString.split('-').map(Number);
+  const [year, month, day] = dateString.split('-').map(Number);
   const date = new Date(year, month - 1, day);
   return date.toLocaleDateString('en-US' ,{
     weekday: 'long',
@@ -54,6 +54,26 @@ export function formatDateWithWeekday(dateString: string): string {
   });
 }
 
+// Add dynamic relative date badge helper
+export function getDateRelativeBadge(dateString: string): string {
+  if (!isValidDate(dateString)) return 'DATE';
+  const today = getTodayDateString();
+  if (dateString === today) return 'TODAY';
+
+  const [tY, tM, tD] = today.split('-').map(Number);
+  const todayDate = new Date(tY, tM -1, tD);
+
+  const [y, m,d] = dateString.split('-').map(Number);
+  const targetDate = new Date(y, m -1, d);
+
+  const diffMs = targetDate.getTime() - todayDate.getTime();
+  const diffDays = Math.round(diffMs / (1000 * 60 * 60 *24));
+
+  if (diffDays === -1) return 'YESTERDAY';
+  if (diffDays === 1) return 'TOMMOROW';
+
+  return targetDate.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase();
+}
 
 
 /**
