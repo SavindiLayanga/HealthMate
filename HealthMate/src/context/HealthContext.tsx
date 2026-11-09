@@ -88,7 +88,7 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       ? todayStats
       :await HealthRecordRepository.getSummaryForDate(selectedDate);
       setSelectedDateSummary(selectedStats);
-      
+
       // Calculate overall summary
       const overall = await HealthRecordRepository.getOverallSummary();
       setOverallSummary(overall);
@@ -99,7 +99,7 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     }
   }, [searchQuery]);
 
-    // initialize SQLite schema and seed if empty
+    // Initializing the database when the app loads for the first time
   useEffect(() => {
     async function setup(){
       try{
@@ -111,6 +111,19 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     }
     setup();
   },[]);
+
+  // Dynamically updating the summary when the selectedDate is changed in the calendar
+  useEffect(() =>{
+    async function updateSelectedSummary(){
+      try {
+        const stats = await HealthRecordRepository.getSummaryForDate(selectedDate);
+        setSelectedDateSummary(stats);
+      } catch (err) {
+        console.error('Failed to update selected date summary:', err);
+      }
+    }
+    updateSelectedSummary();
+  }, [selectedDate]);
 
   //update filtered records when search query changes
   useEffect(() => {
