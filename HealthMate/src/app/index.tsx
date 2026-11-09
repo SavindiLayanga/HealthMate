@@ -60,26 +60,57 @@ export default function DashboardScreen() {
         </View>
          
         {/* 3. Today date box */}
-        <View style={styles.dateCard}>
-          <View style={styles.dateCardLeft}>
+        <TouchableOpacity
+          style={styles.dateCard}
+          onPress={() => setCalendarModalVisible(true)}
+          activeOpacity={0.8} 
+          >
+            <View style={styles.dateCardLeft}>
+              {/* dynamic badge */}
+              <View style={styles.calenderBadge}>
+                <Ionicons name="calendar" size={16} color="#10B981" />
+                <Text style={styles.calenderBadgeText}>
+                  {getDateRelativeBadge(selectedDate)}
+                </Text>           
+                <Ionicons name="chevron-down" size={13} color="#10B981" />   
+              </View>
+              {/* Dynamic Formatted Date */}
+              <Text style={styles.dateText}>
+                {formatDateWithWeekday(selectedDate)}
+              </Text>
 
-            <View style={styles.calenderBadge}>
-              <Ionicons name="calendar" size={16} color="#10B981" />
-              <Text style={styles.dateText}> Sunday, Nov 08 2026</Text>
+              {/* If a day other than today has been selected, please provide a brief note. */}
+              {selectedDate !== todayDate && (
+                <View style={styles.pastDateNotice}>
+                  <Ionicons name="time-outline" size={12} color="#F59E0B" />
+                  <Text style={styles.pastDateNoticeText}> Viewing historical records</Text>
+                </View>
+              )}
             </View>
-          </View>
-
+            
          {/* 3. Water Button */}
          <TouchableOpacity
            style={styles.quickWaterBtn}
-           onPress={() => alert("Water added!")}
+           onPress={(e) => {
+            e.stopPropagation();
+            handleQuickWater();
+           }}
             activeOpacity={0.8}
          >
           <Ionicons name="water" size={16} color="#FFFFFF" />
           <Text style={styles.quickWaterBtnText}> +250 ml</Text>
          </TouchableOpacity>
-         </View>
+      </TouchableOpacity>
      </ScrollView>
+
+     {/* Interactive calendar Modal */}
+     <CalendarModal
+        visible={calendarModalVisible}
+        selectedDate={selectedDate}
+        onSelectDate={(newDate) => setSelectedDate(newDate)}
+        onClose={() => setCalendarModalVisible(false)}
+        markedDates={records.map((r) => r.date)}
+     />
     </SafeAreaView>
   );
 }
