@@ -127,7 +127,7 @@ export class HealthRecordRepository{
     return result.changes > 0;
   }
 
-  // SEARCH & FILTERS : search record by date substring
+  // search record by date substring
   static async searchByDate(query: string): Promise<HealthRecord[]> {
     const trimmed = query.trim();
     if (!trimmed) {
@@ -146,7 +146,7 @@ export class HealthRecordRepository{
   return records;
 }
 
-// AGGREGATE SUMMARY :calculate total steps, calories and water for a special date
+// calculate total steps, calories and water for a special date
 
 static async getSummaryForDate(date: string): Promise<HealthSummary> {
   const db = await getDatabase();
@@ -172,7 +172,8 @@ static async getSummaryForDate(date: string): Promise<HealthSummary> {
       'SELECT SUM(steps) AS totalSteps,  SUM(calories) AS totalCalories,  SUM(water) AS totalWater,  COUNT(*) AS recordCount  FROM health_records  WHERE date = ?',
       [date.trim()]
     );
-    return{
+    const count = result?.recordCount || 0;
+    return {
       totalSteps: count > 0 ? (result?.totalSteps || 0) : 0,
       totalCalories: count > 0 ? (result?.totalCalories || 0) : 0,
       totalWater: count > 0 ? (result?.totalWater || 0) : 0,
