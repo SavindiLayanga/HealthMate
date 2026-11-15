@@ -1,0 +1,281 @@
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Modal,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { THEME } from '../constants/theme';
+
+interface BmiModalProps {
+  visible: boolean;
+  onClose: () => void;
+  onBmiCalculated: (bmi: number, category: string) => void;
+}
+
+export const BmiModal: React.FC<BmiModalProps> = ({
+  visible,
+  onClose,
+  onBmiCalculated,
+}) => {
+  const [heightCm, setHeightCm] = useState('');
+  const [weightKg, setWeightKg] = useState('');
+  const [result, setResult] = useState<{
+    bmi: number;
+    category: string;
+    color: string;
+    description: string;
+  } | null>(null);
+
+  const calculateBmi = () => {
+    const h = parseFloat(heightCm);
+    const w = parseFloat(weightKg);
+
+    if (isNaN(h) || h <= 50 || h > 250 || isNaN(w) || w <= 20 || w > 300) {
+      alert('Please enter a valid height (50-250 cm) and weight (20-300 kg).');
+      return;
+    }
+
+    const heightInMeters = h / 100;
+    const bmiVal = parseFloat((w / (heightInMeters * heightInMeters)).toFixed(1));
+
+    let cat = '';
+    let clr = '#16A34A';
+    let desc = '';
+
+    if (bmiVal < 18.5) {
+      cat = 'Underweight';
+      clr = '#D97706';
+      desc = 'Consider a nutrition-rich diet to reach a healthy weight.';
+    } else if (bmiVal < 25) {
+      cat = 'Normal / Healthy';
+      clr = '#16A34A';
+      desc = 'Excellent! Keep up your active lifestyle and balanced diet.';
+    } else if (bmiVal < 30) {
+      cat = 'Overweight';
+      clr = '#EA580C';
+      desc = 'Incorporate brisk walking and track calorie intake.';
+    } else {
+      cat = 'Obese';
+      clr = '#EF4444';
+      desc = 'Consult your physician for personalized health advice.';
+    }
+
+    setResult({ bmi: bmiVal, category: cat, color: clr, description: desc });
+    onBmiCalculated(bmiVal, cat);
+  };
+
+  const handleClose = () => {
+    setHeightCm('');
+    setWeightKg('');
+    setResult(null);
+    onClose();
+  };
+
+  return (
+    <Modal
+      visible={visible}
+      animationType="fade"
+      transparent
+      onRequestClose={handleClose}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            {/* Modal Header */}
+            <View style={styles.headerRow}>
+              <View style={styles.headerTitleRow}>
+                <Ionicons name="calculator" size={22} color={THEME.colors.primary} />
+                <Text style={styles.headerTitle}>BMI Calculator</Text>
+              </View>
+              <TouchableOpacity onPress={handleClose} style={styles.closeBtn}>
+                <Ionicons name="close" size={20} color={THEME.colors.textSecondary} />
+              </TouchableOpacity>
+            </View>
+
+            <Text style={styles.modalDescription}>
+              Enter your height and weight to calculate your Body Mass Index.
+            </Text>
+
+            {/* Input Row */}
+            <View style={styles.inputsRow}>
+              <View style={styles.inputCol}>
+                <Text style={styles.inputLabel}>Height (cm)</Text>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="e.g. 175"
+                  placeholderTextColor={THEME.colors.textMuted}
+                  value={heightCm}
+                  onChangeText={setHeightCm}
+                  keyboardType="numeric"
+                />
+              </View>
+
+              <View style={styles.inputCol}>
+                <Text style={styles.inputLabel}>Weight (kg)</Text>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="e.g. 70"
+                  placeholderTextColor={THEME.colors.textMuted}
+                  value={weightKg}
+                  onChangeText={setWeightKg}
+                  keyboardType="numeric"
+                />
+              </View>
+            </View>
+
+            {/* Calculate Button */}
+            <TouchableOpacity style={styles.calcBtn} onPress={calculateBmi}>
+              <Text style={styles.calcBtnText}>Calculate BMI</Text>
+            </TouchableOpacity>
+
+            {/* Result Display */}
+            {result ? (
+              <View style={[styles.resultCard, { borderColor: result.color }]}>
+                <View style={styles.resultHeader}>
+                  <Text style={styles.resultScoreLabel}>Your BMI:</Text>
+                  <Text style={[styles.resultScore, { color: result.color }]}>
+                    {result.bmi}
+                  </Text>
+                </View>
+                <View
+                  style={[
+                    styles.resultBadge,
+                    { backgroundColor: result.color + '20' },
+                  ]}
+                >
+                  <Text style={[styles.resultCategory, { color: result.color }]}>
+                    {result.category}
+                  </Text>
+                </View>
+                <Text style={styles.resultDesc}>{result.description}</Text>
+              </View>
+            ) : null}
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+    </Modal>
+  );
+};
+
+const styles = StyleSheet.create({
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(15, 23, 42, 0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    width: '100%',
+    maxWidth: 380,
+    backgroundColor: THEME.colors.surface,
+    borderRadius: THEME.borderRadius.xl,
+    padding: 20,
+    ...THEME.elevation.hover,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  headerTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: THEME.colors.textPrimary,
+  },
+  closeBtn: {
+    padding: 4,
+  },
+  modalDescription: {
+    fontSize: 13,
+    color: THEME.colors.textSecondary,
+    marginBottom: 16,
+  },
+  inputsRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 16,
+  },
+  inputCol: {
+    flex: 1,
+  },
+  inputLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: THEME.colors.textSecondary,
+    marginBottom: 6,
+  },
+  textInput: {
+    backgroundColor: THEME.colors.background,
+    borderWidth: 1.5,
+    borderColor: THEME.colors.border,
+    borderRadius: THEME.borderRadius.md,
+    paddingHorizontal: 12,
+    height: 44,
+    fontSize: 15,
+    color: THEME.colors.textPrimary,
+  },
+  calcBtn: {
+    backgroundColor: THEME.colors.primary,
+    borderRadius: THEME.borderRadius.md,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  calcBtnText: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+    fontSize: 15,
+  },
+  resultCard: {
+    marginTop: 16,
+    padding: 14,
+    borderRadius: THEME.borderRadius.md,
+    backgroundColor: THEME.colors.background,
+    borderWidth: 1.5,
+  },
+  resultHeader: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    gap: 6,
+  },
+  resultScoreLabel: {
+    fontSize: 13,
+    color: THEME.colors.textSecondary,
+    fontWeight: '600',
+  },
+  resultScore: {
+    fontSize: 22,
+    fontWeight: '800',
+  },
+  resultBadge: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: THEME.borderRadius.full,
+    marginVertical: 6,
+  },
+  resultCategory: {
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  resultDesc: {
+    fontSize: 12,
+    color: THEME.colors.textSecondary,
+    lineHeight: 16,
+  },
+});
+
+export default BmiModal;
