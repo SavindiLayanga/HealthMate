@@ -1,10 +1,13 @@
-import React, {useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import { THEME } from '../constants/theme';
 import { useHealth } from '../context/HealthContext';
+import { StartCard } from '../components/StartCard';
 import { CalendarModal } from '../components/CalendarModal';
+import BmiModal from '../components/BmiModal';
 import {
   formatDateWithWeekday,
   getDateRelativeBadge,
@@ -12,23 +15,47 @@ import {
 } from '../utils/validation';
 
 export default function DashboardScreen() {
-
-  // Retrieving the required data from HealthContext
+  //  data from HealthContext
   const {
     selectedDate,
     setSelectedDate,
     selectedDateSummary,
     todaySummary,
     records,
+    goals,
     quickAddWater,
   } = useHealth();
 
-  // calendar modal open/close state
+  // Modal open/close states
   const [calendarModalVisible, setCalendarModalVisible] = useState(false);
+  const [bmiModalVisible, setBmiModalVisible] = useState(false);
+  const [bmiValue, setBmiValue] = useState<number>(22.4);
+  const [bmiCategory, setBmiCategory] = useState<string>('Normal');
 
   const todayDate = getTodayDateString();
 
-  // quick water adding
+  // Active summary for selected or current day
+  const currentSummary = selectedDateSummary || todaySummary;
+
+  // Goals and progress percentages
+  const stepsGoal = goals?.stepsGoal || 10000;
+  const caloriesGoal = goals?.caloriesGoal || 2200;
+  const waterGoal = goals?.waterGoal || 2500;
+
+  const stepsPercent = Math.min(
+    Math.round(((currentSummary?.totalSteps || 0) / stepsGoal) * 100),
+    100
+  );
+  const caloriesPercent = Math.min(
+    Math.round(((currentSummary?.totalCalories || 0) / caloriesGoal) * 100),
+    100
+  );
+  const waterPercent = Math.min(
+    Math.round(((currentSummary?.totalWater || 0) / waterGoal) * 100),
+    100
+  );
+
+  // Quick water adding
   const handleQuickWater = async () => {
     await quickAddWater(250);
   };
@@ -49,68 +76,141 @@ export default function DashboardScreen() {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
-          {/* 2. sub topic */}
+        {/* 2. Sub-topic */}
         <View style={styles.subTopicContainer}>
-         <Text style={styles.subTopicTitle}>
-          Track Your Daily Health Activities
-         </Text>
-         <Text style={styles.subTopicSubtitle}>
-          Monitor your vital metrics and daily habits in real-time
-         </Text>
+          <Text style={styles.subTopicTitle}>
+            Track Your Daily Health Activities
+          </Text>
+          <Text style={styles.subTopicSubtitle}>
+            Monitor your vital metrics and daily habits in real-time
+          </Text>
         </View>
-         
+
         {/* 3. Today date box */}
         <TouchableOpacity
           style={styles.dateCard}
           onPress={() => setCalendarModalVisible(true)}
-          activeOpacity={0.8} 
-          >
-            <View style={styles.dateCardLeft}>
-              {/* dynamic badge */}
-              <View style={styles.calenderBadge}>
-                <Ionicons name="calendar" size={16} color="#10B981" />
-                <Text style={styles.calenderBadgeText}>
-                  {getDateRelativeBadge(selectedDate)}
-                </Text>           
-                <Ionicons name="chevron-down" size={13} color="#10B981" />   
-              </View>
-              {/* Dynamic Formatted Date */}
-              <Text style={styles.dateText}>
-                {formatDateWithWeekday(selectedDate)}
+          activeOpacity={0.8}
+        >
+          <View style={styles.dateCardLeft}>
+            {/* Dynamic badge */}
+            <View style={styles.calenderBadge}>
+              <Ionicons name="calendar" size={16} color="#10B981" />
+              <Text style={styles.calenderBadgeText}>
+                {getDateRelativeBadge(selectedDate)}
               </Text>
-
-              {/* If a day other than today has been selected, please provide a brief note. */}
-              {selectedDate !== todayDate && (
-                <View style={styles.pastDateNotice}>
-                  <Ionicons name="time-outline" size={12} color="#F59E0B" />
-                  <Text style={styles.pastDateNoticeText}> Viewing historical records</Text>
-                </View>
-              )}
+              <Ionicons name="chevron-down" size={13} color="#10B981" />
             </View>
-            
-         {/* 3. Water Button */}
-         <TouchableOpacity
-           style={styles.quickWaterBtn}
-           onPress={(e) => {
-            e.stopPropagation();
-            handleQuickWater();
-           }}
-            activeOpacity={0.8}
-         >
-          <Ionicons name="water" size={16} color="#FFFFFF" />
-          <Text style={styles.quickWaterBtnText}> +250 ml</Text>
-         </TouchableOpacity>
-      </TouchableOpacity>
-     </ScrollView>
 
-     {/* Interactive calendar Modal */}
-     <CalendarModal
+            {/* Dynamic Formatted Date */}
+            <Text style={styles.dateText}>
+              {formatDateWithWeekday(selectedDate)}
+            </Text>
+
+            {/* Past date notice */}
+            {selectedDate !== todayDate && (
+              <View style={styles.pastDateNotice}>
+                <Ionicons name="time-outline" size={12} color="#F59E0B" />
+                <Text style={styles.pastDateNoticeText}>
+                  Viewing historical records
+                </Text>
+              </View>
+            )}
+          </View>
+
+          {/* Quick Water Button inside Date Box */}
+          <TouchableOpacity
+            style={styles.quickWaterBtn}
+            onPress={(e) => {
+              e.stopPropagation();
+              handleQuickWater();
+            }}
+            activeOpacity={0.8}
+          >
+            <Ionicons name="water" size={16} color="#FFFFFF" />
+            <Text style={styles.quickWaterBtnText}>+250 ml</Text>
+          </TouchableOpacity>
+        </TouchableOpacity>
+
+        {/* Cards */}
+        <View style={styles.metricsGrid}>
+          {/* Row 1: Steps & Calories */}
+          <View style={styles.gridRow}>
+            {/* Steps Card */}
+            <StartCard
+              title="Steps"
+              value={(currentSummary?.totalSteps || 0).toLocaleString()}
+              unit="steps"
+              subText={`Goal: ${stepsGoal.toLocaleString()}`}
+              icon="walk"
+              color="rgb(185, 16, 165)"
+              bgColor="#efd3eb"
+              progress={stepsPercent}
+              onPress={() => router.push('/steps-detail')}
+            />
+
+            {/* Calories Card */}
+            <StartCard
+              title="Calories"
+              value={(currentSummary?.totalCalories || 0).toLocaleString()}
+              unit="kcal"
+              subText={`Goal: ${caloriesGoal.toLocaleString()}`}
+              icon="flame"
+              color="#F59E0B"
+              bgColor="#FEF3C7"
+              progress={caloriesPercent}
+            />
+          </View>
+
+          {/* Row 2: Water Intake & BMI Calculator */}
+          <View style={styles.gridRow}>
+            {/* Water Intake Card */}
+            <StartCard
+              title="Water Intake"
+              value={(currentSummary?.totalWater || 0).toLocaleString()}
+              unit="ml"
+              subText={`Goal: ${waterGoal.toLocaleString()}`}
+              icon="water"
+              color="#0EA5E9"
+              bgColor="#E0F2FE"
+              progress={waterPercent}
+              onPress={handleQuickWater}
+            />
+
+            {/* BMI Calculator Card (Interactive) */}
+            <StartCard
+              title="BMI Calculator"
+              value={bmiValue.toString()}
+              unit="BMI"
+              subText="Tap to calculate"
+              icon="fitness"
+              color="#6366F1"
+              bgColor="#EEF2FF"
+              badge={bmiCategory}
+              onPress={() => setBmiModalVisible(true)}
+            />
+          </View>
+        </View>
+      </ScrollView>
+
+      {/* Interactive Calendar Modal */}
+      <CalendarModal
         visible={calendarModalVisible}
         selectedDate={selectedDate}
         onSelectDate={(newDate) => setSelectedDate(newDate)}
         onClose={() => setCalendarModalVisible(false)}
         markedDates={records.map((r) => r.date)}
-     />
+      />
+
+      {/* Interactive BMI Calculator Modal */}
+      <BmiModal
+        visible={bmiModalVisible}
+        onClose={() => setBmiModalVisible(false)}
+        onBmiCalculated={(val, cat) => {
+          setBmiValue(val);
+          setBmiCategory(cat);
+        }}
+      />
     </SafeAreaView>
   );
 }
@@ -141,7 +241,7 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: 12,
-    backgroundColor: '#FEE2E2', 
+    backgroundColor: '#FEE2E2',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -157,21 +257,10 @@ const styles = StyleSheet.create({
     color: THEME.colors.textSecondary,
     marginTop: 1,
   },
-  body: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  placeholderText: {
-    fontSize: 15,
-    color: THEME.colors.textSecondary,
-    textAlign: 'center',
-  },
   subTopicContainer: {
     paddingHorizontal: 20,
     marginTop: 16,
-    marginBottom:12,
+    marginBottom: 12,
   },
   subTopicTitle: {
     fontSize: 18,
@@ -183,7 +272,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: THEME.colors.textSecondary,
     marginTop: 4,
-    lineHeight:18
+    lineHeight: 18,
   },
   dateCard: {
     backgroundColor: '#FFFFFF',
@@ -197,7 +286,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 2,
@@ -223,15 +312,15 @@ const styles = StyleSheet.create({
     color: '#1F2937',
   },
   pastDateNotice: {
-    fontSize: 11,
+    flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
     marginTop: 4,
   },
   pastDateNoticeText: {
     fontSize: 11,
-    color: "#F59E0B",
-    fontWeight: '600' 
+    color: '#F59E0B',
+    fontWeight: '600',
   },
   quickWaterBtn: {
     flexDirection: 'row',
@@ -242,9 +331,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     gap: 6,
   },
-  quickWaterBtnText:{
+  quickWaterBtnText: {
     color: '#FFFFFF',
     fontWeight: '700',
     fontSize: 13,
+  },
+  metricsGrid: {
+    paddingHorizontal: 20,
+    gap: 12,
+    marginBottom: 20,
+  },
+  gridRow: {
+    flexDirection: 'row',
+    gap: 12,
   },
 });
