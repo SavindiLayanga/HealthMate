@@ -66,6 +66,16 @@ export default function RootLayout() {
                     ),
                 }}
             />
+
+            {/* Steps Detail Screen (Hidden from bottom tab bar) */}
+            <Tabs.Screen
+                name='steps-detail'
+                options={{
+                    href: null,
+                    headerShown: false,
+                    tabBarStyle: { display: 'none' },
+                }}
+            />
             </Tabs>
         </HealthProvider>
     );

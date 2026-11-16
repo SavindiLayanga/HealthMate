@@ -5,9 +5,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { THEME } from '../constants/theme';
 import { useHealth } from '../context/HealthContext';
-import { StartCard } from '../components/StartCard';
+import { StatCard } from '../components/StatCard';
 import { CalendarModal } from '../components/CalendarModal';
-import BmiModal from '../components/BmiModal';
+import { BmiModal } from '../components/BmiModal';
 import {
   formatDateWithWeekday,
   getDateRelativeBadge,
@@ -134,10 +134,11 @@ export default function DashboardScreen() {
 
         {/* Cards */}
         <View style={styles.metricsGrid}>
-          {/* Row 1: Steps & Calories */}
+          
           <View style={styles.gridRow}>
+
             {/* Steps Card */}
-            <StartCard
+            <StatCard
               title="Steps"
               value={(currentSummary?.totalSteps || 0).toLocaleString()}
               unit="steps"
@@ -146,11 +147,14 @@ export default function DashboardScreen() {
               color="rgb(185, 16, 165)"
               bgColor="#efd3eb"
               progress={stepsPercent}
-              onPress={() => router.push('/steps-detail')}
+              onPress={() => {
+                alert('Card eka open unaaaa!');
+                router.push('/steps-detail');
+              }}
             />
 
             {/* Calories Card */}
-            <StartCard
+            <StatCard
               title="Calories"
               value={(currentSummary?.totalCalories || 0).toLocaleString()}
               unit="kcal"
@@ -159,13 +163,16 @@ export default function DashboardScreen() {
               color="#F59E0B"
               bgColor="#FEF3C7"
               progress={caloriesPercent}
+              onPress={() => {
+                router.navigate('/steps-detail');
+              }}
             />
           </View>
 
-          {/* Row 2: Water Intake & BMI Calculator */}
+          {/* second row */}
           <View style={styles.gridRow}>
             {/* Water Intake Card */}
-            <StartCard
+            <StatCard
               title="Water Intake"
               value={(currentSummary?.totalWater || 0).toLocaleString()}
               unit="ml"
@@ -177,8 +184,8 @@ export default function DashboardScreen() {
               onPress={handleQuickWater}
             />
 
-            {/* BMI Calculator Card (Interactive) */}
-            <StartCard
+            {/* BMI Calculator Card) */}
+            <StatCard
               title="BMI Calculator"
               value={bmiValue.toString()}
               unit="BMI"
@@ -218,7 +225,7 @@ export default function DashboardScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: THEME.colors.background,
+    backgroundColor: '#ffffff', 
   },
   header: {
     backgroundColor: THEME.colors.surface,
