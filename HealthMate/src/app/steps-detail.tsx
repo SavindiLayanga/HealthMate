@@ -23,8 +23,9 @@ export default function StepsDetailScreen() {
         <Ionicons name="arrow-back" size={24} color="#000000" />
       </TouchableOpacity>
       
-      <View style={styles.centerBox}>
-        <Text style={styles.text}>hii</Text>
+      <View style={styles.titleContainer}>
+        <Text style={styles.mainTitle}> Track Your Daily Steps</Text>
+        
       </View>
     </SafeAreaView>
   );
@@ -38,14 +39,14 @@ const styles = StyleSheet.create({
   backBtn: {
     padding: 12,
   },
-  centerBox: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  titleContainer: {
+    paddingHorizontal: 20,
+    marginTop: 16,
+    marginBottom: 10,
   },
-  text: {
-    fontSize: 24,
+  mainTitle: {
+    fontSize: 26,
     fontWeight: 'bold',
-    color: '#000000',
-  },
+    color: '#111827'
+  }
 });
