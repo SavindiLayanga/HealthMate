@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#111827'
   },
-  SubTopic: {
+  subTitle: {
     fontSize: 14,
     color: '#6B7280',
     marginTop: 4,
