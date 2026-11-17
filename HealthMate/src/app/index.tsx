@@ -148,8 +148,7 @@ export default function DashboardScreen() {
               bgColor="#efd3eb"
               progress={stepsPercent}
               onPress={() => {
-                alert('Card eka open unaaaa!');
-                router.push('/steps-detail');
+                router.navigate('/steps-detail');
               }}
             />
 
@@ -164,7 +163,7 @@ export default function DashboardScreen() {
               bgColor="#FEF3C7"
               progress={caloriesPercent}
               onPress={() => {
-                router.navigate('/steps-detail');
+                router.navigate('/calories-detail');
               }}
             />
           </View>
