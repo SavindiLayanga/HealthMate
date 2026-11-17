@@ -71,21 +71,22 @@ export default function RootLayout() {
             <Tabs.Screen
                 name='steps-detail'
                 options={{
-                    href: null,
+                    tabBarButton: () => null,
+                    tabBarItemStyle: { display: 'none' },
                     headerShown: false,
                     tabBarStyle: { display: 'none' },
                 }}
             />
 
             <Tabs.Screen
-                name='calories-details'
+                name='calories-detail'
                 options={{
-                    href: null,
+                    tabBarButton: () => null,
+                    tabBarItemStyle: { display: 'none' },
                     headerShown: false,
-                    tabBarStyle: { display: 'none'},
+                    tabBarStyle: { display: 'none' },
                 }}
             />
-
             </Tabs>
             
         </HealthProvider>
