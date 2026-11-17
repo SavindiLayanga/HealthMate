@@ -25,7 +25,7 @@ export default function StepsDetailScreen() {
       
       <View style={styles.titleContainer}>
         <Text style={styles.mainTitle}> Track Your Daily Steps</Text>
-        
+        <Text style={styles.subTitle}> Keep moving to reach your daily goal</Text>
       </View>
     </SafeAreaView>
   );
@@ -48,5 +48,10 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: 'bold',
     color: '#111827'
-  }
+  },
+  SubTopic: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginTop: 4,
+  },
 });
