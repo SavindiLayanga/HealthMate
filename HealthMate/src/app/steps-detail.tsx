@@ -18,6 +18,7 @@ export default function StepsDetailScreen() {
             router.navigate('/');
           }
         }}
+        accessibilityLabel="Go back"
       >
         <Ionicons name="arrow-back" size={24} color="#000000" />
       </TouchableOpacity>
