@@ -9,12 +9,21 @@ export default function StepsDetailScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity style={styles.backBtn} onPress={() => router.navigate('/')}>
+      <TouchableOpacity
+        style={styles.backBtn}
+        onPress={() => {
+          if (router.canGoBack()) {
+            router.back();
+          } else {
+            router.navigate('/');
+          }
+        }}
+      >
         <Ionicons name="arrow-back" size={24} color="#000000" />
       </TouchableOpacity>
       
       <View style={styles.centerBox}>
-        <Text style={styles.text}>hi</Text>
+        <Text style={styles.text}>hii</Text>
       </View>
     </SafeAreaView>
   );
