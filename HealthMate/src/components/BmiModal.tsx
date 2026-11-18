@@ -35,7 +35,7 @@ export const BmiModal: React.FC<BmiModalProps> = ({
   } | null>(null);
 
   const calculateBmi = () => {
-    const a = paraseInt(age, 10);
+    const a = parseInt(age, 10);
     const h = parseFloat(heightCm);
     const w = parseFloat(weightKg);
 
@@ -129,9 +129,9 @@ export const BmiModal: React.FC<BmiModalProps> = ({
                     color={gender === 'male' ? '#FFFFFF' : THEME.colors.textSecondary}
                   />
                   <Text
-                    style={[
-                      styles.genderBtnText,
-                      gender === 'male' && styles.genderBtnTextActive,
+                    style={[ 
+                      styles.genderBtnText, 
+                      gender === 'male' && styles.genderBtnTextActive, 
                     ]}
                   >
                     Male
@@ -152,9 +152,9 @@ export const BmiModal: React.FC<BmiModalProps> = ({
                     color={gender === 'female' ? '#FFFFFF' : THEME.colors.textSecondary}
                   />
                   <Text
-                    style={[
-                      styles.genderBtnText,
-                      gender === 'female' && styles.genderBtnTextActive,
+                    style={[ 
+                      styles.genderBtnText, 
+                      gender === 'female' && styles.genderBtnTextActive, 
                     ]}
                   >
                     Female
@@ -237,6 +237,16 @@ export const BmiModal: React.FC<BmiModalProps> = ({
 };
 
 const styles = StyleSheet.create({
+  genderBtnText: {
+    fontSize: 16,
+    color: THEME.colors.textSecondary,
+    marginLeft: 6,
+    fontWeight: '500',
+  },
+  genderBtnTextActive: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(15, 23, 42, 0.6)',
@@ -298,9 +308,8 @@ const styles = StyleSheet.create({
     borderColor: THEME.colors.primary,
   },
   genderBtnActive: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: THEME.colors.textSecondary,
+    backgroundColor: THEME.colors.primary,
+    borderColor: THEME.colors.primary,
   },
   genderBtnTextActive: {
     color: '#FFFFFF',
