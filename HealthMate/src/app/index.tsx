@@ -62,19 +62,6 @@ export default function DashboardScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      {/* 1. Top Header with Heart Logo & HealthMate Title */}
-      {/* <View style={styles.header}>
-        <View style={styles.logoContainer}>
-          <View style={styles.heartIconWrapper}>
-            <Ionicons name="heart" size={24} color="#EF4444" />
-          </View>
-          <View>
-            <Text style={styles.logoText}>HealthMate</Text>
-            <Text style={styles.logoTagline}>Personal Health & Wellness</Text>
-          </View>
-        </View>
-      </View> */}
-
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* 2. Sub-topic */}
         <View style={styles.subTopicContainer}>
@@ -226,46 +213,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#ffffff', 
   },
-  header: {
-    backgroundColor: THEME.colors.surface,
-    paddingHorizontal: 20,
-    paddingTop: 12,
-    paddingBottom: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: THEME.colors.border,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    ...THEME.elevation.card,
-  },
-  logoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  heartIconWrapper: {
-    width: 42,
-    height: 42,
-    borderRadius: 12,
-    backgroundColor: '#FEE2E2',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logoText: {
-    fontSize: 22,
-    fontWeight: '800',
-    color: THEME.colors.textPrimary,
-    letterSpacing: -0.5,
-  },
-  logoTagline: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: THEME.colors.textSecondary,
-    marginTop: 1,
-  },
   subTopicContainer: {
     paddingHorizontal: 20,
-    marginTop: 16,
     marginBottom: 12,
   },
   subTopicTitle: {
