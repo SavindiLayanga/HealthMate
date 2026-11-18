@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { HealthProvider} from '../context/HealthContext';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { AppHeader } from '../components/AppHeader';
 
 export default function RootLayout() {
     return (
@@ -10,7 +11,8 @@ export default function RootLayout() {
             <StatusBar style="dark" />
             <Tabs
              screenOptions={{
-                headerShown: false,
+                headerShown: true,
+                header: () => <AppHeader />,
                 tabBarActiveTintColor: '#10B981',
                 tabBarInactiveTintColor: '#9CA3AF',
                 tabBarStyle: {
@@ -66,7 +68,7 @@ export default function RootLayout() {
                     ),
                 }}
             />
-
+              
             {/* Steps Detail Screen */}
             <Tabs.Screen
                 name='steps-detail'
@@ -78,6 +80,7 @@ export default function RootLayout() {
                 }}
             />
 
+              {/* calories Detail Screen */}
             <Tabs.Screen
                 name='calories-detail'
                 options={{
@@ -87,6 +90,7 @@ export default function RootLayout() {
                     tabBarStyle: { display: 'none' },
                 }}
             />
+
             </Tabs>
             
         </HealthProvider>
