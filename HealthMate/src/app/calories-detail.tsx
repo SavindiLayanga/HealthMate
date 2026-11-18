@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   backBtn: {
-    paddingLeft: 2,
-    paddingRight: 0,
+    paddingTop: 12,
+    paddingLeft: 4,
     alignSelf: 'flex-start',
     paddingVertical: 4,
   },
