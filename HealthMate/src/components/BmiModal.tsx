@@ -23,6 +23,8 @@ export const BmiModal: React.FC<BmiModalProps> = ({
   onClose,
   onBmiCalculated,
 }) => {
+  const [gender, setGender] = useState<'male' | 'female'> ('male');
+  const [age, setAge ] = useState('');
   const [heightCm, setHeightCm] = useState('');
   const [weightKg, setWeightKg] = useState('');
   const [result, setResult] = useState<{
@@ -33,8 +35,14 @@ export const BmiModal: React.FC<BmiModalProps> = ({
   } | null>(null);
 
   const calculateBmi = () => {
+    const a = paraseInt(age, 10);
     const h = parseFloat(heightCm);
     const w = parseFloat(weightKg);
+
+    if (isNaN(a) || a<2 || a>120) {
+      alert('Please enter a valid age (2-120 years).');
+      return;
+    }
 
     if (isNaN(h) || h <= 50 || h > 250 || isNaN(w) || w <= 20 || w > 300) {
       alert('Please enter a valid height (50-250 cm) and weight (20-300 kg).');
@@ -71,6 +79,8 @@ export const BmiModal: React.FC<BmiModalProps> = ({
   };
 
   const handleClose = () => {
+    setGender('male');
+    setAge('');
     setHeightCm('');
     setWeightKg('');
     setResult(null);
@@ -102,6 +112,56 @@ export const BmiModal: React.FC<BmiModalProps> = ({
               Enter your height and weight to calculate your Body Mass Index.
             </Text>
 
+            <View>
+              <Text style={styles.inputLabel}>Gender</Text>
+              <View style={styles.genderRow}>
+                <TouchableOpacity
+                  style={[
+                    styles.genderBtn,
+                    gender === 'male' && styles.genderBtnActive,
+                  ]}
+                  onPress={() => setGender('male')}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons
+                    name="male"
+                    size={16}
+                    color={gender === 'male' ? '#FFFFFF' : THEME.colors.textSecondary}
+                  />
+                  <Text
+                    style={[
+                      styles.genderBtnText,
+                      gender === 'male' && styles.genderBtnTextActive,
+                    ]}
+                  >
+                    Male
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[
+                    styles.genderBtn,
+                    gender === 'female' && styles.genderBtnActive,
+                  ]}
+                  onPress={() => setGender('female')}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons
+                    name="female"
+                    size={16}
+                    color={gender === 'female' ? '#FFFFFF' : THEME.colors.textSecondary}
+                  />
+                  <Text
+                    style={[
+                      styles.genderBtnText,
+                      gender === 'female' && styles.genderBtnTextActive,
+                    ]}
+                  >
+                    Female
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
             {/* Input Row */}
             <View style={styles.inputsRow}>
               <View style={styles.inputCol}>
