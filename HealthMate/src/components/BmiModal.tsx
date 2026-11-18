@@ -113,7 +113,7 @@ export const BmiModal: React.FC<BmiModalProps> = ({
       desc = 'Incorporate brisk walking and track calorie intake.'; 
     } else { 
       clr = '#EF4444'; 
-      desc = 'Consult your physician for personalized health advice.';
+      desc = 'PLEASE ! Consult your physician for personalized health advice.';
     }
 
     setResult({ bmi: bmiResult.bmi, category: bmiResult.status, color: clr, description: desc }); 
@@ -139,7 +139,7 @@ export const BmiModal: React.FC<BmiModalProps> = ({
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            
+
             {/* Modal Header */}
             <View style={styles.headerRow}>
               <View style={styles.headerTitleRow}>

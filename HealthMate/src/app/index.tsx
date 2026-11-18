@@ -180,6 +180,14 @@ export default function DashboardScreen() {
               color="#6366F1"
               bgColor="#EEF2FF"
               badge={bmiCategory}
+              badgeColor= {
+                bmiCategory.toLowerCase().includes('normal')
+                  ? '#16A34A': '#EF4444'
+              }
+              badgeBgColor={
+                bmiCategory.toLocaleLowerCase().includes('normal')
+                ? '#DCFCE7': '#FEE2E2'
+              }
               onPress={() => setBmiModalVisible(true)}
             />
           </View>

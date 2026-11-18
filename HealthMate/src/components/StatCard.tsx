@@ -11,6 +11,8 @@ interface StartCardProps {
     color: string;
     bgColor: string;
     badge?: string;
+    badgeColor?: string;
+    badgeBgColor?: string;
     progress?: number;
     onPress?: () => void;
 }
@@ -39,10 +41,8 @@ export const StatCard = ({
             </View>
         
         {badge && (
-            <View style={[styles.badge, { backgroundColor: bgColor }]}>
-                <Text style={[styles.badgeText, {color }]}>
-                    {badge}
-                </Text>
+            <View style={[styles.badge, { backgroundColor: badgeBgColor || bgColor }]}>
+                <Text style={[styles.badgeText, {color: badgeColor || color }]}>{badge}</Text>
             </View>
         )}
         </View>
