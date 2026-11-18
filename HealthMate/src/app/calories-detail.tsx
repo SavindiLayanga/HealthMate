@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 
 export default function CaloriesDetailScreen() {
   return (
-    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+    <SafeAreaView style={styles.container} edges={['bottom', 'left', 'right']}>
 
       <View style={styles.titleRow}>
       <TouchableOpacity
@@ -46,24 +46,22 @@ const styles = StyleSheet.create({
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    marginBottom: 16,
+    paddingHorizontal: 12,
+    paddingTop: 4,
+    marginBottom: 10,
   },
   backBtn: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingLeft: 2,
+    paddingRight: 0,
     alignSelf: 'flex-start',
+    paddingVertical: 4,
   },
-//   headerTitle: {
-//     fontSize: 18,
-//     fontWeight: '700',
-//     color: '#111827',    
-//   },
   titleContainer: {
     paddingHorizontal: 20,
     marginTop: 8,
     marginBottom: 16,
+    marginLeft: 4,
+    flex: 1,
   },
   mainTitle: {
     fontSize: 20,
@@ -74,7 +72,7 @@ const styles = StyleSheet.create({
   subTitle: {
     fontSize: 14,
     color: '#6B7280',
-    marginTop: 4,
+    marginTop: 2,
   },
   contentBox: {
     flex: 1,
