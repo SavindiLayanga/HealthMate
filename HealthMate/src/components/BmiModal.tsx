@@ -162,7 +162,20 @@ export const BmiModal: React.FC<BmiModalProps> = ({
                 </TouchableOpacity>
               </View>
             </View>
-            {/* Input Row */}
+            {/* Age input */}
+            <View style={styles.singleInputContainer}>
+              <Text style={styles.inputLabel}> Age (years)</Text>
+              <TextInput 
+                style={styles.textInput}
+                placeholder="e.g. 25"
+                placeholderTextColor={THEME.colors.textMuted}
+                value={age}
+                onChangeText={setAge}
+                keyboardType="numeric"
+              />
+            </View>
+            
+            {/* Height and weight inputs*/}
             <View style={styles.inputsRow}>
               <View style={styles.inputCol}>
                 <Text style={styles.inputLabel}>Height (cm)</Text>
@@ -262,6 +275,23 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: THEME.colors.textSecondary,
     marginBottom: 16,
+  },
+  genderRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 14,
+  },
+  genderBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    height: 42,
+    borderRadius: THEME.borderRadius.md,
+    borderWidth: 1.5,
+    borderColor:THEME.colors.border,
+    backgroundColor:THEME.colors.background,
   },
   inputsRow: {
     flexDirection: 'row',
