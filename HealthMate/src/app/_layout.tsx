@@ -86,7 +86,7 @@ export default function RootLayout() {
                 options={{
                     tabBarButton: () => null,
                     tabBarItemStyle: { display: 'none' },
-                    headerShown: false,
+                    headerShown: true,
                     tabBarStyle: { display: 'none' },
                 }}
             />
