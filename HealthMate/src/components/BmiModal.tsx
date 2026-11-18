@@ -18,13 +18,53 @@ interface BmiModalProps {
   onBmiCalculated: (bmi: number, category: string) => void;
 }
 
+const calculateBMI = ( 
+  weight: number, 
+  height: number, 
+  age: number, 
+  gender: string 
+) => { 
+  if (weight <= 0 || height <= 0 || age <= 0) { 
+    return { error: 'Invalid input' }; 
+  } 
+
+  const heightInMeters = height / 100; 
+  const bmi = weight / heightInMeters ** 2; 
+
+  if (age < 20) { 
+    return { 
+      bmi: Number(bmi.toFixed(2)), 
+      status: 'BMI-for-age percentile required', 
+      gender, 
+    }; 
+  } 
+
+  let status = ''; 
+
+  if (bmi < 18.5) { 
+    status = 'Underweight';
+  } else if (bmi < 25) { 
+    status = 'Normal Weight';
+  } else if (bmi < 30) {
+    status = 'Overweight'; 
+  } else { 
+    status = 'Obese'; 
+  }
+
+  return { 
+    bmi: Number(bmi.toFixed(2)),
+    status,
+    gender, 
+  }; 
+}; 
+
 export const BmiModal: React.FC<BmiModalProps> = ({
   visible,
   onClose,
   onBmiCalculated,
 }) => {
-  const [gender, setGender] = useState<'male' | 'female'> ('male');
-  const [age, setAge ] = useState('');
+  const [gender, setGender] = useState<'male' | 'female'>('male');
+  const [age, setAge] = useState('');
   const [heightCm, setHeightCm] = useState('');
   const [weightKg, setWeightKg] = useState('');
   const [result, setResult] = useState<{
@@ -39,7 +79,7 @@ export const BmiModal: React.FC<BmiModalProps> = ({
     const h = parseFloat(heightCm);
     const w = parseFloat(weightKg);
 
-    if (isNaN(a) || a<2 || a>120) {
+    if (isNaN(a) || a < 2 || a > 120) {
       alert('Please enter a valid age (2-120 years).');
       return;
     }
@@ -49,33 +89,35 @@ export const BmiModal: React.FC<BmiModalProps> = ({
       return;
     }
 
-    const heightInMeters = h / 100;
-    const bmiVal = parseFloat((w / (heightInMeters * heightInMeters)).toFixed(1));
+    const bmiResult = calculateBMI(w, h, a, gender); 
 
-    let cat = '';
+    if ('error' in bmiResult) { 
+      alert('Invalid input values.');
+      return;
+    } 
+
     let clr = '#16A34A';
     let desc = '';
 
-    if (bmiVal < 18.5) {
-      cat = 'Underweight';
-      clr = '#D97706';
-      desc = 'Consider a nutrition-rich diet to reach a healthy weight.';
-    } else if (bmiVal < 25) {
-      cat = 'Normal / Healthy';
-      clr = '#16A34A';
-      desc = 'Excellent! Keep up your active lifestyle and balanced diet.';
-    } else if (bmiVal < 30) {
-      cat = 'Overweight';
+    if (a < 20) {
+      clr = '#3B82F6'; 
+      desc = `For individuals under 20 (${gender === 'male' ? 'Boys' : 'Girls'}), a BMI-for-age percentile is required to assess growth accurately.`; 
+    } else if (bmiResult.status === 'Underweight') { 
+      clr = '#D97706'; 
+      desc = 'Consider a nutrition-rich diet to reach a healthy weight.'; 
+    } else if (bmiResult.status === 'Normal Weight') { 
+      clr = '#16A34A'; 
+      desc = 'Excellent! Keep up your active lifestyle and balanced diet.'; 
+    } else if (bmiResult.status === 'Overweight') {
       clr = '#EA580C';
-      desc = 'Incorporate brisk walking and track calorie intake.';
-    } else {
-      cat = 'Obese';
-      clr = '#EF4444';
+      desc = 'Incorporate brisk walking and track calorie intake.'; 
+    } else { 
+      clr = '#EF4444'; 
       desc = 'Consult your physician for personalized health advice.';
     }
 
-    setResult({ bmi: bmiVal, category: cat, color: clr, description: desc });
-    onBmiCalculated(bmiVal, cat);
+    setResult({ bmi: bmiResult.bmi, category: bmiResult.status, color: clr, description: desc }); 
+    onBmiCalculated(bmiResult.bmi, bmiResult.status); 
   };
 
   const handleClose = () => {
@@ -97,6 +139,7 @@ export const BmiModal: React.FC<BmiModalProps> = ({
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
+            
             {/* Modal Header */}
             <View style={styles.headerRow}>
               <View style={styles.headerTitleRow}>
@@ -112,6 +155,7 @@ export const BmiModal: React.FC<BmiModalProps> = ({
               Enter your height and weight to calculate your Body Mass Index.
             </Text>
 
+            {/* Gender input */}
             <View>
               <Text style={styles.inputLabel}>Gender</Text>
               <View style={styles.genderRow}>
@@ -129,9 +173,9 @@ export const BmiModal: React.FC<BmiModalProps> = ({
                     color={gender === 'male' ? '#FFFFFF' : THEME.colors.textSecondary}
                   />
                   <Text
-                    style={[ 
-                      styles.genderBtnText, 
-                      gender === 'male' && styles.genderBtnTextActive, 
+                    style={[
+                      styles.genderBtnText,
+                      gender === 'male' && styles.genderBtnTextActive,
                     ]}
                   >
                     Male
@@ -152,9 +196,9 @@ export const BmiModal: React.FC<BmiModalProps> = ({
                     color={gender === 'female' ? '#FFFFFF' : THEME.colors.textSecondary}
                   />
                   <Text
-                    style={[ 
-                      styles.genderBtnText, 
-                      gender === 'female' && styles.genderBtnTextActive, 
+                    style={[
+                      styles.genderBtnText,
+                      gender === 'female' && styles.genderBtnTextActive,
                     ]}
                   >
                     Female
@@ -162,10 +206,11 @@ export const BmiModal: React.FC<BmiModalProps> = ({
                 </TouchableOpacity>
               </View>
             </View>
+
             {/* Age input */}
             <View style={styles.singleInputContainer}>
-              <Text style={styles.inputLabel}> Age (years)</Text>
-              <TextInput 
+              <Text style={styles.inputLabel}>Age (years)</Text>
+              <TextInput
                 style={styles.textInput}
                 placeholder="e.g. 25"
                 placeholderTextColor={THEME.colors.textMuted}
@@ -174,8 +219,8 @@ export const BmiModal: React.FC<BmiModalProps> = ({
                 keyboardType="numeric"
               />
             </View>
-            
-            {/* Height and weight inputs*/}
+
+            {/* Height and weight inputs */}
             <View style={styles.inputsRow}>
               <View style={styles.inputCol}>
                 <Text style={styles.inputLabel}>Height (cm)</Text>
@@ -303,17 +348,9 @@ const styles = StyleSheet.create({
     borderColor: THEME.colors.border,
     backgroundColor: THEME.colors.background,
   },
-  genderActive: {
-    backgroundColor: THEME.colors.primary,
-    borderColor: THEME.colors.primary,
-  },
   genderBtnActive: {
     backgroundColor: THEME.colors.primary,
     borderColor: THEME.colors.primary,
-  },
-  genderBtnTextActive: {
-    color: '#FFFFFF',
-    fontWeight: '700',
   },
   singleInputContainer: {
     marginBottom: 14,
