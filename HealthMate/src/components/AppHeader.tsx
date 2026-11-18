@@ -44,10 +44,13 @@ export function AppHeader ({ showBack = false, onBackPress, rightElement }: AppH
                         <Ionicons name="heart" size={22} color="#EF4444"/>
                     </View>
                 </View>
-                <Text style={styles.logoText}>HealthMate</Text>
-                <Text style={styles.logoTagLine}> Personal Health & Welness</Text>
+                <View>
+                    <Text style={styles.logoText}>HealthMate</Text>
+                    <Text style={styles.logoTagLine}> Personal Health & Welness</Text>
+                </View>
             </View>
         </View>
+        {rightElement ? <View style={styles.rightContainer}>{rightElement}</View> : null}
     </View>
     );
 }
@@ -63,7 +66,7 @@ const styles = StyleSheet.create({
     innerRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
     },
     leftContainer: {
         flexDirection: 'row',
@@ -88,13 +91,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     logoText: {
-        fontSize: 20,
+        fontSize: 22,
         fontWeight: '800',
         color: THEME.colors.textPrimary,
         letterSpacing: -0.5,
     },
     logoTagLine: {
-        fontSize: 11,
+        fontSize: 12,
         fontWeight: '500',
         color: THEME.colors.textSecondary,
         marginTop: 1,
