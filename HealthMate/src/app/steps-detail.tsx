@@ -20,6 +20,8 @@ export default function StepsDetailScreen() {
             }
           }}
           accessibilityLabel="Go back"
+          hitSlop={{ top:12 , bottom:12, left:12, right:12 }}
+          activeOpacity={0.7}
         >
           <Ionicons name="arrow-back" size={24} color="#000000" />
         </TouchableOpacity>
