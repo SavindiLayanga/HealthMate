@@ -48,12 +48,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   backBtn: {
-    padding: 12,
+    paddingTop: 12,
+    paddingLeft: 4,
+    alignSelf: 'flex-start',
+    paddingVertical: 4,
   },
   titleContainer: {
     paddingHorizontal: 20,
-    marginTop: 16,
-    marginBottom: 10,
+    marginTop: 8,
+    marginBottom: 16,
+    marginLeft: 4,
+    flex: 1,
   },
   mainTitle: {
     fontSize: 18,
