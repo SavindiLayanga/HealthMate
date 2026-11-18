@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -92,9 +92,13 @@ const styles = StyleSheet.create({
     },
     logoText: {
         fontSize: 22,
-        fontWeight: '800',
+        fontWeight: 'bold',
         color: THEME.colors.textPrimary,
         letterSpacing: -0.5,
+        fontFamily: Platform.select({
+            android: 'monospace',
+            default: 'monospace',
+        }),
     },
     logoTagLine: {
         fontSize: 12,

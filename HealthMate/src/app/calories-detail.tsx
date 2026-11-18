@@ -7,8 +7,8 @@ import { router } from 'expo-router';
 export default function CaloriesDetailScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
-      <View style={styles.header}>
 
+      <View style={styles.titleRow}>
       <TouchableOpacity
         style={styles.backBtn}
         onPress={() => {
@@ -25,12 +25,10 @@ export default function CaloriesDetailScreen() {
         <Ionicons name="arrow-back" size={24} color="#111827" />
       </TouchableOpacity>
 
-      <Text style={styles.headerTitle}> Calories Tracker</Text>
-      </View>
-
       <View style={styles.titleContainer}>
         <Text style={styles.mainTitle}>Track Your Daily Calories</Text>
         <Text style={styles.subTitle}>Monitor calories burned and consumed</Text>
+      </View>
       </View>
 
       <View style={styles.contentBox}>
@@ -45,31 +43,30 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
-  header: {
+  titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
+    paddingTop: 12,
+    marginBottom: 16,
   },
   backBtn: {
     paddingHorizontal: 16,
     paddingVertical: 12,
     alignSelf: 'flex-start',
   },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#111827',    
-  },
+//   headerTitle: {
+//     fontSize: 18,
+//     fontWeight: '700',
+//     color: '#111827',    
+//   },
   titleContainer: {
     paddingHorizontal: 20,
     marginTop: 8,
     marginBottom: 16,
   },
   mainTitle: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '800',
     color: '#111827',
     letterSpacing: -0.3,
