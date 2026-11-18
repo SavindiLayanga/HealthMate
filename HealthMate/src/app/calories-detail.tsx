@@ -6,7 +6,9 @@ import { router } from 'expo-router';
 
 export default function CaloriesDetailScreen() {
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+      <View style={styles.header}>
+
       <TouchableOpacity
         style={styles.backBtn}
         onPress={() => {
@@ -17,10 +19,14 @@ export default function CaloriesDetailScreen() {
           }
         }}
         accessibilityLabel="Go back"
-        // activeOpacity={0.7}
+        hitSlop={{ top:12, bottom:12, left:12, right:12 }}
+        activeOpacity={0.7}
       >
         <Ionicons name="arrow-back" size={24} color="#111827" />
       </TouchableOpacity>
+
+      <Text style={styles.headerTitle}> Calories Tracker</Text>
+      </View>
 
       <View style={styles.titleContainer}>
         <Text style={styles.mainTitle}>Track Your Daily Calories</Text>
@@ -28,7 +34,7 @@ export default function CaloriesDetailScreen() {
       </View>
 
       <View style={styles.contentBox}>
-        <Text style={styles.infoText}>Calories details content here</Text>
+        <Text style={styles.infoText}>blaaaaaa</Text>
       </View>
     </SafeAreaView>
   );
@@ -39,10 +45,23 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+  },
   backBtn: {
     paddingHorizontal: 16,
     paddingVertical: 12,
     alignSelf: 'flex-start',
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#111827',    
   },
   titleContainer: {
     paddingHorizontal: 20,
