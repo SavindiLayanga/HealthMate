@@ -290,8 +290,24 @@ const styles = StyleSheet.create({
     height: 42,
     borderRadius: THEME.borderRadius.md,
     borderWidth: 1.5,
-    borderColor:THEME.colors.border,
-    backgroundColor:THEME.colors.background,
+    borderColor: THEME.colors.border,
+    backgroundColor: THEME.colors.background,
+  },
+  genderActive: {
+    backgroundColor: THEME.colors.primary,
+    borderColor: THEME.colors.primary,
+  },
+  genderBtnActive: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: THEME.colors.textSecondary,
+  },
+  genderBtnTextActive: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+  },
+  singleInputContainer: {
+    marginBottom: 14,
   },
   inputsRow: {
     flexDirection: 'row',
