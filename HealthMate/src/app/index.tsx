@@ -63,7 +63,7 @@ export default function DashboardScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       {/* 1. Top Header with Heart Logo & HealthMate Title */}
-      <View style={styles.header}>
+      {/* <View style={styles.header}>
         <View style={styles.logoContainer}>
           <View style={styles.heartIconWrapper}>
             <Ionicons name="heart" size={24} color="#EF4444" />
@@ -73,7 +73,7 @@ export default function DashboardScreen() {
             <Text style={styles.logoTagline}>Personal Health & Wellness</Text>
           </View>
         </View>
-      </View>
+      </View> */}
 
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* 2. Sub-topic */}
