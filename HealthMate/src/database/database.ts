@@ -78,7 +78,8 @@ export async function initDatabase(): Promise<void> {
 
 export async function seedDummyRecords(): Promise<void> {
   if (Platform.OS === 'web') {
-    webRecords = getInitialSampleData();
+    webRecords.length = 0;
+    webRecords.push(...getInitialSampleData());
     return;
   }
 
