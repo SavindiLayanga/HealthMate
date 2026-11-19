@@ -30,7 +30,6 @@ export const StepsModal: React.FC<StepsModalProps> = ({
   const [steps, setSteps] = useState('');
   const [goal, setGoal] = useState('');
 
-  // Modal එක open වෙන විට දැනට ඇති අගයන් input වලට load කිරීම
   useEffect(() => {
     setSteps(currentSteps.toString());
     setGoal(currentGoal.toString());
@@ -40,7 +39,6 @@ export const StepsModal: React.FC<StepsModalProps> = ({
     const s = parseInt(steps, 10);
     const g = parseInt(goal, 10);
 
-    // සරල if-else validation
     if (isNaN(s) || s < 0) {
       alert('Please enter a valid number for today steps.');
       return;
@@ -65,7 +63,6 @@ export const StepsModal: React.FC<StepsModalProps> = ({
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            {/* Header */}
             <View style={styles.headerRow}>
               <View style={styles.headerTitleRow}>
                 <Ionicons name="walk" size={22} color={THEME.colors.steps} />
@@ -80,7 +77,6 @@ export const StepsModal: React.FC<StepsModalProps> = ({
               Update your daily target steps and today's walked steps count.
             </Text>
 
-            {/* 1. Target Steps Goal Input */}
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Target Steps Goal</Text>
               <TextInput
@@ -93,7 +89,6 @@ export const StepsModal: React.FC<StepsModalProps> = ({
               />
             </View>
 
-            {/* 2. Today's Steps Input */}
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Today's Steps Walked</Text>
               <TextInput
@@ -106,7 +101,6 @@ export const StepsModal: React.FC<StepsModalProps> = ({
               />
             </View>
 
-            {/* Save Button */}
             <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
               <Text style={styles.saveBtnText}>Save Steps</Text>
             </TouchableOpacity>
