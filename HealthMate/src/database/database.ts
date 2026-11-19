@@ -4,12 +4,8 @@ import { HealthRecord } from '../types';
 
 let dbInstance: SQLite.SQLiteDatabase | null = null;
 
-// In-memory / web fallback store for browser preview
 let webRecords: HealthRecord[] = [];
 
-/**
- * Returns the open SQLite database connection singleton on native devices.
- */
 export async function getDatabase(): Promise<SQLite.SQLiteDatabase | null> {
   if (Platform.OS === 'web') {
     return null;
@@ -20,9 +16,6 @@ export async function getDatabase(): Promise<SQLite.SQLiteDatabase | null> {
   return dbInstance;
 }
 
-/**
- * Helper to get a formatted date string (YYYY-MM-DD) for n days ago.
- */
 export function getDateNDaysAgo(daysAgo: number): string {
   const d = new Date();
   d.setDate(d.getDate() - daysAgo);
@@ -32,13 +25,11 @@ export function getDateNDaysAgo(daysAgo: number): string {
   return `${year}-${month}-${day}`;
 }
 
-/**
- * Default sample records for initial testing (matches Coursework scenario)
- */
+//dummy data
 export function getInitialSampleData(): HealthRecord[] {
   return [
-    { id: 1, date: getDateNDaysAgo(0), steps: 7850, calories: 420, water: 2000 }, // Today (Scenario example)
-    { id: 2, date: getDateNDaysAgo(1), steps: 9400, calories: 510, water: 2500 }, // Yesterday
+    { id: 1, date: getDateNDaysAgo(0), steps: 7850, calories: 420, water: 2000 }, 
+    { id: 2, date: getDateNDaysAgo(1), steps: 9400, calories: 510, water: 2500 }, 
     { id: 3, date: getDateNDaysAgo(2), steps: 6200, calories: 340, water: 1800 },
     { id: 4, date: getDateNDaysAgo(3), steps: 8100, calories: 450, water: 2200 },
     { id: 5, date: getDateNDaysAgo(4), steps: 10500, calories: 600, water: 3000 },
@@ -47,13 +38,11 @@ export function getInitialSampleData(): HealthRecord[] {
   ];
 }
 
-/**
- * Initializes the SQLite database on native platforms, or memory store on web.
- */
 export async function initDatabase(): Promise<void> {
   if (Platform.OS === 'web') {
     if (webRecords.length === 0) {
-      webRecords = getInitialSampleData();
+      webRecords.push(...getInitialSampleData())
+      ;
     }
     return;
   }
@@ -62,7 +51,6 @@ export async function initDatabase(): Promise<void> {
     const db = await getDatabase();
     if (!db) return;
 
-    // Enable Write-Ahead Logging (WAL) for high performance and concurrency
     await db.execAsync(`
       PRAGMA journal_mode = WAL;
       CREATE TABLE IF NOT EXISTS health_records (
@@ -74,7 +62,6 @@ export async function initDatabase(): Promise<void> {
       );
     `);
 
-    // Check if records already exist
     const countResult = await db.getFirstAsync<{ count: number }>(
       'SELECT COUNT(*) as count FROM health_records'
     );
@@ -88,9 +75,6 @@ export async function initDatabase(): Promise<void> {
   }
 }
 
-/**
- * Seeds realistic dummy health records for initial testing.
- */
 export async function seedDummyRecords(): Promise<void> {
   if (Platform.OS === 'web') {
     webRecords = getInitialSampleData();
@@ -115,9 +99,6 @@ export async function seedDummyRecords(): Promise<void> {
   }
 }
 
-/**
- * Clears and re-seeds dummy records (useful for test resets).
- */
 export async function resetDatabaseWithDummyData(): Promise<void> {
   if (Platform.OS === 'web') {
     webRecords = getInitialSampleData();
