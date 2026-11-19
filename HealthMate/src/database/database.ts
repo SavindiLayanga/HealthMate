@@ -71,7 +71,8 @@ export async function initDatabase(): Promise<void> {
     }
   } catch (err) {
     console.warn('Native SQLite init fallback:', err);
-    webRecords = getInitialSampleData();
+    webRecords.length = 0;
+    webRecords.push(...getInitialSampleData());
   }
 }
 
