@@ -3,7 +3,7 @@ import { HealthRecord, NewHealthRecord, HealthSummary } from "../types";
 
 let nextId = 10;
 
-export class HealthRecordRepository{
+export class HealthRecordRepositor{
   static async create(record: NewHealthRecord): Promise<number> {
     const db = await getDatabase();
 
@@ -241,38 +241,45 @@ static async getSummaryForDate(date: string): Promise<HealthSummary> {
   }
 
   static async updateStepsForDate (date: string, newSteps: number) : Promise<void> {
+    const trimmeDate = date.trim();
     const db = await getDatabase();
+
     if (!db) {
-      const todayRec = webRecords.find((r) => r.date === date);
+      const todayRec = webRecords.find((r) => r.date === trimmeDate);
       if (todayRec){
         webRecords.forEach((r) => {
-          if (r.date === date) r.steps = 0;
+          if (r.date === trimmeDate) r.steps = 0;
         });
-        todayRec.steps = newSteps;
+        todayRec.steps = Math.round(newSteps);
       } else {
         webRecords.unshift({
           id: nextId++,
-          date,
-          steps: newSteps,
+          date: trimmeDate,
+          steps: Math.round(newSteps),
           calories: 0,
           water: 0,
         });
       }
       return;
     }
-    const todayRec = await db.getFirstAsync<HealthRecord>(
+
+    const latestToday = await db.getFirstAsync<HealthRecord>(
       'SELECT id, date, steps, calories, water FROM health_records WHERE date = ? ORDER BY id DESC LIMIT 1',
-      [date]
+      [trimmeDate]
     );
-    if (todayRec) {
+    if (latestToday) {
       await db.runAsync(
-        'UPDATE health_records SET steps = CASE WHEN id = ? THEN ? ELSE 0 END WHERE date = ? ',
-        [todayRec.id, newSteps, date]
+        'UPDATE health_records SET steps = 0 WHERE date = ? AND id! = ? ',
+        [trimmeDate, latestToday.id]
+      );
+      await db.runAsync(
+        'UPDATE health_records SET steps = ? WHERE id = ?',
+        [Math.round(newSteps), latestToday.id]
       );
     } else {
       await db.runAsync(
         'INSERT INTO health_records (date, steps, calories, water) VALUES (?, ?, 0, 0)',
-        [date, newSteps]
+        [trimmeDate, Math.round(newSteps)]
       );
     }
   }
