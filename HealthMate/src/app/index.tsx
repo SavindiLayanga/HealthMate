@@ -21,7 +21,6 @@ export default function DashboardScreen() {
     goals,
     quickAddWater,
     updateGoals,
-    updateTodaySteps,
   } = useHealth();
 
   const [calendarModalVisible, setCalendarModalVisible] = useState(false);
@@ -126,7 +125,7 @@ export default function DashboardScreen() {
               unit="steps"
               subText={`Goal: ${stepsGoal.toLocaleString()}`}
               icon="walk"
-              color="rgb(185, 16, 165)"
+              color="#b910a5"
               bgColor="#efd3eb"
               progress={stepsPercent}
               onPress={() => setStepsModalVisible(true)}
