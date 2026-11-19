@@ -261,7 +261,7 @@ static async getSummaryForDate(date: string): Promise<HealthSummary> {
       return;
     }
     const todayRec = await db.getFirstAsync<HealthRecord>(
-      'SELECT id, date, steps, calories, water FROM health_records WHERE date = ? ORDER BY DESC LIMIT 1',
+      'SELECT id, date, steps, calories, water FROM health_records WHERE date = ? ORDER BY id DESC LIMIT 1',
       [date]
     );
     if (todayRec) {
