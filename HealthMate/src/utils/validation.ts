@@ -1,8 +1,5 @@
 import { FormErrors, NewHealthRecord } from '../types';
 
-/**
- * Validates date string in YYYY-MM-DD format
- */
 export function isValidDate(dateString: string): boolean {
   const regex = /^\d{4}-\d{2}-\d{2}$/;
   if (!regex.test(dateString)) return false;
@@ -16,9 +13,6 @@ export function isValidDate(dateString: string): boolean {
   );
 }
 
-/**
- * Helper to get today's date formatted as YYYY-MM-DD
- */
 export function getTodayDateString(): string {
   const now = new Date();
   const year = now.getFullYear();
@@ -27,9 +21,6 @@ export function getTodayDateString(): string {
   return `${year}-${month}-${day}`;
 }
 
-/**
- * Helper to format date nicely (e.g., "18 August 2026")
- */
 export function formatDisplayDate(dateString: string): string {
   if (!isValidDate(dateString)) return dateString;
   const [year, month, day] = dateString.split('-').map(Number);
@@ -41,7 +32,6 @@ export function formatDisplayDate(dateString: string): string {
   });
 }
 
-// date card eke dinaya pennanna
 export function formatDateWithWeekday(dateString: string): string {
   if (!isValidDate(dateString)) return dateString;
   const [year, month, day] = dateString.split('-').map(Number);
@@ -54,7 +44,6 @@ export function formatDateWithWeekday(dateString: string): string {
   });
 }
 
-// Add dynamic relative date badge helper
 export function getDateRelativeBadge(dateString: string): string {
   if (!isValidDate(dateString)) return 'DATE';
   const today = getTodayDateString();
@@ -75,11 +64,6 @@ export function getDateRelativeBadge(dateString: string): string {
   return targetDate.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase();
 }
 
-
-/**
- * Validates a health record entry form.
- * Returns an object with field-specific error messages.
- */
 export function validateHealthRecordForm(data: {
   date: string;
   steps: string;
@@ -88,14 +72,14 @@ export function validateHealthRecordForm(data: {
 }): { isValid: boolean; errors: FormErrors } {
   const errors: FormErrors = {};
 
-  // Date validation
+  //date validation
   if (!data.date || !data.date.trim()) {
     errors.date = 'Date is required (YYYY-MM-DD).';
   } else if (!isValidDate(data.date.trim())) {
     errors.date = 'Please enter a valid date in YYYY-MM-DD format.';
   }
 
-  // Steps validation
+  //step validation
   if (data.steps === undefined || data.steps === null || data.steps.trim() === '') {
     errors.steps = 'Steps count is required.';
   } else {
@@ -109,7 +93,7 @@ export function validateHealthRecordForm(data: {
     }
   }
 
-  // Calories validation
+  // calorie validation
   if (data.calories === undefined || data.calories === null || data.calories.trim() === '') {
     errors.calories = 'Calories burned is required.';
   } else {
@@ -123,7 +107,7 @@ export function validateHealthRecordForm(data: {
     }
   }
 
-  // Water validation
+  //water validation
   if (data.water === undefined || data.water === null || data.water.trim() === '') {
     errors.water = 'Water intake is required.';
   } else {
