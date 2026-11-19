@@ -1,23 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Modal,
-  TextInput,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from 'react-native';
+import { View, Text, StyleSheet, Modal, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard,} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { THEME } from '../constants/theme';
+import { Alert } from 'react-native';
 
 interface StepsModalProps {
   visible: boolean;
   onClose: () => void;
   currentSteps: number;
   currentGoal: number;
-  onSave: (newSteps: number, newGoal: number) => void;
+  onSave: (newSteps: number, newGoal: number) => Promise<void> | void;
 }
 
 export const StepsModal: React.FC<StepsModalProps> = ({
@@ -35,7 +27,7 @@ export const StepsModal: React.FC<StepsModalProps> = ({
     setGoal(currentGoal.toString());
   }, [currentSteps, currentGoal, visible]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const s = parseInt(steps, 10);
     const g = parseInt(goal, 10);
 
@@ -49,7 +41,7 @@ export const StepsModal: React.FC<StepsModalProps> = ({
       return;
     }
 
-    onSave(s, g);
+    await onSave(s, g);
     onClose();
   };
 
