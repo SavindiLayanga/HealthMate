@@ -26,6 +26,8 @@ export const StatCard = ({
     color,
     bgColor,
     badge,
+    badgeColor,
+    badgeBgColor,
     progress,
     onPress,
 }: StartCardProps) => {
