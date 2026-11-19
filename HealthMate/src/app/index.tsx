@@ -187,7 +187,7 @@ export default function DashboardScreen() {
         </View>
       </ScrollView>
 
-      {/* Interactive Calendar Modal */}
+      {/* Calendar modal */}
       <CalendarModal
         visible={calendarModalVisible}
         selectedDate={selectedDate}
@@ -196,13 +196,24 @@ export default function DashboardScreen() {
         markedDates={records.map((r) => r.date)}
       />
 
-      {/* Interactive BMI Calculator Modal */}
+      {/* BMI Calculator mdal */}
       <BmiModal
         visible={bmiModalVisible}
         onClose={() => setBmiModalVisible(false)}
         onBmiCalculated={(val, cat) => {
           setBmiValue(val);
           setBmiCategory(cat);
+        }}
+      />
+      {/* Step modal */}
+      <StepsModal
+        visible={stepsModalVisible}
+        onClose={() => setStepsModalVisible(false)}
+        currentSteps={currentSummary?.totalSteps || 0 }
+        currentGoal={stepsGoal}
+        onSave={async (newSteps, newGoal) => {
+          updateGoals ({ ...goals, stepsGoal: newGoal });
+          await updateTodaySteps ( newSteps, selectedDate);
         }}
       />
     </SafeAreaView>
