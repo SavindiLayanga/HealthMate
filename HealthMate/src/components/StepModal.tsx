@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Modal, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard,} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Modal,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Alert,
+  Platform,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { THEME } from '../constants/theme';
-import { Alert } from 'react-native';
 
 interface StepsModalProps {
   visible: boolean;
@@ -31,13 +41,21 @@ export const StepsModal: React.FC<StepsModalProps> = ({
     const s = parseInt(steps, 10);
     const g = parseInt(goal, 10);
 
+    const showAlert = (message: string) => {
+      if (Platform.OS === 'web') {
+        alert(message);
+      } else {
+        Alert.alert('Validation Error', message);
+      }
+    };
+
     if (isNaN(s) || s < 0) {
-      alert('Please enter a valid number for today steps.');
+      showAlert('Please enter a valid number for today steps.');
       return;
     }
 
     if (isNaN(g) || g <= 0) {
-      alert('Please enter a valid target goal greater than 0.');
+      showAlert('Please enter a valid target goal greater than 0.');
       return;
     }
 
