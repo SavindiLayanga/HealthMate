@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Modal,
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Pressable,
-  Platform,
-} from 'react-native';
+import { Modal,View,Text,TouchableOpacity,StyleSheet,Pressable,Platform,} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { THEME } from '../constants/theme';
 import { getTodayDateString, isValidDate } from '../utils/validation';
