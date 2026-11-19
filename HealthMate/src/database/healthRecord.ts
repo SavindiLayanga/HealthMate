@@ -260,6 +260,20 @@ static async getSummaryForDate(date: string): Promise<HealthSummary> {
       }
       return;
     }
-    
+    const todayRec = await db.getFirstAsync<HealthRecord>(
+      'SELECT id, date, steps, calories, water FROM health_records WHERE date = ? ORDER BY DESC LIMIT 1',
+      [date]
+    );
+    if (todayRec) {
+      await db.runAsync(
+        'UPDATE health_records SET steps = CASE WHEN id = ? THEN ? ELSE 0 END WHERE date = ? ',
+        [todayRec.id, newSteps, date]
+      );
+    } else {
+      await db.runAsync(
+        'INSERT INTO health_records (date, steps, calories, water) VALUES (?, ?, 0, 0)',
+        [date, newSteps]
+      );
+    }
   }
 }
