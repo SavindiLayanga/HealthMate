@@ -212,7 +212,6 @@ export default function DashboardScreen() {
         currentGoal={stepsGoal}
         onSave={async (newSteps, newGoal) => {
           updateGoals ({ ...goals, stepsGoal: newGoal });
-          await updateTodaySteps ( newSteps, selectedDate);
         }}
       />
     </SafeAreaView>
