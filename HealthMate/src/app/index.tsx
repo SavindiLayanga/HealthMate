@@ -8,14 +8,10 @@ import { useHealth } from '../context/HealthContext';
 import { StatCard } from '../components/StatCard';
 import { CalendarModal } from '../components/CalendarModal';
 import { BmiModal } from '../components/BmiModal';
-import {
-  formatDateWithWeekday,
-  getDateRelativeBadge,
-  getTodayDateString,
-} from '../utils/validation';
+import { StepsModal } from '../components/StepModal';
+import { formatDateWithWeekday, getDateRelativeBadge, getTodayDateString,} from '../utils/validation';
 
 export default function DashboardScreen() {
-  //  data from HealthContext
   const {
     selectedDate,
     setSelectedDate,
@@ -26,7 +22,6 @@ export default function DashboardScreen() {
     quickAddWater,
   } = useHealth();
 
-  // Modal open/close states
   const [calendarModalVisible, setCalendarModalVisible] = useState(false);
   const [bmiModalVisible, setBmiModalVisible] = useState(false);
   const [bmiValue, setBmiValue] = useState<number>(22.4);
@@ -34,10 +29,8 @@ export default function DashboardScreen() {
 
   const todayDate = getTodayDateString();
 
-  // Active summary for selected or current day
   const currentSummary = selectedDateSummary || todaySummary;
 
-  // Goals and progress percentages
   const stepsGoal = goals?.stepsGoal || 10000;
   const caloriesGoal = goals?.caloriesGoal || 2200;
   const waterGoal = goals?.waterGoal || 2500;
@@ -55,7 +48,6 @@ export default function DashboardScreen() {
     100
   );
 
-  // Quick water adding
   const handleQuickWater = async () => {
     await quickAddWater(250);
   };
@@ -134,9 +126,7 @@ export default function DashboardScreen() {
               color="rgb(185, 16, 165)"
               bgColor="#efd3eb"
               progress={stepsPercent}
-              onPress={() => {
-                router.navigate('/steps-detail');
-              }}
+              onPress={() => setStepsModalVisible(true)}
             />
 
             {/* Calories Card */}
