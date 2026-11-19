@@ -21,6 +21,7 @@ export default function DashboardScreen() {
     goals,
     quickAddWater,
     updateGoals,
+    updateSteps,
   } = useHealth();
 
   const [calendarModalVisible, setCalendarModalVisible] = useState(false);
@@ -208,10 +209,11 @@ export default function DashboardScreen() {
       <StepsModal
         visible={stepsModalVisible}
         onClose={() => setStepsModalVisible(false)}
-        currentSteps={currentSummary?.totalSteps || 0 }
+        currentSteps={currentSummary?.totalSteps || 0}
         currentGoal={stepsGoal}
         onSave={async (newSteps, newGoal) => {
-          updateGoals ({ ...goals, stepsGoal: newGoal });
+          updateGoals({ ...goals, stepsGoal: newGoal });
+          await updateSteps(newSteps);
         }}
       />
     </SafeAreaView>
