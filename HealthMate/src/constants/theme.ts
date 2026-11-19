@@ -1,9 +1,9 @@
 export const THEME = {
   colors: {
-    primary: '#2563EB', // Vibrant Health Blue
+    primary: '#2563EB',
     primaryLight: '#DBEAFE',
-    secondary: '#10B981', // Emerald Green
-    background: '#F8FAFC', // Slate 50
+    secondary: '#10B981', 
+    background: '#F8FAFC',
     surface: '#FFFFFF',
     surfaceVariant: '#F1F5F9',
     border: '#E2E8F0',
@@ -15,16 +15,15 @@ export const THEME = {
     warning: '#F59E0B',
     warningLight: '#FEF3C7',
 
-    // Specific Metric Color Scheme required by Coursework Brief:
-    water: '#0284C7', // Blue for Water Intake
+    water: '#0284C7', 
     waterLight: '#E0F2FE',
     waterDark: '#0369A1',
 
-    calories: '#EA580C', // Orange/Red for Calories Burned
+    calories: '#EA580C', 
     caloriesLight: '#FFEDD5',
     caloriesDark: '#C2410C',
 
-    steps: '#16A34A', // Green for Steps Walked
+    steps: '#b910a5', 
     stepsLight: '#DCFCE7',
     stepsDark: '#15803D',
   },
@@ -61,7 +60,7 @@ export const THEME = {
 };
 
 export const DEFAULT_GOALS = {
-  stepsGoal: 8000, // 8,000 steps per day
-  caloriesGoal: 500, // 500 kcal per day
-  waterGoal: 2500, // 2,500 ml per day
+  stepsGoal: 8000, 
+  caloriesGoal: 500, 
+  waterGoal: 2500, 
 };
