@@ -19,18 +19,16 @@ export class HealthRecordRepository{
       return newRec.id;
     }
 
-    //SQLite INSERT query with parameterized statement
     const result= await db.runAsync(
       'INSERT INTO health_records (date, steps, calories, water) VALUES (?, ?, ?, ?)',
       [record.date.trim(), Math.round(record.steps), Math.round(record.calories), Math.round(record.water)]
     );
 
-    //returns the auto generated primary key id
     return result.lastInsertRowId;
   }
 
-  //2. READ : fetch all health records sorted newest first
-
+  
+  // create
   static async getAll(): Promise<HealthRecord[]> {
     const db = await getDatabase();
 
@@ -47,7 +45,7 @@ export class HealthRecordRepository{
     return records;
   }
 
-  // 2. READ : getch single record by primary key id
+  // Read
   static async getById(id: number): Promise<HealthRecord | null> {
     const db = await getDatabase();
     if(!db){
@@ -61,7 +59,6 @@ export class HealthRecordRepository{
     return record || null;
   }
 
-  //READ : fetch all health records for a specific date
   static async getByDate(date: string): Promise<HealthRecord[]> {
     const db = await getDatabase();
     if(!db){
@@ -75,11 +72,10 @@ export class HealthRecordRepository{
     return records;
   }
 
-  //UPDATE : update a health record by primary key id
+  //update
   static async update(record: HealthRecord): Promise<boolean> {
     const db = await getDatabase();
 
-    //web browser fallback if SQLite is not available
     if(!db){
       const idx = webRecords.findIndex(r => r.id === record.id);
       if(idx !== -1) {
@@ -107,7 +103,7 @@ export class HealthRecordRepository{
     );
     return result.changes > 0;
   }
-  // DELETE: delete a health record by id
+  // Delete
   static async delete(id: number): Promise<boolean> {
     const db = await getDatabase();
 
@@ -127,7 +123,6 @@ export class HealthRecordRepository{
     return result.changes > 0;
   }
 
-  // search record by date substring
   static async searchByDate(query: string): Promise<HealthRecord[]> {
     const trimmed = query.trim();
     if (!trimmed) {
@@ -145,8 +140,6 @@ export class HealthRecordRepository{
   );
   return records;
 }
-
-// calculate total steps, calories and water for a special date
 
 static async getSummaryForDate(date: string): Promise<HealthSummary> {
   const db = await getDatabase();
@@ -211,7 +204,6 @@ static async getSummaryForDate(date: string): Promise<HealthSummary> {
     };
   }
 
-  // quick add water for a special date
   static async quickAddWater(date: string, amountML: number = 250): Promise<void> {
     const db = await getDatabase();
     if (!db) {
@@ -246,5 +238,28 @@ static async getSummaryForDate(date: string): Promise<HealthSummary> {
         [date, amountML]
       );
     }
+  }
+
+  static async updateStepsForDate (date: string, newSteps: number) : Promise<void> {
+    const db = await getDatabase();
+    if (!db) {
+      const todayRec = webRecords.find((r) => r.date === date);
+      if (todayRec){
+        webRecords.forEach((r) => {
+          if (r.date === date) r.steps = 0;
+        });
+        todayRec.steps = newSteps;
+      } else {
+        webRecords.unshift({
+          id: nextId++,
+          date,
+          steps: newSteps,
+          calories: 0,
+          water: 0,
+        });
+      }
+      return;
+    }
+    
   }
 }
