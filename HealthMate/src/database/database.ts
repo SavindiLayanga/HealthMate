@@ -112,13 +112,15 @@ export async function resetDatabaseWithDummyData(): Promise<void> {
   try {
     const db = await getDatabase();
     if (!db) {
-      webRecords = getInitialSampleData();
+      webRecords.length = 0;
+      webRecords.push(...getInitialSampleData());
       return;
     }
     await db.runAsync('DELETE FROM health_records');
     await seedDummyRecords();
   } catch {
-    webRecords = getInitialSampleData();
+    webRecords.length = 0;
+    webRecords.push(...getInitialSampleData());
   }
 }
 
