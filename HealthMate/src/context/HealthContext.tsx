@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { HealthRecord, NewHealthRecord, HealthSummary, DailyGoals } from '../types';
-import { HealthRecordRepository } from '../database/healthRecord';
+import { HealthRecordRepositor as HealthRecordRepository } from '../database/healthRecord';
 import { initDatabase, resetDatabaseWithDummyData } from '../database/database';
 import { getTodayDateString } from '../utils/validation';
 import { DEFAULT_GOALS } from '../constants/theme';
@@ -20,6 +20,7 @@ interface HealthContextType {
   setSelectedRecord: (react: HealthRecord | null) => void;
   goals: DailyGoals;
   updateGoals: (goals: DailyGoals) => void;
+  updateSteps: (steps: number, targetDate?: string) => Promise<void>;
   refreshRecords: () => Promise<void>;
   addRecord: (record: NewHealthRecord) => Promise<boolean>;
   updateRecord: (record: HealthRecord) => Promise<boolean>;
@@ -204,6 +205,17 @@ const resetWithDummyData = async (): Promise<void> => {
 const updateGoals = (newGoals: DailyGoals) => {
   setGoals(newGoals);
 };
+
+// Update steps
+const updateSteps = async (steps: number, targetDate?: string): Promise<void> => {
+  try {
+    const dateToUse = targetDate || selectedDate || getTodayDateString();
+    await HealthRecordRepository.updateStepsForDate(dateToUse, steps);
+    await refreshRecords();
+  } catch (error) {
+    console.error('Failed to update steps:', error);
+  }
+};
 return (
   <HealthContext.Provider
     value={{
@@ -221,6 +233,7 @@ return (
       setSelectedRecord,
       goals,
       updateGoals,
+      updateSteps,
       refreshRecords,
       addRecord,
       updateRecord,
