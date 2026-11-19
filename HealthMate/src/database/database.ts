@@ -97,7 +97,8 @@ export async function seedDummyRecords(): Promise<void> {
     }
   } catch (err) {
     console.warn('Native seed fallback:', err);
-    webRecords = getInitialSampleData();
+    webRecords.length = 0;
+    webRecords.push(...getInitialSampleData());
   }
 }
 
