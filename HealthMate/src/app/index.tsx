@@ -20,6 +20,8 @@ export default function DashboardScreen() {
     records,
     goals,
     quickAddWater,
+    updateGoals,
+    updateTodaySteps,
   } = useHealth();
 
   const [calendarModalVisible, setCalendarModalVisible] = useState(false);
