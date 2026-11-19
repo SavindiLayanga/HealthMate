@@ -104,7 +104,8 @@ export async function seedDummyRecords(): Promise<void> {
 
 export async function resetDatabaseWithDummyData(): Promise<void> {
   if (Platform.OS === 'web') {
-    webRecords = getInitialSampleData();
+    webRecords.length = 0;
+    webRecords.push(...getInitialSampleData());
     return;
   }
 
