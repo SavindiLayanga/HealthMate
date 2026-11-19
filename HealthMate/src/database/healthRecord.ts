@@ -269,7 +269,7 @@ static async getSummaryForDate(date: string): Promise<HealthSummary> {
     );
     if (latestToday) {
       await db.runAsync(
-        'UPDATE health_records SET steps = 0 WHERE date = ? AND id! = ? ',
+        'UPDATE health_records SET steps = 0 WHERE date = ? AND id != ?',
         [trimmeDate, latestToday.id]
       );
       await db.runAsync(
