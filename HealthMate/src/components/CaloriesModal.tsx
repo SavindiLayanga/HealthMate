@@ -35,5 +35,10 @@ export const CaloriesModal: React.FC<CaloriesModalProps> = ({
             Alert.alert('Invalid Input', 'Please enter a valid number for calories.');
             return;
         }
+
+        if (isNaN(g) || g<0 ){
+            Alert.alert('Invalid Input', 'Please enter a valid target goal greater than 0.');
+            return;
+        }
     }
 }
