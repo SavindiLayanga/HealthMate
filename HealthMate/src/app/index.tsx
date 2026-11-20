@@ -23,11 +23,13 @@ export default function DashboardScreen() {
     quickAddWater,
     updateGoals,
     updateSteps,
+    updateTodayCalories,
   } = useHealth();
 
   const [calendarModalVisible, setCalendarModalVisible] = useState(false);
   const [bmiModalVisible, setBmiModalVisible] = useState(false);
-  const [ stepsModalVisible, setStepsModalVisible ] = useState(false);
+  const [stepsModalVisible, setStepsModalVisible ] = useState(false);
+  const [caloriesModalVisible, setCaloriesModalVisible] = useState(false);
   const [bmiValue, setBmiValue] = useState<number>(22.4);
   const [bmiCategory, setBmiCategory] = useState<string>('Normal');
 
