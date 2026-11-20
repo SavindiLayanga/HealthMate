@@ -30,5 +30,10 @@ export const CaloriesModal: React.FC<CaloriesModalProps> = ({
     const handleSave = async () => {
         const c = parseInt(calories, 10);
         const g = parseInt(goal, 10);
+
+        if (isNaN(c) || c<0 ){
+            Alert.alert('Invalid Input', 'Please enter a valid number for calories.');
+            return;
+        }
     }
 }
