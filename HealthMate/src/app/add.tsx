@@ -56,7 +56,7 @@ function FormField({
 }
 
 export default function AddRecordScreen() {
-  const { addRecord, updateRecord, selectedRecord, setSelectedRecord, records } = useHealth();
+  const { addRecord, updateRecord, selectedRecord, setSelectedRecord, records, setSelectedDate } = useHealth();
 
   const isEditMode = selectedRecord !== null;
 
@@ -131,6 +131,7 @@ export default function AddRecordScreen() {
         });
 
         if (success) {
+          setSelectedDate(targetDate);
           Alert.alert('Success', 'Health record updated successfully!', [
             { text: 'OK', onPress: () => router.push('/records') },
           ]);
@@ -287,6 +288,16 @@ export default function AddRecordScreen() {
             keyboardType="number-pad"
             error={errors.water}
           />
+
+          <TouchableOpacity 
+            style={[styles.saveBtn, isSubmitting ? styles.saveBtnDisabled : null]}
+            onPress={handleSubmit}
+            disabled={isSubmitting}
+            activeOpacity={0.8}
+          >
+            <Ionicons name="checkmark-circle" size={20} color='#FFFFFF'/>
+            <Text style={styles.saveBtn}> {isSubmitting ? 'Saving...' : 'Save'} </Text>
+          </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -333,7 +344,7 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
-    backgroundColor: THEME.colors.background,
+    backgroundColor: THEME.colors.surface,
   },
   header: {
     flexDirection: 'row',
@@ -394,5 +405,24 @@ const styles = StyleSheet.create({
     color: THEME.colors.primary,
     fontSize: 13,
     fontWeight: '600',
+  },
+  saveBtn: {
+    backgroundColor: THEME.colors.primary,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 48,
+    borderRadius: 12,
+    marginTop: 10,
+    marginBottom: 20,
+    gap: 8,
+  },
+  saveBtnDisabled: {
+    opacity: 0.6,
+  },
+  saveBtnText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '700',
   },
 });
