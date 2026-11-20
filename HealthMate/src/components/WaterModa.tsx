@@ -29,7 +29,7 @@ export const WaterModal: React.FC<WaterModalPropos> = ({
                                 <Ionicons name="water" size={22} color={THEME.colors.water}/>
                                 <Text style={styles.headerTitle}> Water Intake </Text>
                             </View>
-                            <TouchableOpacity onPress={onClose} style={StyleSheet.closeBtn}>
+                            <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
                                 <Ionicons name="close" size={22} color={THEME.colors.textSecondary}/> 
                             </TouchableOpacity>
                         </View>
