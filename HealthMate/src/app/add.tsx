@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View,Text,StyleSheet,ScrollView,TouchableOpacity,Alert,KeyboardAvoidingView,Platform,TextInput,TextInputProps,} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, KeyboardAvoidingView, Platform,TextInput, TextInputProps, } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -56,7 +56,14 @@ function FormField({
 }
 
 export default function AddRecordScreen() {
-  const { addRecord, updateRecord, selectedRecord, setSelectedRecord, records, setSelectedDate } = useHealth();
+  const {
+    addRecord,
+    updateRecord,
+    selectedRecord,
+    setSelectedRecord,
+    records,
+    setSelectedDate,
+  } = useHealth();
 
   const isEditMode = selectedRecord !== null;
 
@@ -75,17 +82,34 @@ export default function AddRecordScreen() {
       setCalories(selectedRecord.calories.toString());
       setWater(selectedRecord.water.toString());
     } else {
-      setDate(getTodayDateString());
-      setSteps('');
-      setCalories('');
-      setWater('');
+      const today = getTodayDateString();
+      setDate(today);
+      
+      const existingToday = records.find((r) => r.date === today);
+      if (existingToday) {
+        setSteps(existingToday.steps.toString());
+        setCalories(existingToday.calories.toString());
+        setWater(existingToday.water.toString());
+      } else {
+        setSteps('');
+        setCalories('');
+        setWater('');
+      }
     }
     setErrors({});
   }, [selectedRecord]);
 
   const handleSetToday = () => {
-    setDate(getTodayDateString());
+    const today = getTodayDateString();
+    setDate(today);
     if (errors.date) setErrors((prev) => ({ ...prev, date: undefined }));
+    
+    const existing = records.find((r) => r.date === today);
+    if (existing) {
+      setSteps(existing.steps.toString());
+      setCalories(existing.calories.toString());
+      setWater(existing.water.toString());
+    }
   };
 
   const handleResetForm = () => {
@@ -121,43 +145,40 @@ export default function AddRecordScreen() {
     setIsSubmitting(true);
 
     try {
-      if (isEditMode && selectedRecord) {
-        const success = await updateRecord({
-          id: selectedRecord.id,
-          date: date.trim(),
-          steps: parseInt(steps, 10),
-          calories: parseInt(calories, 10),
-          water: parseInt(water, 10),
-        });
+      const targetDate = date.trim();
+      const numSteps = parseInt(steps, 10);
+      const numCalories = parseInt(calories, 10);
+      const numWater = parseInt(water, 10);
+      const existingRecord = isEditMode && selectedRecord
+        ? selectedRecord
+        : records.find((r) => r.date === targetDate);
 
-        if (success) {
-          setSelectedDate(targetDate);
-          Alert.alert('Success', 'Health record updated successfully!', [
-            { text: 'OK', onPress: () => router.push('/records') },
-          ]);
-        }
+      let success = false;
+      if (existingRecord) {
+        success = await updateRecord({
+          id: existingRecord.id,
+          date: targetDate,
+          steps: numSteps,
+          calories: numCalories,
+          water: numWater,
+        });
       } else {
-        const success = await addRecord({
-          date: date.trim(),
-          steps: parseInt(steps, 10),
-          calories: parseInt(calories, 10),
-          water: parseInt(water, 10),
+        success = await addRecord({
+          date: targetDate,
+          steps: numSteps,
+          calories: numCalories,
+          water: numWater,
         });
+      }
 
-        if (success) {
-          Alert.alert('Success', 'Daily activity saved to SQLite database!', [
-            { text: 'View Records', onPress: () => router.push('/records') },
-            {
-              text: 'Add Another',
-              style: 'cancel',
-              onPress: () => {
-                setSteps('');
-                setCalories('');
-                setWater('');
-              },
-            },
-          ]);
-        }
+      if (success) {
+        setSelectedDate(targetDate);
+        Alert.alert('Success', `Health record for ${targetDate} saved successfully!`, [
+          { text: 'View Records', onPress: () => router.push('/records') },
+          { text: 'OK', style: 'cancel' },
+        ]);
+      } else {
+        Alert.alert('Error', 'Failed to save health record.');
       }
     } catch (error) {
       console.error('Submit error:', error);
@@ -202,7 +223,6 @@ export default function AddRecordScreen() {
           contentContainerStyle={styles.contentContainer}
           keyboardShouldPersistTaps="handled"
         >
-
           {/* Date Input Field */}
           <View style={styles.dateFieldWrapper}>
             <TouchableOpacity
@@ -241,7 +261,7 @@ export default function AddRecordScreen() {
             </View>
           </View>
 
-           {/* Steps Field */}
+          {/* Steps Field */}
           <FormField
             label="Steps Walked"
             iconName="walk"
@@ -280,7 +300,7 @@ export default function AddRecordScreen() {
             iconColor={THEME.colors.water}
             unit="ml"
             value={water}
-            onChangeText={(t: React.SetStateAction<string>) => {
+            onChangeText={(t: string) => {
               setWater(t);
               if (errors.water) setErrors((prev) => ({ ...prev, water: undefined }));
             }}
@@ -289,17 +309,37 @@ export default function AddRecordScreen() {
             error={errors.water}
           />
 
-          <TouchableOpacity 
+          {/* Save Button */}
+          <TouchableOpacity
             style={[styles.saveBtn, isSubmitting ? styles.saveBtnDisabled : null]}
             onPress={handleSubmit}
             disabled={isSubmitting}
             activeOpacity={0.8}
           >
-            <Ionicons name="checkmark-circle" size={20} color='#FFFFFF'/>
-            <Text style={styles.saveBtn}> {isSubmitting ? 'Saving...' : 'Save'} </Text>
+            <Ionicons name="checkmark-circle" size={20} color="#FFFFFF" />
+            <Text style={styles.saveBtnText}>
+              {isSubmitting ? 'Saving...' : 'Save'}
+            </Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <CalendarModal
+        visible={calendarModalVisible}
+        selectedDate={date}
+        onSelectDate={(newDate) => {
+          setDate(newDate);
+          if (errors.date) setErrors((prev) => ({ ...prev, date: undefined }));
+          const existing = records.find((r) => r.date === newDate);
+          if (existing) {
+            setSteps(existing.steps.toString());
+            setCalories(existing.calories.toString());
+            setWater(existing.water.toString());
+          }
+        }}
+        onClose={() => setCalendarModalVisible(false)}
+        markedDates={records.map((r) => r.date)}
+      />
     </SafeAreaView>
   );
 }
@@ -320,7 +360,7 @@ const styles = StyleSheet.create({
     gap: 10,
     backgroundColor: THEME.colors.surface,
     borderWidth: 1,
-    borderColor: THEME.colors.textSecondary,
+    borderColor: THEME.colors.border,
     borderRadius: 12,
     paddingHorizontal: 14,
   },
@@ -351,6 +391,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.colors.border,
   },
   headerTitle: {
     color: THEME.colors.textPrimary,
@@ -370,15 +414,11 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    backgroundColor: THEME.colors.background,
   },
   contentContainer: {
     padding: 20,
     paddingBottom: 32,
-  },
-  infoText: {
-    flex: 1,
-    color: THEME.colors.textSecondary,
-    fontSize: 13,
   },
   dateFieldWrapper: {
     marginBottom: 16,
