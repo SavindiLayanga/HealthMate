@@ -201,13 +201,6 @@ export default function AddRecordScreen() {
           contentContainerStyle={styles.contentContainer}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Form Info Box */}
-          <View style={styles.infoBox}>
-            <Ionicons name="shield-checkmark" size={18} color={THEME.colors.primary} />
-            <Text style={styles.infoText}>
-              All entries are validated and saved securely to the embedded SQLite database.
-            </Text>
-          </View>
 
           {/* Date Input Field */}
           <View style={styles.dateFieldWrapper}>
@@ -247,7 +240,7 @@ export default function AddRecordScreen() {
             </View>
           </View>
 
-                   {/* Steps Field */}
+           {/* Steps Field */}
           <FormField
             label="Steps Walked"
             iconName="walk"
@@ -371,15 +364,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     padding: 20,
     paddingBottom: 32,
-  },
-  infoBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: THEME.colors.surface,
-    borderRadius: 12,
-    padding: 14,
-    marginBottom: 20,
-    gap: 10,
   },
   infoText: {
     flex: 1,

@@ -10,6 +10,7 @@ import { CalendarModal } from '../components/CalendarModal';
 import { BmiModal } from '../components/BmiModal';
 import { StepsModal } from '../components/StepModal';
 import { CaloriesModal } from '../components/CaloriesModal';
+import { WaterModal } from '../components/WaterModal';
 import { formatDateWithWeekday, getDateRelativeBadge, getTodayDateString,} from '../utils/validation';
 
 export default function DashboardScreen() {
@@ -30,6 +31,7 @@ export default function DashboardScreen() {
   const [bmiModalVisible, setBmiModalVisible] = useState(false);
   const [stepsModalVisible, setStepsModalVisible ] = useState(false);
   const [caloriesModalVisible, setCaloriesModalVisible] = useState(false);
+  const [waterModalVisible, setWaterModalVisible] = useState(false);
   const [bmiValue, setBmiValue] = useState<number>(22.4);
   const [bmiCategory, setBmiCategory] = useState<string>('Normal');
 
