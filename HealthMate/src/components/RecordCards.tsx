@@ -1,23 +1,23 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { THEME } from '../constants/theme';
 
 export default function RecordsScreen() {
+   const router = useRouter();
+
    return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
             <View style={styles.container}>
                 <View style={styles.header}>
                     <View>
-                        <Text style={styles.headerTitle}> Health Reords</Text>
+                        <Text style={styles.headerTitle}>Health Records</Text>
                         <TouchableOpacity
                             style={styles.addButton}
-                            onPress={() => {
-                                setSelectedRecord(null);
-                                router.push('/add');
-                            }}
+                            onPress={() => router.push('/add')}
                             activeOpacity={0.8}
-                        ></TouchableOpacity>
+                        />
                     </View>
                 </View>
             </View>
