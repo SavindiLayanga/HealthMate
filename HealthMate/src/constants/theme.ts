@@ -10,7 +10,7 @@ export const THEME = {
     textPrimary: '#0F172A',
     textSecondary: '#64748B',
     textMuted: '#94A3B8',
-    danger: '#EF4444',
+    danger: '#fd4444',
     dangerLight: '#FEE2E2',
     warning: '#F59E0B',
     warningLight: '#FEF3C7',
