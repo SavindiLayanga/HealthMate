@@ -145,9 +145,7 @@ export default function DashboardScreen() {
               color="#F59E0B"
               bgColor="#FEF3C7"
               progress={caloriesPercent}
-              onPress={() => {
-                router.navigate('/calories-detail');
-              }}
+              onPress={() => setCaloriesModalVisible(true)}
             />
           </View>
 
