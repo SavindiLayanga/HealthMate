@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   addButton: {
-    backgroundColor: THEME.colors.primary,
+    backgroundColor: '#0EA5E9',
     width: 38,
     height: 38,
     borderRadius: THEME.borderRadius.full,
