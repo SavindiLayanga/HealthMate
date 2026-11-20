@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   editBtn: {
-    backgroundColor: THEME.colors.primary,
+    backgroundColor: '#29a9c9',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
