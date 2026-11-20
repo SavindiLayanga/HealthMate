@@ -43,10 +43,10 @@ export const WaterModal: React.FC<WaterModalProps> = ({
                 </TouchableOpacity>
               </View>
 
-              {/* Empty placeholder body */}
-              <View style={styles.bodyPlaceholder}>
-                <Text style={styles.placeholderText}>Water Details (Coming Soon)</Text>
-              </View>
+              {/* Subtitle / Description */}
+              <Text style={styles.modalDescription}>
+                Update your daily target water and today's water intake.
+              </Text>
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -69,12 +69,13 @@ const styles = StyleSheet.create({
     backgroundColor: THEME.colors.surface,
     borderRadius: THEME.borderRadius.xl,
     padding: 20,
+    ...THEME.elevation.hover,
   },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 8,
   },
   headerTitleRow: {
     flexDirection: 'row',
@@ -89,14 +90,10 @@ const styles = StyleSheet.create({
   closeBtn: {
     padding: 4,
   },
-  bodyPlaceholder: {
-    paddingVertical: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  placeholderText: {
-    fontSize: 14,
+  modalDescription: {
+    fontSize: 13,
     color: THEME.colors.textSecondary,
+    marginBottom: 16,
   },
 });
 
