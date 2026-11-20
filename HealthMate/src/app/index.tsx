@@ -9,6 +9,7 @@ import { StatCard } from '../components/StatCard';
 import { CalendarModal } from '../components/CalendarModal';
 import { BmiModal } from '../components/BmiModal';
 import { StepsModal } from '../components/StepModal';
+import { CaloriesModal } from '../components/CaloriesModal';
 import { formatDateWithWeekday, getDateRelativeBadge, getTodayDateString,} from '../utils/validation';
 
 export default function DashboardScreen() {
