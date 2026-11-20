@@ -162,7 +162,7 @@ export default function DashboardScreen() {
               color={THEME.colors.water}
               bgColor="#E0F2FE"
               progress={waterPercent}
-              onPress={handleQuickWater}
+              onPress={() => setWaterModalVisible(true)}
             />
 
             {/* BMI Calculator Card) */}
