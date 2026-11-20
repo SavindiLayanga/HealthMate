@@ -222,9 +222,9 @@ export default function DashboardScreen() {
       {/*Calories Modal */}
       <CaloriesModal
         visible={caloriesModalVisible}
-        onClose={() => setCalendarModalVisible(false)}
-        currentCalories={currentSummary.totalCalories}
-        currentGoal={goals.caloriesGoal}
+        onClose={() => setCaloriesModalVisible(false)}
+        currentCalories={currentSummary?.totalCalories || 0}
+        currentGoal={caloriesGoal}
         onSave={async(newCalories, newGoal) => {
           updateGoals({ ...goals, caloriesGoal: newGoal});
           await updateTodayCalories(newCalories, selectedDate);
