@@ -117,6 +117,7 @@ export default function DashboardScreen() {
           </TouchableOpacity>
         </TouchableOpacity>
 
+
         {/* Cards */}
         <View style={styles.metricsGrid}>
           
@@ -158,7 +159,7 @@ export default function DashboardScreen() {
               unit="ml"
               subText={`Goal: ${waterGoal.toLocaleString()}`}
               icon="water"
-              color="#0EA5E9"
+              color={THEME.colors.water}
               bgColor="#E0F2FE"
               progress={waterPercent}
               onPress={handleQuickWater}
