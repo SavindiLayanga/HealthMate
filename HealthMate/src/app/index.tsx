@@ -231,6 +231,12 @@ export default function DashboardScreen() {
           await updateTodayCalories(newCalories, selectedDate);
         }}
       />
+
+      {/*Water Modal */}
+      <WaterModal 
+        visible={waterModalVisible}
+        onClose={() => setWaterModalVisible(false)}
+      />
     </SafeAreaView>
   );
 }
