@@ -26,6 +26,8 @@ interface HealthContextType {
   updateRecord: (record: HealthRecord) => Promise<boolean>;
   deleteRecord: (id: number) => Promise<boolean>;
   quickAddWater: (amountML?: number) => Promise<void>;
+  updateTodaySteps: (newSteps: number, targetDate?: string) => Promise<void>;
+  updateTodayCalories: (newCalories: number, targetDate?: string) => Promise<void>;
   resetWithDummyData: () => Promise<void>;
 }
 
@@ -35,8 +37,6 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [records, setRecords] = useState<HealthRecord[]>([]);
   const [filteredRecords, setFilteredRecords] = useState<HealthRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
-
-  // Today's date is selected by default 
   const [selectedDate, setSelectedDate] = useState<string>(getTodayDateString());
 
   const [todaySummary, setTodaySummary] = useState<HealthSummary>({
@@ -46,13 +46,13 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     recordCount: 0,
   });
 
-  // Summary for the selected day
   const [selectedDateSummary, setSelectedDateSummary] = useState<HealthSummary>({
     totalSteps: 0,
     totalCalories: 0,
     totalWater: 0,
     recordCount: 0,
   });
+
   const [overallSummary, setOverallSummary] = useState<HealthSummary>({
     totalSteps: 0,
     totalCalories: 0,
@@ -63,14 +63,12 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [selectedRecord, setSelectedRecord] = useState<HealthRecord | null>(null);
   const [goals, setGoals] = useState<DailyGoals>(DEFAULT_GOALS);  
 
-  // data refreshing
   const refreshRecords = useCallback(async () => {
     try{
       setIsLoading(true);
       const all = await HealthRecordRepository.getAll();
       setRecords(all);
   
-      // aply current search filter
       if (searchQuery.trim()) {
         const filtered = await HealthRecordRepository.searchByDate(searchQuery);
         setFilteredRecords(filtered);
@@ -78,19 +76,16 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         setFilteredRecords(all);
       }
 
-      // Calculate today summary
       const today = getTodayDateString();
       const todayStats = await HealthRecordRepository.getSummaryForDate(today);
       setTodaySummary(todayStats);
 
-      // Calculate selected day summary
       const selectedStats =
       selectedDate === today
       ? todayStats
       :await HealthRecordRepository.getSummaryForDate(selectedDate);
       setSelectedDateSummary(selectedStats);
 
-      // Calculate overall summary
       const overall = await HealthRecordRepository.getOverallSummary();
       setOverallSummary(overall);
     }catch (error) {
@@ -100,7 +95,6 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     }
   }, [searchQuery]);
 
-    // Initializing the database when the app loads for the first time
   useEffect(() => {
     async function setup(){
       try{
@@ -113,7 +107,6 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     setup();
   },[]);
 
-  // Dynamically updating the summary when the selectedDate is changed in the calendar
   useEffect(() =>{
     async function updateSelectedSummary(){
       try {
@@ -126,7 +119,6 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     updateSelectedSummary();
   }, [selectedDate]);
 
-  //update filtered records when search query changes
   useEffect(() => {
     async function filter() {
       if (!searchQuery.trim()) {
@@ -139,7 +131,7 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     filter();
 }, [searchQuery, records]);
 
-//CREATE: adds a new record
+//CREATE
 const addRecord = async (newRecord: NewHealthRecord):Promise<boolean> =>{
   try{
     await HealthRecordRepository.create(newRecord);
@@ -151,7 +143,7 @@ const addRecord = async (newRecord: NewHealthRecord):Promise<boolean> =>{
   }
 };
 
-//UPDATE: Update an existing record
+//UPDATE
 const updateRecord = async (record: HealthRecord): Promise<boolean> => {
   try{
     const success = await HealthRecordRepository.update(record);
@@ -166,7 +158,7 @@ const updateRecord = async (record: HealthRecord): Promise<boolean> => {
   }
 };
 
-// DELETE: Delete a record by id
+// DELETE
 const deleteRecord = async (id: number): Promise<boolean> => {
   try{
     const success = await HealthRecordRepository.delete(id);
@@ -191,7 +183,6 @@ const quickAddWater = async (amountMl: number = 250, targetDate?: string): Promi
   }
 };
 
-// Reset database with fresh dummy data
 const resetWithDummyData = async (): Promise<void> => {
   try{
     await resetDatabaseWithDummyData();
@@ -216,6 +207,18 @@ const updateSteps = async (steps: number, targetDate?: string): Promise<void> =>
     console.error('Failed to update steps:', error);
   }
 };
+
+// Update calories
+const updateCalories = async (calories: number, targetDate?: string): Promise<void> => {
+  try {
+    const dateToUse = targetDate || selectedDate || getTodayDateString();
+    await HealthRecordRepository.updateCaloriesForDate(dateToUse, calories);
+    await refreshRecords();
+  } catch (error) {
+    console.error('Failed to update calories:', error);
+  }
+};
+
 return (
   <HealthContext.Provider
     value={{
@@ -234,6 +237,8 @@ return (
       goals,
       updateGoals,
       updateSteps,
+      updateTodaySteps: updateSteps,
+      updateTodayCalories: updateCalories,
       refreshRecords,
       addRecord,
       updateRecord,
