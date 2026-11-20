@@ -10,3 +10,25 @@ interface CaloriesModalProps {
     currentGoal: number;
     onSave: (newCalories: number, newGoal:number) => Promise<void> | void;
 }
+
+export const CaloriesModal: React.FC<CaloriesModalProps> = ({
+    visible,
+    onClose,
+    currentCalories,
+    currentGoal,
+    onSave,
+}) => {
+    const [calories, setCalories] = useState ('');
+    const [ goal, setGoal] = useState ('');
+    const [ saving, setSaving] = useState ('');
+
+    useEffect(() => {
+        setCalories(currentCalories.toString());
+        setGoal(currentGoal.toString());
+    }, [currentCalories, currentGoal, visible]);
+
+    const handleSave = async () => {
+        const c = parseInt(calories, 10);
+        const g = parseInt(goal, 10);
+    }
+}
