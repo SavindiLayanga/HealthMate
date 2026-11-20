@@ -221,7 +221,7 @@ export default function DashboardScreen() {
 
       {/*Calories Modal */}
       <CaloriesModal
-        visible={calendarModalVisible}
+        visible={caloriesModalVisible}
         onClose={() => setCalendarModalVisible(false)}
         currentCalories={currentSummary.totalCalories}
         currentGoal={goals.caloriesGoal}
