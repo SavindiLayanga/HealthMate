@@ -1,19 +1,31 @@
 import { Platform } from 'react-native';
-import * as SQLite from 'expo-sqlite';
+import type { SQLiteDatabase } from 'expo-sqlite';
 import { HealthRecord } from '../types';
 
-let dbInstance: SQLite.SQLiteDatabase | null = null;
+// Safely require expo-sqlite at runtime to prevent crash if native module is unavailable in Expo Go
+let SQLite: typeof import('expo-sqlite') | null = null;
+try {
+  SQLite = require('expo-sqlite');
+} catch (e) {
+  console.warn('ExpoSQLite native module not available, using in-memory storage.');
+}
 
+let dbInstance: SQLiteDatabase | null = null;
 let webRecords: HealthRecord[] = [];
 
-export async function getDatabase(): Promise<SQLite.SQLiteDatabase | null> {
-  if (Platform.OS === 'web') {
+export async function getDatabase(): Promise<SQLiteDatabase | null> {
+  if (Platform.OS === 'web' || !SQLite) {
     return null;
   }
-  if (!dbInstance) {
-    dbInstance = await SQLite.openDatabaseAsync('healthmate.db');
+  try {
+    if (!dbInstance) {
+      dbInstance = await SQLite.openDatabaseAsync('healthmate.db');
+    }
+    return dbInstance;
+  } catch (err) {
+    console.warn('Could not open SQLite database, falling back to memory:', err);
+    return null;
   }
-  return dbInstance;
 }
 
 export function getDateNDaysAgo(daysAgo: number): string {
@@ -25,7 +37,7 @@ export function getDateNDaysAgo(daysAgo: number): string {
   return `${year}-${month}-${day}`;
 }
 
-//dummy data
+// Dummy data
 export function getInitialSampleData(): HealthRecord[] {
   return [
     { id: 1, date: getDateNDaysAgo(0), steps: 7850, calories: 420, water: 2000 }, 
@@ -39,10 +51,9 @@ export function getInitialSampleData(): HealthRecord[] {
 }
 
 export async function initDatabase(): Promise<void> {
-  if (Platform.OS === 'web') {
+  if (Platform.OS === 'web' || !SQLite) {
     if (webRecords.length === 0) {
-      webRecords.push(...getInitialSampleData())
-      ;
+      webRecords.push(...getInitialSampleData());
     }
     return;
   }
@@ -77,7 +88,7 @@ export async function initDatabase(): Promise<void> {
 }
 
 export async function seedDummyRecords(): Promise<void> {
-  if (Platform.OS === 'web') {
+  if (Platform.OS === 'web' || !SQLite) {
     webRecords.length = 0;
     webRecords.push(...getInitialSampleData());
     return;
@@ -103,7 +114,7 @@ export async function seedDummyRecords(): Promise<void> {
 }
 
 export async function resetDatabaseWithDummyData(): Promise<void> {
-  if (Platform.OS === 'web') {
+  if (Platform.OS === 'web' || !SQLite) {
     webRecords.length = 0;
     webRecords.push(...getInitialSampleData());
     return;

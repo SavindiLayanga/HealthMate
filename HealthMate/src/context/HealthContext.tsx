@@ -28,6 +28,7 @@ interface HealthContextType {
   quickAddWater: (amountML?: number) => Promise<void>;
   updateTodaySteps: (newSteps: number, targetDate?: string) => Promise<void>;
   updateTodayCalories: (newCalories: number, targetDate?: string) => Promise<void>;
+  updateTodayWater: (newWater: number, targetDate?: string) => Promise<void>;
   resetWithDummyData: () => Promise<void>;
 }
 
@@ -219,6 +220,17 @@ const updateCalories = async (calories: number, targetDate?: string): Promise<vo
   }
 };
 
+// Update water
+const updateWater = async (water: number, targetDate?: string): Promise<void> => {
+  try {
+    const dateToUse = targetDate || selectedDate || getTodayDateString();
+    await HealthRecordRepository.updateWaterForDate(dateToUse, water);
+    await refreshRecords();
+  } catch (error) {
+    console.error('Failed to update water:', error);
+  }
+};
+
 return (
   <HealthContext.Provider
     value={{
@@ -239,6 +251,7 @@ return (
       updateSteps,
       updateTodaySteps: updateSteps,
       updateTodayCalories: updateCalories,
+      updateTodayWater: updateWater,
       refreshRecords,
       addRecord,
       updateRecord,

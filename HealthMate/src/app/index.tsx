@@ -25,6 +25,7 @@ export default function DashboardScreen() {
     updateGoals,
     updateSteps,
     updateTodayCalories,
+    updateTodayWater,
   } = useHealth();
 
   const [calendarModalVisible, setCalendarModalVisible] = useState(false);
@@ -238,6 +239,12 @@ export default function DashboardScreen() {
       <WaterModal 
         visible={waterModalVisible}
         onClose={() => setWaterModalVisible(false)}
+        currentWater={currentSummary?.totalWater || 0}
+        currentGoal={waterGoal}
+        onSave={async (newWater, newGoal) => {
+          updateGoals({ ...goals, waterGoal: newGoal });
+          await updateTodayWater(newWater, selectedDate);
+        }}
       />
     </SafeAreaView>
   );

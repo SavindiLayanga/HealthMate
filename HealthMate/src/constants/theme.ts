@@ -15,7 +15,7 @@ export const THEME = {
     warning: '#F59E0B',
     warningLight: '#FEF3C7',
 
-    water: '#0284C7', 
+    water: '#0EA5E9', 
     waterLight: '#E0F2FE',
     waterDark: '#0369A1',
 

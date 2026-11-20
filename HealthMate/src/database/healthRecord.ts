@@ -328,4 +328,49 @@ static async getSummaryForDate(date: string): Promise<HealthSummary> {
     );
   }
 }
+
+  static async updateWaterForDate(date: string, newWater: number): Promise<void> {
+    const trimmedDate = date.trim();
+    const roundedWater = Math.round(newWater);
+    const db = await getDatabase();
+    if (!db) {
+      const todayRec = webRecords.find((r) => r.date === trimmedDate);
+      if (todayRec) {
+        webRecords.forEach((r) => {
+          if (r.date === trimmedDate) r.water = 0;
+        });
+        todayRec.water = roundedWater;
+      } else {
+        webRecords.unshift({
+          id: nextId++,
+          date: trimmedDate,
+          steps: 0,
+          calories: 0,
+          water: roundedWater,
+        });
+      }
+      return;
+    }
+
+    const latestToday = await db.getFirstAsync<HealthRecord>(
+      'SELECT id, date, steps, calories, water FROM health_records WHERE date = ? ORDER BY id DESC LIMIT 1',
+      [trimmedDate]
+    );
+
+    if (latestToday) {
+      await db.runAsync(
+        'UPDATE health_records SET water = 0 WHERE date = ? AND id != ?',
+        [trimmedDate, latestToday.id]
+      );
+      await db.runAsync(
+        'UPDATE health_records SET water = ? WHERE id = ?',
+        [roundedWater, latestToday.id]
+      );
+    } else {
+      await db.runAsync(
+        'INSERT INTO health_records (date, steps, calories, water) VALUES (?, 0, 0, ?)',
+        [trimmedDate, roundedWater]
+      );
+    }
+  }
 }
