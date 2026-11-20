@@ -1,13 +1,57 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, FlatList, RefreshControl, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  FlatList,
+  RefreshControl,
+  Alert,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { THEME } from '../constants/theme';
 import { Ionicons } from '@expo/vector-icons';
+import { THEME } from '../constants/theme';
 import { useHealth } from '../context/HealthContext';
 import { HealthRecord } from '../types';
-import { formatDisplayDate } from '../utils/validation';
+import { formatDisplayDate, getTodayDateString } from '../utils/validation';
 import { getInitialSampleData } from '../database/database';
+
+// Cute theme colors matching Dashboard
+const CUTE_COLORS = {
+  steps: {
+    icon: '#b910a5',
+    bg: '#FDF2F8',
+    iconBg: '#efd3eb',
+    border: '#FBCFE8',
+    text: '#9D174D',
+  },
+  calories: {
+    icon: '#F59E0B',
+    bg: '#FFFBEB',
+    iconBg: '#FEF3C7',
+    border: '#FDE68A',
+    text: '#B45309',
+  },
+  water: {
+    icon: '#0EA5E9',
+    bg: '#F0F9FF',
+    iconBg: '#E0F2FE',
+    border: '#BAE6FD',
+    text: '#0369A1',
+  },
+  calendar: {
+    icon: '#10B981',
+    bg: '#ECFDF5',
+    border: '#A7F3D0',
+    text: '#065F46',
+  },
+  editBtn: '#0EA5E9',
+  deleteBtnBg: '#FEE2E2',
+  deleteBtnText: '#EF4444',
+  deleteBtnBorder: '#FECACA',
+};
 
 type RecordCardProps = {
   record: HealthRecord;
@@ -15,11 +59,13 @@ type RecordCardProps = {
   onDelete: (id: number) => void;
 };
 
-function RecordCard({ record, onEdit, onDelete }: RecordCardProps) {
+export function RecordCard({ record, onEdit, onDelete }: RecordCardProps) {
+  const isToday = record.date === getTodayDateString();
+
   const handleDeletePress = () => {
     Alert.alert(
       'Delete Record',
-      `Are you sure you want to delete the record for ${record.date}?`,
+      `Are you sure you want to delete the record for ${formatDisplayDate(record.date)}?`,
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -33,51 +79,143 @@ function RecordCard({ record, onEdit, onDelete }: RecordCardProps) {
 
   return (
     <View style={styles.card}>
+      {/* Date Header Badge */}
       <View style={styles.cardHeader}>
-        <Ionicons name="calendar-outline" size={16} color={THEME.colors.primary} />
-        <Text style={styles.dateText}>{formatDisplayDate(record.date)}</Text>
+        <View style={styles.dateBadge}>
+          <Ionicons name="calendar" size={14} color={CUTE_COLORS.calendar.icon} />
+          <Text style={styles.dateBadgeText}>{formatDisplayDate(record.date)}</Text>
+        </View>
+
+        {isToday && (
+          <View style={styles.todayPill}>
+            <Text style={styles.todayPillText}>TODAY</Text>
+          </View>
+        )}
       </View>
 
+      {/* Main Row: Left Metrics + Right Buttons */}
       <View style={styles.cardBody}>
+        {/* Left Side: Steps, Calories, Water with cute pastel boxes */}
         <View style={styles.metricsColumn}>
-          <View style={styles.metricBox}>
-            <Ionicons name="walk" size={16} color={THEME.colors.steps} />
-            <Text style={styles.metricText}>
-              Steps: <Text style={styles.metricValue}>{record.steps.toLocaleString()}</Text>
-            </Text>
+          {/* Steps */}
+          <View
+            style={[
+              styles.metricBox,
+              {
+                backgroundColor: CUTE_COLORS.steps.bg,
+                borderColor: CUTE_COLORS.steps.border,
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.metricIconBox,
+                { backgroundColor: CUTE_COLORS.steps.iconBg },
+              ]}
+            >
+              <Ionicons name="walk" size={15} color={CUTE_COLORS.steps.icon} />
+            </View>
+            <View style={styles.metricContent}>
+              <Text style={styles.metricLabel}>Steps</Text>
+              <Text
+                style={[
+                  styles.metricValue,
+                  { color: CUTE_COLORS.steps.text },
+                ]}
+              >
+                {record.steps.toLocaleString()}
+              </Text>
+            </View>
           </View>
 
-          <View style={styles.metricBox}>
-            <Ionicons name="flame" size={16} color={THEME.colors.calories} />
-            <Text style={styles.metricText}>
-              Calories: <Text style={styles.metricValue}>{record.calories.toLocaleString()} kcal</Text>
-            </Text>
+          {/* Calories */}
+          <View
+            style={[
+              styles.metricBox,
+              {
+                backgroundColor: CUTE_COLORS.calories.bg,
+                borderColor: CUTE_COLORS.calories.border,
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.metricIconBox,
+                { backgroundColor: CUTE_COLORS.calories.iconBg },
+              ]}
+            >
+              <Ionicons name="flame" size={15} color={CUTE_COLORS.calories.icon} />
+            </View>
+            <View style={styles.metricContent}>
+              <Text style={styles.metricLabel}>Calories</Text>
+              <Text
+                style={[
+                  styles.metricValue,
+                  { color: CUTE_COLORS.calories.text },
+                ]}
+              >
+                {record.calories.toLocaleString()}{' '}
+                <Text style={styles.metricUnit}>kcal</Text>
+              </Text>
+            </View>
           </View>
 
-          <View style={styles.metricBox}>
-            <Ionicons name="water" size={16} color={THEME.colors.water} />
-            <Text style={styles.metricText}>
-              Water Intake: <Text style={styles.metricValue}>{record.water.toLocaleString()} ml</Text>
-            </Text>
+          {/* Water Intake */}
+          <View
+            style={[
+              styles.metricBox,
+              {
+                backgroundColor: CUTE_COLORS.water.bg,
+                borderColor: CUTE_COLORS.water.border,
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.metricIconBox,
+                { backgroundColor: CUTE_COLORS.water.iconBg },
+              ]}
+            >
+              <Ionicons name="water" size={15} color={CUTE_COLORS.water.icon} />
+            </View>
+            <View style={styles.metricContent}>
+              <Text style={styles.metricLabel}>Water</Text>
+              <Text
+                style={[
+                  styles.metricValue,
+                  { color: CUTE_COLORS.water.text },
+                ]}
+              >
+                {record.water.toLocaleString()}{' '}
+                <Text style={styles.metricUnit}>ml</Text>
+              </Text>
+            </View>
           </View>
         </View>
 
+        {/* Right Side: Cute EDIT and DELETE Buttons */}
         <View style={styles.buttonsColumn}>
+          {/* Edit Button */}
           <TouchableOpacity
             style={styles.editBtn}
             onPress={() => onEdit(record)}
             activeOpacity={0.8}
           >
-            <Ionicons name="create-outline" size={15} color="#FFFFFF" />
+            <Ionicons name="create-outline" size={14} color="#FFFFFF" />
             <Text style={styles.editBtnText}>EDIT</Text>
           </TouchableOpacity>
 
+          {/* Delete Button */}
           <TouchableOpacity
             style={styles.deleteBtn}
             onPress={handleDeletePress}
             activeOpacity={0.8}
           >
-            <Ionicons name="trash-outline" size={15} color="#FFFFFF" />
+            <Ionicons
+              name="trash-outline"
+              size={14}
+              color={CUTE_COLORS.deleteBtnText}
+            />
             <Text style={styles.deleteBtnText}>DELETE</Text>
           </TouchableOpacity>
         </View>
@@ -103,6 +241,7 @@ export default function RecordsScreen() {
 
   const [refreshing, setRefreshing] = useState(false);
 
+  // Fallback to sample records if database is empty
   const displayRecords =
     searchQuery.trim().length > 0
       ? filteredRecords
@@ -123,6 +262,7 @@ export default function RecordsScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
+      {/* Top Section Header */}
       <View style={styles.header}>
         <View>
           <Text style={styles.headerTitle}>Health Records</Text>
@@ -144,11 +284,12 @@ export default function RecordsScreen() {
       </View>
 
       <View style={styles.container}>
+        {/* Search & Filter Bar */}
         <View style={styles.searchContainer}>
           <Ionicons
             name="search"
             size={18}
-            color={THEME.colors.textMuted}
+            color={CUTE_COLORS.calendar.icon}
             style={styles.searchIcon}
           />
           <TextInput
@@ -160,12 +301,20 @@ export default function RecordsScreen() {
             autoCapitalize="none"
           />
           {searchQuery ? (
-            <TouchableOpacity onPress={() => setSearchQuery('')} style={styles.clearButton}>
-              <Ionicons name="close-circle" size={18} color={THEME.colors.textMuted} />
+            <TouchableOpacity
+              onPress={() => setSearchQuery('')}
+              style={styles.clearButton}
+            >
+              <Ionicons
+                name="close-circle"
+                size={18}
+                color={THEME.colors.textMuted}
+              />
             </TouchableOpacity>
           ) : null}
         </View>
 
+        {/* Records FlatList */}
         <FlatList
           data={displayRecords}
           keyExtractor={(item) => item.id.toString()}
@@ -177,12 +326,24 @@ export default function RecordsScreen() {
             />
           )}
           contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
           refreshControl={
-            <RefreshControl refreshing={refreshing || isLoading} onRefresh={onRefresh} />
+            <RefreshControl
+              refreshing={refreshing || isLoading}
+              onRefresh={onRefresh}
+              tintColor={CUTE_COLORS.calendar.icon}
+              colors={[CUTE_COLORS.calendar.icon]}
+            />
           }
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
-              <Ionicons name="calendar-outline" size={48} color={THEME.colors.textMuted} />
+              <View style={styles.emptyIconCircle}>
+                <Ionicons
+                  name="calendar-outline"
+                  size={36}
+                  color={CUTE_COLORS.calendar.icon}
+                />
+              </View>
               <Text style={styles.emptyTitle}>No Records Found</Text>
               <Text style={styles.emptySubtitle}>
                 {searchQuery
@@ -191,7 +352,10 @@ export default function RecordsScreen() {
               </Text>
 
               {searchQuery ? (
-                <TouchableOpacity style={styles.resetSearchBtn} onPress={() => setSearchQuery('')}>
+                <TouchableOpacity
+                  style={styles.resetSearchBtn}
+                  onPress={() => setSearchQuery('')}
+                >
                   <Text style={styles.resetSearchText}>Clear Date Filter</Text>
                 </TouchableOpacity>
               ) : (
@@ -215,29 +379,28 @@ export default function RecordsScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: THEME.colors.surface,
+    backgroundColor: '#FFFFFF',
   },
   container: {
     flex: 1,
-    backgroundColor: THEME.colors.background,
+    backgroundColor: '#FFFFFF',
   },
   header: {
-    backgroundColor: THEME.colors.surface,
+    backgroundColor: '#FFFFFF',
     paddingHorizontal: 20,
     paddingTop: 12,
-    paddingBottom: 14,
+    paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: THEME.colors.border,
+    borderBottomColor: '#F1F5F9',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    ...THEME.elevation.card,
   },
   headerTitle: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '800',
     color: THEME.colors.textPrimary,
-    letterSpacing: -0.5,
+    letterSpacing: -0.4,
   },
   headerSubtitle: {
     fontSize: 12,
@@ -245,25 +408,30 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   addButton: {
-    backgroundColor: '#0EA5E9',
+    backgroundColor: CUTE_COLORS.calendar.icon,
     width: 38,
     height: 38,
-    borderRadius: THEME.borderRadius.full,
+    borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: CUTE_COLORS.calendar.icon,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    elevation: 3,
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: THEME.colors.surface,
+    backgroundColor: '#F8FAFC',
     marginHorizontal: 16,
-    marginTop: 14,
+    marginTop: 12,
     marginBottom: 8,
     paddingHorizontal: 14,
-    height: 48,
-    borderRadius: THEME.borderRadius.md,
-    borderWidth: 1.5,
-    borderColor: THEME.colors.border,
+    height: 46,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
   },
   searchIcon: {
     marginRight: 8,
@@ -278,30 +446,59 @@ const styles = StyleSheet.create({
   },
   listContent: {
     padding: 16,
-    paddingBottom: 30,
+    paddingBottom: 36,
   },
+
+  // --- Cute Record Card Styles (Matching Dashboard) ---
   card: {
-    backgroundColor: THEME.colors.surface,
-    borderRadius: 14,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
     padding: 14,
     marginBottom: 14,
     borderWidth: 1,
-    borderColor: THEME.colors.border,
-    ...THEME.elevation.card,
+    borderColor: '#E5E7EB',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
   },
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    paddingBottom: 8,
+    justifyContent: 'space-between',
+    paddingBottom: 10,
     marginBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: THEME.colors.surfaceVariant,
+    borderBottomColor: '#F3F4F6',
   },
-  dateText: {
-    fontSize: 15,
+  dateBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: CUTE_COLORS.calendar.bg,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: CUTE_COLORS.calendar.border,
+    gap: 6,
+  },
+  dateBadgeText: {
+    fontSize: 13,
     fontWeight: '700',
-    color: THEME.colors.textPrimary,
+    color: CUTE_COLORS.calendar.text,
+  },
+  todayPill: {
+    backgroundColor: '#DCFCE7',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+  },
+  todayPillText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#15803D',
+    letterSpacing: 0.5,
   },
   cardBody: {
     flexDirection: 'row',
@@ -311,75 +508,109 @@ const styles = StyleSheet.create({
   },
   metricsColumn: {
     flex: 1,
-    gap: 8,
+    gap: 7,
   },
   metricBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: THEME.colors.surfaceVariant,
-    paddingVertical: 7,
-    paddingHorizontal: 10,
-    borderRadius: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    borderRadius: 10,
     borderWidth: 1,
-    borderColor: THEME.colors.border,
     gap: 8,
   },
-  metricText: {
-    fontSize: 13,
+  metricIconBox: {
+    width: 26,
+    height: 26,
+    borderRadius: 7,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  metricContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flex: 1,
+  },
+  metricLabel: {
+    fontSize: 12,
     color: THEME.colors.textSecondary,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   metricValue: {
     fontSize: 13,
-    color: THEME.colors.textPrimary,
-    fontWeight: '700',
+    fontWeight: '800',
+  },
+  metricUnit: {
+    fontSize: 11,
+    fontWeight: '500',
+    color: THEME.colors.textSecondary,
   },
   buttonsColumn: {
-    width: 95,
-    gap: 10,
+    width: 88,
+    gap: 8,
     justifyContent: 'center',
   },
   editBtn: {
-    backgroundColor: '#29a9c9',
+    backgroundColor: CUTE_COLORS.editBtn,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 10,
-    borderRadius: 8,
-    gap: 5,
+    paddingVertical: 9,
+    borderRadius: 10,
+    gap: 4,
+    shadowColor: CUTE_COLORS.editBtn,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 2,
   },
   editBtnText: {
     color: '#FFFFFF',
-    fontSize: 12,
-    fontWeight: '700',
-    letterSpacing: 0.5,
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 0.4,
   },
   deleteBtn: {
-    backgroundColor: THEME.colors.danger,
+    backgroundColor: CUTE_COLORS.deleteBtnBg,
+    borderWidth: 1,
+    borderColor: CUTE_COLORS.deleteBtnBorder,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 10,
-    borderRadius: 8,
-    gap: 5,
+    paddingVertical: 8,
+    borderRadius: 10,
+    gap: 4,
   },
   deleteBtnText: {
-    color: '#FFFFFF',
-    fontSize: 12,
-    fontWeight: '700',
-    letterSpacing: 0.5,
+    color: CUTE_COLORS.deleteBtnText,
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 0.4,
   },
+
+  // --- Empty List Styles ---
   emptyContainer: {
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 50,
     paddingHorizontal: 20,
   },
+  emptyIconCircle: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: CUTE_COLORS.calendar.bg,
+    borderWidth: 1,
+    borderColor: CUTE_COLORS.calendar.border,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
   emptyTitle: {
     fontSize: 17,
     fontWeight: '700',
     color: THEME.colors.textPrimary,
-    marginTop: 12,
   },
   emptySubtitle: {
     fontSize: 13,
@@ -390,25 +621,32 @@ const styles = StyleSheet.create({
   },
   resetSearchBtn: {
     marginTop: 14,
-    backgroundColor: THEME.colors.primaryLight,
+    backgroundColor: CUTE_COLORS.calendar.bg,
     paddingHorizontal: 14,
     paddingVertical: 8,
-    borderRadius: THEME.borderRadius.md,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: CUTE_COLORS.calendar.border,
   },
   resetSearchText: {
-    color: THEME.colors.primary,
-    fontWeight: '600',
+    color: CUTE_COLORS.calendar.text,
+    fontWeight: '700',
     fontSize: 13,
   },
   loadSampleBtn: {
     marginTop: 16,
-    backgroundColor: THEME.colors.primary,
+    backgroundColor: CUTE_COLORS.calendar.icon,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: 18,
     paddingVertical: 10,
-    borderRadius: 10,
+    borderRadius: 12,
     gap: 6,
+    shadowColor: CUTE_COLORS.calendar.icon,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    elevation: 3,
   },
   loadSampleText: {
     color: '#FFFFFF',
