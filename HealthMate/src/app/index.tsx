@@ -206,6 +206,7 @@ export default function DashboardScreen() {
           setBmiCategory(cat);
         }}
       />
+
       {/* Step modal */}
       <StepsModal
         visible={stepsModalVisible}
@@ -215,6 +216,18 @@ export default function DashboardScreen() {
         onSave={async (newSteps, newGoal) => {
           updateGoals({ ...goals, stepsGoal: newGoal });
           await updateSteps(newSteps);
+        }}
+      />
+
+      {/*Calories Modal */}
+      <CaloriesModal
+        visible={calendarModalVisible}
+        onClose={setCalendarModalVisible(false)}
+        currentCalories={currentSummary.totalCalories}
+        currentGoal={goals.caloriesGoal}
+        onSave={async(newCalories, newGoal) => {
+          updateGoals({ ...goals, caloriesGoal: newGoal});
+          await updateTodayCalories(newCalories, selectedDate);
         }}
       />
     </SafeAreaView>
