@@ -40,5 +40,17 @@ export const CaloriesModal: React.FC<CaloriesModalProps> = ({
             Alert.alert('Invalid Input', 'Please enter a valid target goal greater than 0.');
             return;
         }
-    }
+
+        try{
+            setSaving(true);
+            await onSave(c, g);
+            onClose();
+        } catch {
+            Alert.alert('Error', 'Fialed to save calories.');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    return
 }
