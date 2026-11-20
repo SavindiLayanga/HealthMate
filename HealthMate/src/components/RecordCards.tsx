@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, FlatList, RefreshControl, Alert} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { THEME } from '../constants/theme';
 import { Ionicons } from '@expo/vector-icons';
+import { useHealth } from '../context/HealthContext';
 import { HealthRecord } from '../types';
 import { formatDisplayDate } from '../utils/validation';
+import { getInitialSampleData } from '../database/database';
 
 type RecordCardProps = {
   record: HealthRecord;
   onEdit: (record: HealthRecord) => void;
   onDelete: (id: number) => void;
 };
+
 function RecordCard({ record, onEdit, onDelete }: RecordCardProps) {
   const handleDeletePress = () => {
     Alert.alert(
@@ -27,32 +30,30 @@ function RecordCard({ record, onEdit, onDelete }: RecordCardProps) {
       ]
     );
   };
+
   return (
     <View style={styles.card}>
-      {/* Date Header at top */}
       <View style={styles.cardHeader}>
         <Ionicons name="calendar-outline" size={16} color={THEME.colors.primary} />
         <Text style={styles.dateText}>{formatDisplayDate(record.date)}</Text>
       </View>
-      {/* Main Row: Left Metrics + Right Buttons */}
+
       <View style={styles.cardBody}>
-        {/* Left Side: Steps, Calories, Water Intake */}
         <View style={styles.metricsColumn}>
-          {/* Steps */}
           <View style={styles.metricBox}>
             <Ionicons name="walk" size={16} color={THEME.colors.steps} />
             <Text style={styles.metricText}>
               Steps: <Text style={styles.metricValue}>{record.steps.toLocaleString()}</Text>
             </Text>
           </View>
-          {/* Calories */}
+
           <View style={styles.metricBox}>
             <Ionicons name="flame" size={16} color={THEME.colors.calories} />
             <Text style={styles.metricText}>
               Calories: <Text style={styles.metricValue}>{record.calories.toLocaleString()} kcal</Text>
             </Text>
           </View>
-          {/* Water Intake */}
+
           <View style={styles.metricBox}>
             <Ionicons name="water" size={16} color={THEME.colors.water} />
             <Text style={styles.metricText}>
@@ -60,9 +61,8 @@ function RecordCard({ record, onEdit, onDelete }: RecordCardProps) {
             </Text>
           </View>
         </View>
-        {/* Right Side: EDIT and DELETE Buttons */}
+
         <View style={styles.buttonsColumn}>
-          {/* Edit Button */}
           <TouchableOpacity
             style={styles.editBtn}
             onPress={() => onEdit(record)}
@@ -71,7 +71,7 @@ function RecordCard({ record, onEdit, onDelete }: RecordCardProps) {
             <Ionicons name="create-outline" size={15} color="#FFFFFF" />
             <Text style={styles.editBtnText}>EDIT</Text>
           </TouchableOpacity>
-          {/* Delete Button */}
+
           <TouchableOpacity
             style={styles.deleteBtn}
             onPress={handleDeletePress}
@@ -88,19 +88,55 @@ function RecordCard({ record, onEdit, onDelete }: RecordCardProps) {
 
 export default function RecordsScreen() {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState('');
+
+  const {
+    records,
+    filteredRecords,
+    searchQuery,
+    setSearchQuery,
+    isLoading,
+    refreshRecords,
+    deleteRecord,
+    setSelectedRecord,
+    resetWithDummyData,
+  } = useHealth();
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const displayRecords =
+    searchQuery.trim().length > 0
+      ? filteredRecords
+      : records.length > 0
+      ? records
+      : getInitialSampleData();
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refreshRecords();
+    setRefreshing(false);
+  };
+
+  const handleEdit = (record: HealthRecord) => {
+    setSelectedRecord(record);
+    router.push('/add');
+  };
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
       <View style={styles.header}>
         <View>
           <Text style={styles.headerTitle}>Health Records</Text>
-          <Text style={styles.headerSubtitle}>Manage your daily activity records</Text>
+          <Text style={styles.headerSubtitle}>
+            Showing {displayRecords.length} recorded entries
+          </Text>
         </View>
 
         <TouchableOpacity
           style={styles.addButton}
-          onPress={() => router.push('/add')}
+          onPress={() => {
+            setSelectedRecord(null);
+            router.push('/add');
+          }}
           activeOpacity={0.8}
         >
           <Ionicons name="add" size={22} color="#FFFFFF" />
@@ -108,7 +144,6 @@ export default function RecordsScreen() {
       </View>
 
       <View style={styles.container}>
-        {/* Search Bar */}
         <View style={styles.searchContainer}>
           <Ionicons
             name="search"
@@ -130,6 +165,48 @@ export default function RecordsScreen() {
             </TouchableOpacity>
           ) : null}
         </View>
+
+        <FlatList
+          data={displayRecords}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <RecordCard
+              record={item}
+              onEdit={handleEdit}
+              onDelete={deleteRecord}
+            />
+          )}
+          contentContainerStyle={styles.listContent}
+          refreshControl={
+            <RefreshControl refreshing={refreshing || isLoading} onRefresh={onRefresh} />
+          }
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Ionicons name="calendar-outline" size={48} color={THEME.colors.textMuted} />
+              <Text style={styles.emptyTitle}>No Records Found</Text>
+              <Text style={styles.emptySubtitle}>
+                {searchQuery
+                  ? `No health entries match "${searchQuery}". Try another date.`
+                  : 'No records yet! Tap below to load sample records or tap + to add one.'}
+              </Text>
+
+              {searchQuery ? (
+                <TouchableOpacity style={styles.resetSearchBtn} onPress={() => setSearchQuery('')}>
+                  <Text style={styles.resetSearchText}>Clear Date Filter</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={styles.loadSampleBtn}
+                  onPress={() => resetWithDummyData()}
+                  activeOpacity={0.8}
+                >
+                  <Ionicons name="refresh" size={16} color="#FFFFFF" />
+                  <Text style={styles.loadSampleText}>Load Sample Records</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          }
+        />
       </View>
     </SafeAreaView>
   );
@@ -199,7 +276,11 @@ const styles = StyleSheet.create({
   clearButton: {
     padding: 4,
   },
-   card: {
+  listContent: {
+    padding: 16,
+    paddingBottom: 30,
+  },
+  card: {
     backgroundColor: THEME.colors.surface,
     borderRadius: 14,
     padding: 14,
@@ -287,5 +368,51 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 0.5,
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 50,
+    paddingHorizontal: 20,
+  },
+  emptyTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: THEME.colors.textPrimary,
+    marginTop: 12,
+  },
+  emptySubtitle: {
+    fontSize: 13,
+    color: THEME.colors.textSecondary,
+    textAlign: 'center',
+    marginTop: 6,
+    lineHeight: 18,
+  },
+  resetSearchBtn: {
+    marginTop: 14,
+    backgroundColor: THEME.colors.primaryLight,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: THEME.borderRadius.md,
+  },
+  resetSearchText: {
+    color: THEME.colors.primary,
+    fontWeight: '600',
+    fontSize: 13,
+  },
+  loadSampleBtn: {
+    marginTop: 16,
+    backgroundColor: THEME.colors.primary,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 10,
+    gap: 6,
+  },
+  loadSampleText: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+    fontSize: 13,
   },
 });
