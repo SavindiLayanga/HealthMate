@@ -57,4 +57,12 @@ const styles = StyleSheet.create ({
         color: THEME.colors.textSecondary,
         marginTop: 2,
     },
+    addButton: {
+        backgroundColor: THEME.colors.primary,
+        width: 38,
+        height: 38,
+        borderRadius: THEME.borderRadius.full,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 })
