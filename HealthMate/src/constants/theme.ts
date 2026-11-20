@@ -25,7 +25,7 @@ export const THEME = {
 
     steps: '#b910a5', 
     stepsLight: '#DCFCE7',
-    stepsDark: '#15803D',
+    stepsDark: 'rgb(128, 21, 91)',
   },
   spacing: {
     xs: 4,
