@@ -75,4 +75,20 @@ const styles = StyleSheet.create ({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    searchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: THEME.colors.surface,
+        marginHorizontal: 16,
+        marginTop: 14,
+        marginBottom: 8,
+        paddingHorizontal: 14,
+        height: 48,
+        borderRadius: THEME.borderRadius.md,
+        borderWidth: 1.5,
+        borderColor: THEME.colors.border,
+    },
+    searchIcon: {
+        marginRight: 8,
+    },
 })
