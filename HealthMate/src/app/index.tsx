@@ -146,7 +146,7 @@ export default function DashboardScreen() {
               onPress={() => setCaloriesModalVisible(true)}
             />
           </View>
-          
+
           <View style={styles.gridRow}>
             {/* Water Intake Card */}
             <StatCard
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   subTopicTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '700',
     color: THEME.colors.textPrimary,
     letterSpacing: -0.3,
