@@ -43,7 +43,7 @@ export const THEME = {
       iconBg: '#fef6d6',
       tint: '#FFFBEB',
       border: '#FDE68A',
-      text: '#B45309',
+      text: '#e4741d',
     },
     water: {
       icon: '#0EA5E9',
