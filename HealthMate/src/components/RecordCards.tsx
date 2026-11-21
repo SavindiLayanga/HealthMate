@@ -8,22 +8,22 @@ import { formatDisplayDate, getTodayDateString } from '../utils/validation';
 export const CUTE_COLORS = {
   steps: {
     icon: '#b910a5',
-    bg: '#FDF2F8',
-    iconBg: '#efd3eb',
+    bg: '#ffffff',
+    iconBg: '#f7eaf5',
     border: '#FBCFE8',
     text: '#9D174D',
   },
   calories: {
     icon: '#F59E0B',
-    bg: '#FFFBEB',
-    iconBg: '#FEF3C7',
+    bg: '#ffffff',
+    iconBg: '#fdf8e7',
     border: '#FDE68A',
     text: '#B45309',
   },
   water: {
     icon: '#0EA5E9',
-    bg: '#F0F9FF',
-    iconBg: '#E0F2FE',
+    bg: '#ffffff',
+    iconBg: '#ebf5fc',
     border: '#BAE6FD',
     text: '#0369A1',
   },
