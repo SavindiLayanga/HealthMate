@@ -33,7 +33,7 @@ export const CUTE_COLORS = {
     border: '#A7F3D0',
     text: '#065F46',
   },
-  editBtn: '#0EA5E9',
+  editBtn: '#bdeaff',
   deleteBtnBg: '#FEE2E2',
   deleteBtnText: '#EF4444',
   deleteBtnBorder: '#FECACA',
@@ -183,7 +183,7 @@ export function RecordCard({ record, onEdit, onDelete }: RecordCardProps) {
             onPress={() => onEdit(record)}
             activeOpacity={0.8}
           >
-            <Ionicons name="create-outline" size={14} color="#FFFFFF" />
+            <Ionicons name="create-outline" size={14} color="#0EA5E9" />
             <Text style={styles.editBtnText}>EDIT</Text>
           </TouchableOpacity>
 
@@ -316,6 +316,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 9,
     borderRadius: 10,
+    borderColor: CUTE_COLORS.water.icon,
     gap: 4,
     shadowColor: CUTE_COLORS.editBtn,
     shadowOffset: { width: 0, height: 2 },
@@ -324,7 +325,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   editBtnText: {
-    color: '#FFFFFF',
+    color: CUTE_COLORS.water.icon,
     fontSize: 11,
     fontWeight: '800',
     letterSpacing: 0.4,
