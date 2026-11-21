@@ -29,7 +29,7 @@ export const CUTE_COLORS = {
   },
   calendar: {
     icon: '#10B981',
-    bg: '#ECFDF5',
+    bg: '#f5fffa',
     border: '#A7F3D0',
     text: '#065F46',
   },
