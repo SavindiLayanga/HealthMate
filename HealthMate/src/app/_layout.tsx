@@ -25,7 +25,7 @@ export default function RootLayout() {
                 },
              }}
             >
-            {/*bottom nav bar - 1. Dashboard tab*/}
+            {/*Dashboard tab*/}
             <Tabs.Screen
                 name='index'
                 options={{
@@ -36,7 +36,7 @@ export default function RootLayout() {
                 }}
             />
 
-            {/*bottom nav bar - 2. Record tab*/}
+            {/*Record tab*/}
             <Tabs.Screen
                 name='records'
                 options={{
@@ -47,7 +47,7 @@ export default function RootLayout() {
                 }}
             />
 
-            {/*bottom nav bar - 3. Add Entry tab*/}
+            {/*Add Entry tab*/}
             <Tabs.Screen
                 name='add'
                 options={{
@@ -57,40 +57,7 @@ export default function RootLayout() {
                     ),
                 }}
             />
-
-            {/*bottom nav bar - 4. Report tab*/}
-            <Tabs.Screen
-                name='report'
-                options={{
-                    title: 'Report',
-                    tabBarIcon: ({ color, size}) => (
-                        <Ionicons name="bar-chart-outline" size={size} color={color as string}/>
-                    ),
-                }}
-            />
-              
-            {/* Steps Detail Screen */}
-            <Tabs.Screen
-                name='steps-detail'
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: 'none' },
-                    headerShown: true,
-                    tabBarStyle: { display: 'none' },
-                }}
-            />
-
-              {/* calories Detail Screen */}
-            <Tabs.Screen
-                name='calories-detail'
-                options={{
-                    tabBarButton: () => null,
-                    tabBarItemStyle: { display: 'none' },
-                    headerShown: true,
-                    tabBarStyle: { display: 'none' },
-                }}
-            />
-
+    
             </Tabs>
             
         </HealthProvider>

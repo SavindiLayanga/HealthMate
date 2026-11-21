@@ -1,24 +1,72 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, KeyboardAvoidingView, Platform,TextInput, TextInputProps, } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  TextInput,
+  TextInputProps,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useHealth } from '../context/HealthContext';
 import { CalendarModal } from '../components/CalendarModal';
 import { THEME } from '../constants/theme';
-import { validateHealthRecordForm, getTodayDateString } from '../utils/validation';
+import { validateHealthRecordForm, getTodayDateString, formatDisplayDate } from '../utils/validation';
 import { FormErrors } from '../types';
+
+const CUTE_COLORS = {
+  steps: {
+    icon: '#b910a5',
+    iconBg: '#efd3eb',
+    tint: '#FDF2F8',
+    border: '#FBCFE8',
+    text: '#9D174D',
+  },
+  calories: {
+    icon: '#F59E0B',
+    iconBg: '#FEF3C7',
+    tint: '#FFFBEB',
+    border: '#FDE68A',
+    text: '#B45309',
+  },
+  water: {
+    icon: '#0EA5E9',
+    iconBg: '#E0F2FE',
+    tint: '#F0F9FF',
+    border: '#BAE6FD',
+    text: '#0369A1',
+  },
+  calendar: {
+    icon: '#10B981',
+    iconBg: '#ECFDF5',
+    tint: '#ECFDF5',
+    border: '#A7F3D0',
+    text: '#065F46',
+  },
+  saveBtn: '#10B981',
+  resetBtnBg: '#F3F4F6',
+  resetBtnText: '#6B7280',
+};
 
 type FormFieldProps = {
   label: string;
   iconName: React.ComponentProps<typeof Ionicons>['name'];
   iconColor: string;
+  iconBgColor?: string;
   value: string;
   onChangeText?: (value: string) => void;
   placeholder?: string;
   keyboardType?: TextInputProps['keyboardType'];
   editable?: boolean;
   unit?: string;
+  unitColor?: string;
+  unitBgColor?: string;
   error?: string;
 };
 
@@ -26,19 +74,30 @@ function FormField({
   label,
   iconName,
   iconColor,
+  iconBgColor = '#F1F5F9',
   value,
   onChangeText,
   placeholder,
   keyboardType,
   editable = true,
   unit,
+  unitColor,
+  unitBgColor,
   error,
 }: FormFieldProps) {
   return (
     <View style={styles.formField}>
       <Text style={styles.formFieldLabel}>{label}</Text>
-      <View style={[styles.formFieldInputRow, error ? styles.formFieldInputError : null]}>
-        <Ionicons name={iconName} size={20} color={iconColor} />
+      <View
+        style={[
+          styles.formFieldInputRow,
+          error ? styles.formFieldInputError : null,
+        ]}
+      >
+        <View style={[styles.fieldIconBox, { backgroundColor: iconBgColor }]}>
+          <Ionicons name={iconName} size={18} color={iconColor} />
+        </View>
+
         <TextInput
           style={styles.formFieldInput}
           value={value}
@@ -46,9 +105,26 @@ function FormField({
           placeholder={placeholder}
           keyboardType={keyboardType}
           editable={editable}
-          placeholderTextColor={THEME.colors.textSecondary}
+          placeholderTextColor="#9CA3AF"
         />
-        {unit ? <Text style={styles.formFieldUnit}>{unit}</Text> : null}
+
+        {unit ? (
+          <View
+            style={[
+              styles.unitBadge,
+              unitBgColor ? { backgroundColor: unitBgColor } : null,
+            ]}
+          >
+            <Text
+              style={[
+                styles.formFieldUnit,
+                unitColor ? { color: unitColor } : null,
+              ]}
+            >
+              {unit}
+            </Text>
+          </View>
+        ) : null}
       </View>
       {error ? <Text style={styles.formFieldError}>{error}</Text> : null}
     </View>
@@ -84,7 +160,7 @@ export default function AddRecordScreen() {
     } else {
       const today = getTodayDateString();
       setDate(today);
-      
+
       const existingToday = records.find((r) => r.date === today);
       if (existingToday) {
         setSteps(existingToday.steps.toString());
@@ -103,7 +179,7 @@ export default function AddRecordScreen() {
     const today = getTodayDateString();
     setDate(today);
     if (errors.date) setErrors((prev) => ({ ...prev, date: undefined }));
-    
+
     const existing = records.find((r) => r.date === today);
     if (existing) {
       setSteps(existing.steps.toString());
@@ -149,9 +225,10 @@ export default function AddRecordScreen() {
       const numSteps = parseInt(steps, 10);
       const numCalories = parseInt(calories, 10);
       const numWater = parseInt(water, 10);
-      const existingRecord = isEditMode && selectedRecord
-        ? selectedRecord
-        : records.find((r) => r.date === targetDate);
+      const existingRecord =
+        isEditMode && selectedRecord
+          ? selectedRecord
+          : records.find((r) => r.date === targetDate);
 
       let success = false;
       if (existingRecord) {
@@ -173,10 +250,14 @@ export default function AddRecordScreen() {
 
       if (success) {
         setSelectedDate(targetDate);
-        Alert.alert('Success', `Health record for ${targetDate} saved successfully!`, [
-          { text: 'View Records', onPress: () => router.push('/records') },
-          { text: 'OK', style: 'cancel' },
-        ]);
+        Alert.alert(
+          'Success',
+          `Health record for ${formatDisplayDate(targetDate)} saved successfully!`,
+          [
+            { text: 'View Records', onPress: () => router.push('/records') },
+            { text: 'OK', style: 'cancel' },
+          ]
+        );
       } else {
         Alert.alert('Error', 'Failed to save health record.');
       }
@@ -190,14 +271,15 @@ export default function AddRecordScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
-      {/* Header */}
       <View style={styles.header}>
         <View>
           <Text style={styles.headerTitle}>
-            {isEditMode ? 'Edit Record' : 'Add Health Record'}
+            {isEditMode ? 'Edit Health Record' : 'Add Health Record'}
           </Text>
           <Text style={styles.headerSubtitle}>
-            {isEditMode ? `Updating ID #${selectedRecord?.id}` : 'Record steps, calories & water'}
+            {isEditMode
+              ? `Updating entry for ${formatDisplayDate(date)}`
+              : 'Record your daily steps, calories & water'}
           </Text>
         </View>
 
@@ -209,7 +291,7 @@ export default function AddRecordScreen() {
               router.back();
             }}
           >
-            <Ionicons name="close" size={22} color={THEME.colors.textSecondary} />
+            <Ionicons name="close" size={20} color={THEME.colors.textSecondary} />
           </TouchableOpacity>
         ) : null}
       </View>
@@ -222,8 +304,9 @@ export default function AddRecordScreen() {
           style={styles.container}
           contentContainerStyle={styles.contentContainer}
           keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          {/* Date Input Field */}
+
           <View style={styles.dateFieldWrapper}>
             <TouchableOpacity
               activeOpacity={0.8}
@@ -231,96 +314,129 @@ export default function AddRecordScreen() {
             >
               <FormField
                 label="Activity Date"
-                iconName="calendar-outline"
-                iconColor={THEME.colors.primary}
+                iconName="calendar"
+                iconColor={CUTE_COLORS.calendar.icon}
+                iconBgColor={CUTE_COLORS.calendar.iconBg}
                 value={date}
                 editable={false}
-                placeholder="YYYY-MM-DD (e.g. 2026-08-18)"
+                placeholder="YYYY-MM-DD"
                 error={errors.date}
               />
             </TouchableOpacity>
 
             <View style={styles.dateActionBtns}>
               <TouchableOpacity
-                style={styles.calendarPickBtn}
+                style={styles.cuteActionBtn}
                 onPress={() => setCalendarModalVisible(true)}
                 activeOpacity={0.7}
               >
-                <Ionicons name="calendar" size={13} color={THEME.colors.primary} />
-                <Text style={styles.todayBtnText}>Calendar</Text>
+                <Ionicons
+                  name="calendar"
+                  size={14}
+                  color={CUTE_COLORS.calendar.icon}
+                />
+                <Text style={styles.cuteActionBtnText}>Calendar</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={styles.todayBtn}
+                style={styles.cuteActionBtn}
                 onPress={handleSetToday}
                 activeOpacity={0.7}
               >
-                <Ionicons name="today" size={13} color={THEME.colors.primary} />
-                <Text style={styles.todayBtnText}>Today</Text>
+                <Ionicons
+                  name="today"
+                  size={14}
+                  color={CUTE_COLORS.calendar.icon}
+                />
+                <Text style={styles.cuteActionBtnText}>Today</Text>
               </TouchableOpacity>
             </View>
           </View>
 
-          {/* Steps Field */}
           <FormField
             label="Steps Walked"
             iconName="walk"
-            iconColor={THEME.colors.steps}
+            iconColor={CUTE_COLORS.steps.icon}
+            iconBgColor={CUTE_COLORS.steps.iconBg}
             unit="steps"
+            unitColor={CUTE_COLORS.steps.text}
+            unitBgColor={CUTE_COLORS.steps.tint}
             value={steps}
             onChangeText={(t: string) => {
               setSteps(t);
               if (errors.steps) setErrors((prev) => ({ ...prev, steps: undefined }));
             }}
-            placeholder="e.g. 7850"
+            placeholder="e.g. 8000"
             keyboardType="number-pad"
             error={errors.steps}
           />
 
-          {/* Calories Field */}
           <FormField
             label="Calories Burned"
             iconName="flame"
-            iconColor={THEME.colors.calories}
+            iconColor={CUTE_COLORS.calories.icon}
+            iconBgColor={CUTE_COLORS.calories.iconBg}
             unit="kcal"
+            unitColor={CUTE_COLORS.calories.text}
+            unitBgColor={CUTE_COLORS.calories.tint}
             value={calories}
             onChangeText={(t: string) => {
               setCalories(t);
-              if (errors.calories) setErrors((prev) => ({ ...prev, calories: undefined }));
+              if (errors.calories)
+                setErrors((prev) => ({ ...prev, calories: undefined }));
             }}
-            placeholder="e.g. 420"
+            placeholder="e.g. 450"
             keyboardType="number-pad"
             error={errors.calories}
           />
 
-          {/* Water Field */}
           <FormField
             label="Water Intake"
             iconName="water"
-            iconColor={THEME.colors.water}
+            iconColor={CUTE_COLORS.water.icon}
+            iconBgColor={CUTE_COLORS.water.iconBg}
             unit="ml"
+            unitColor={CUTE_COLORS.water.text}
+            unitBgColor={CUTE_COLORS.water.tint}
             value={water}
             onChangeText={(t: string) => {
               setWater(t);
               if (errors.water) setErrors((prev) => ({ ...prev, water: undefined }));
             }}
-            placeholder="e.g. 2000"
+            placeholder="e.g. 2500"
             keyboardType="number-pad"
             error={errors.water}
           />
 
-          {/* Save Button */}
-          <TouchableOpacity
-            style={[styles.saveBtn, isSubmitting ? styles.saveBtnDisabled : null]}
-            onPress={handleSubmit}
-            disabled={isSubmitting}
-            activeOpacity={0.8}
-          >
-            <Ionicons name="checkmark-circle" size={20} color="#FFFFFF" />
-            <Text style={styles.saveBtnText}>
-              {isSubmitting ? 'Saving...' : 'Save'}
-            </Text>
-          </TouchableOpacity>
+          <View style={styles.bottomButtonsRow}>
+            <TouchableOpacity
+              style={styles.resetBtn}
+              onPress={handleResetForm}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="refresh" size={16} color={CUTE_COLORS.resetBtnText} />
+              <Text style={styles.resetBtnText}>Clear</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.saveBtn,
+                isSubmitting ? styles.saveBtnDisabled : null,
+              ]}
+              onPress={handleSubmit}
+              disabled={isSubmitting}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="checkmark-circle" size={18} color="#FFFFFF" />
+              <Text style={styles.saveBtnText}>
+                {isSubmitting
+                  ? 'Saving...'
+                  : isEditMode
+                  ? 'Update Record'
+                  : 'Save Record'}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
 
@@ -345,46 +461,13 @@ export default function AddRecordScreen() {
 }
 
 const styles = StyleSheet.create({
-  formField: {
-    marginBottom: 16,
-  },
-  formFieldLabel: {
-    color: THEME.colors.textPrimary,
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 8,
-  },
-  formFieldInputRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    backgroundColor: THEME.colors.surface,
-    borderWidth: 1,
-    borderColor: THEME.colors.border,
-    borderRadius: 12,
-    paddingHorizontal: 14,
-  },
-  formFieldInputError: {
-    borderColor: '#D9534F',
-  },
-  formFieldInput: {
-    flex: 1,
-    minHeight: 48,
-    color: THEME.colors.textPrimary,
-    fontSize: 15,
-  },
-  formFieldUnit: {
-    color: THEME.colors.textSecondary,
-    fontSize: 13,
-  },
-  formFieldError: {
-    color: '#D9534F',
-    fontSize: 12,
-    marginTop: 5,
-  },
   safeArea: {
     flex: 1,
-    backgroundColor: THEME.colors.surface,
+    backgroundColor: '#FFFFFF',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
   },
   header: {
     flexDirection: 'row',
@@ -393,32 +476,95 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 12,
     paddingBottom: 14,
+    backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
-    borderBottomColor: THEME.colors.border,
+    borderBottomColor: '#F1F5F9',
   },
   headerTitle: {
     color: THEME.colors.textPrimary,
-    fontSize: 22,
-    fontWeight: '700',
+    fontSize: 20,
+    fontWeight: '800',
+    letterSpacing: -0.4,
   },
   headerSubtitle: {
     color: THEME.colors.textSecondary,
-    fontSize: 13,
-    marginTop: 4,
+    fontSize: 12,
+    marginTop: 2,
   },
   cancelBtn: {
-    padding: 8,
+    width: 34,
+    height: 34,
+    borderRadius: 10,
+    backgroundColor: '#F3F4F6',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   keyboardContainer: {
     flex: 1,
   },
-  container: {
-    flex: 1,
-    backgroundColor: THEME.colors.background,
-  },
   contentContainer: {
     padding: 20,
-    paddingBottom: 32,
+    paddingBottom: 40,
+  },
+  formField: {
+    marginBottom: 16,
+  },
+  formFieldLabel: {
+    color: THEME.colors.textPrimary,
+    fontSize: 14,
+    fontWeight: '700',
+    marginBottom: 8,
+  },
+  formFieldInputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: '#E5E7EB',
+    borderRadius: 14,
+    paddingHorizontal: 12,
+    minHeight: 52,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.03,
+    shadowRadius: 3,
+    elevation: 1,
+  },
+  fieldIconBox: {
+    width: 32,
+    height: 32,
+    borderRadius: 9,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  formFieldInput: {
+    flex: 1,
+    minHeight: 48,
+    color: THEME.colors.textPrimary,
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  unitBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
+    backgroundColor: '#F1F5F9',
+  },
+  formFieldUnit: {
+    color: THEME.colors.textSecondary,
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  formFieldInputError: {
+    borderColor: '#EF4444',
+  },
+  formFieldError: {
+    color: '#EF4444',
+    fontSize: 12,
+    fontWeight: '600',
+    marginTop: 5,
+    marginLeft: 4,
   },
   dateFieldWrapper: {
     marginBottom: 16,
@@ -426,43 +572,69 @@ const styles = StyleSheet.create({
   dateActionBtns: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    gap: 10,
+    gap: 8,
     marginTop: 8,
   },
-  calendarPickBtn: {
+  cuteActionBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
-    padding: 8,
+    backgroundColor: CUTE_COLORS.calendar.tint,
+    borderWidth: 1,
+    borderColor: CUTE_COLORS.calendar.border,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
+    gap: 4,
   },
-  todayBtn: {
+  cuteActionBtnText: {
+    color: CUTE_COLORS.calendar.text,
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  bottomButtonsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
-    padding: 8,
+    gap: 12,
+    marginTop: 14,
+    marginBottom: 20,
   },
-  todayBtnText: {
-    color: THEME.colors.primary,
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  saveBtn: {
-    backgroundColor: THEME.colors.primary,
+  resetBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 48,
-    borderRadius: 12,
-    marginTop: 10,
-    marginBottom: 20,
+    backgroundColor: CUTE_COLORS.resetBtnBg,
+    height: 50,
+    paddingHorizontal: 16,
+    borderRadius: 14,
+    gap: 6,
+  },
+  resetBtnText: {
+    color: CUTE_COLORS.resetBtnText,
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  saveBtn: {
+    flex: 1,
+    backgroundColor: CUTE_COLORS.saveBtn,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
+    borderRadius: 14,
     gap: 8,
+    shadowColor: CUTE_COLORS.saveBtn,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 3,
   },
   saveBtnDisabled: {
     opacity: 0.6,
   },
   saveBtnText: {
     color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 15,
+    fontWeight: '800',
+    letterSpacing: 0.3,
   },
 });

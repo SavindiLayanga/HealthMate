@@ -64,7 +64,6 @@ export default function DashboardScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* 2. Sub-topic */}
         <View style={styles.subTopicContainer}>
           <Text style={styles.subTopicTitle}>
             Track Your Daily Health Activities
@@ -74,14 +73,12 @@ export default function DashboardScreen() {
           </Text>
         </View>
 
-        {/* 3. Today date box */}
         <TouchableOpacity
           style={styles.dateCard}
           onPress={() => setCalendarModalVisible(true)}
           activeOpacity={0.8}
         >
           <View style={styles.dateCardLeft}>
-            {/* Dynamic badge */}
             <View style={styles.calenderBadge}>
               <Ionicons name="calendar" size={16} color="#10B981" />
               <Text style={styles.calenderBadgeText}>
@@ -90,12 +87,10 @@ export default function DashboardScreen() {
               <Ionicons name="chevron-down" size={13} color="#10B981" />
             </View>
 
-            {/* Dynamic Formatted Date */}
             <Text style={styles.dateText}>
               {formatDateWithWeekday(selectedDate)}
             </Text>
 
-            {/* Past date notice */}
             {selectedDate !== todayDate && (
               <View style={styles.pastDateNotice}>
                 <Ionicons name="time-outline" size={12} color="#F59E0B" />
@@ -106,7 +101,7 @@ export default function DashboardScreen() {
             )}
           </View>
 
-          {/* Quick Water Button inside Date Box */}
+          {/* Quick Water Button -date box eka athule thiyena */}
           <TouchableOpacity
             style={styles.quickWaterBtn}
             onPress={(e) => {
@@ -123,7 +118,6 @@ export default function DashboardScreen() {
 
         {/* Cards */}
         <View style={styles.metricsGrid}>
-          
           <View style={styles.gridRow}>
 
             {/* Steps Card */}
@@ -152,8 +146,7 @@ export default function DashboardScreen() {
               onPress={() => setCaloriesModalVisible(true)}
             />
           </View>
-
-          {/* second row */}
+          
           <View style={styles.gridRow}>
             {/* Water Intake Card */}
             <StatCard

@@ -79,7 +79,6 @@ export function RecordCard({ record, onEdit, onDelete }: RecordCardProps) {
 
   return (
     <View style={styles.card}>
-      {/* Date Header Badge */}
       <View style={styles.cardHeader}>
         <View style={styles.dateBadge}>
           <Ionicons name="calendar" size={14} color={CUTE_COLORS.calendar.icon} />
@@ -93,9 +92,7 @@ export function RecordCard({ record, onEdit, onDelete }: RecordCardProps) {
         )}
       </View>
 
-      {/* Main Row: Left Metrics + Right Buttons */}
       <View style={styles.cardBody}>
-        {/* Left Side: Steps, Calories, Water with cute pastel boxes */}
         <View style={styles.metricsColumn}>
           {/* Steps */}
           <View
@@ -193,7 +190,6 @@ export function RecordCard({ record, onEdit, onDelete }: RecordCardProps) {
           </View>
         </View>
 
-        {/* Right Side: Cute EDIT and DELETE Buttons */}
         <View style={styles.buttonsColumn}>
           {/* Edit Button */}
           <TouchableOpacity
@@ -241,7 +237,6 @@ export default function RecordsScreen() {
 
   const [refreshing, setRefreshing] = useState(false);
 
-  // Fallback to sample records if database is empty
   const displayRecords =
     searchQuery.trim().length > 0
       ? filteredRecords
@@ -262,7 +257,6 @@ export default function RecordsScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
-      {/* Top Section Header */}
       <View style={styles.header}>
         <View>
           <Text style={styles.headerTitle}>Health Records</Text>
@@ -284,7 +278,6 @@ export default function RecordsScreen() {
       </View>
 
       <View style={styles.container}>
-        {/* Search & Filter Bar */}
         <View style={styles.searchContainer}>
           <Ionicons
             name="search"
@@ -294,7 +287,7 @@ export default function RecordsScreen() {
           />
           <TextInput
             style={styles.searchInput}
-            placeholder="Search / filter by date (e.g. 2026-08)..."
+            placeholder="Search by date . . ."
             placeholderTextColor={THEME.colors.textMuted}
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -314,7 +307,6 @@ export default function RecordsScreen() {
           ) : null}
         </View>
 
-        {/* Records FlatList */}
         <FlatList
           data={displayRecords}
           keyExtractor={(item) => item.id.toString()}
@@ -448,8 +440,6 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingBottom: 36,
   },
-
-  // --- Cute Record Card Styles (Matching Dashboard) ---
   card: {
     backgroundColor: '#FFFFFF',
     borderRadius: 18,
@@ -497,7 +487,7 @@ const styles = StyleSheet.create({
   todayPillText: {
     fontSize: 10,
     fontWeight: '800',
-    color: '#15803D',
+    color: '#3fbf6e',
     letterSpacing: 0.5,
   },
   cardBody: {
@@ -588,8 +578,6 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: 0.4,
   },
-
-  // --- Empty List Styles ---
   emptyContainer: {
     alignItems: 'center',
     justifyContent: 'center',

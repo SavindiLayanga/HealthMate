@@ -238,12 +238,10 @@ export const BmiModal: React.FC<BmiModalProps> = ({
               </View>
             </View>
 
-            {/* Calculate Button */}
             <TouchableOpacity style={styles.calcBtn} onPress={calculateBmi}>
               <Text style={styles.calcBtnText}>Calculate BMI</Text>
             </TouchableOpacity>
 
-            {/* Result Display */}
             {result ? (
               <View style={[styles.resultCard, { borderColor: result.color }]}>
                 <View style={styles.resultHeader}>

@@ -82,7 +82,6 @@ export const WaterModal: React.FC<WaterModalProps> = ({
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            {/* Header */}
             <View style={styles.headerRow}>
               <View style={styles.headerTitleRow}>
                 <Ionicons name="water" size={22} color={THEME.colors.water} />
@@ -93,12 +92,10 @@ export const WaterModal: React.FC<WaterModalProps> = ({
               </TouchableOpacity>
             </View>
 
-            {/* Subtitle / Description */}
             <Text style={styles.modalDescription}>
               Update your daily target water and today's water intake.
             </Text>
 
-            {/* 1. Target Water Goal Input */}
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Target Water Goal (ml)</Text>
               <TextInput
@@ -111,7 +108,6 @@ export const WaterModal: React.FC<WaterModalProps> = ({
               />
             </View>
 
-            {/* 2. Today's Water Intake Input */}
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Today's Water Intake (ml)</Text>
               <TextInput
@@ -124,7 +120,6 @@ export const WaterModal: React.FC<WaterModalProps> = ({
               />
             </View>
 
-            {/* Save Button */}
             <TouchableOpacity
               style={[styles.saveBtn, saving && { opacity: 0.7 }]}
               onPress={handleSave}

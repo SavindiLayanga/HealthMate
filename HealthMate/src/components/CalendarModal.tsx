@@ -6,7 +6,7 @@ import { getTodayDateString, isValidDate } from '../utils/validation';
 
 interface CalendarModalProps {
   visible: boolean;
-  selectedDate: string; // YYYY-MM-DD
+  selectedDate: string; 
   onSelectDate: (date: string) => void;
   onClose: () => void;
   markedDates?: string[]; 
@@ -135,7 +135,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <Pressable style={styles.backdrop} onPress={onClose}>
         <Pressable style={styles.modalCard} onPress={(e) => e.stopPropagation()}>
-          {/* Header */}
+        
           <View style={styles.header}>
             <View style={styles.headerTitleRow}>
               <View style={styles.headerIconWrapper}>
@@ -151,7 +151,6 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
             </TouchableOpacity>
           </View>
 
-          {/* Month / Year Navigator */}
           <View style={styles.monthNav}>
             <TouchableOpacity style={styles.navArrowBtn} onPress={handlePrevMonth}>
               <Ionicons name="chevron-back" size={20} color={THEME.colors.textPrimary} />
@@ -164,7 +163,6 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
             </TouchableOpacity>
           </View>
 
-          {/* Weekday Row */}
           <View style={styles.weekdayRow}>
             {WEEKDAYS.map((w, idx) => (
               <View key={idx} style={styles.weekdayCell}>
@@ -175,7 +173,6 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
             ))}
           </View>
 
-          {/* Days Grid */}
           <View style={styles.daysGrid}>
             {days.map((item, index) => {
               const isSelected = item.isSelected;
@@ -212,7 +209,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
             })}
           </View>
 
-          {/* Quick Action Footer */}
+          {/* Quick today select button */}
           <View style={styles.footer}>
             <TouchableOpacity style={styles.todayButton} onPress={handleSelectToday}>
               <Ionicons name="today-outline" size={16} color={THEME.colors.primary} />

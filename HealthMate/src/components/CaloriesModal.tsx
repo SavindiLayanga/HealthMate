@@ -82,7 +82,7 @@ export const CaloriesModal: React.FC<CaloriesModalProps> = ({
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            {/* Header */}
+            
             <View style={styles.headerRow}>
               <View style={styles.headerTitleRow}>
                 <Ionicons name="flame" size={22} color={THEME.colors.calories} />
@@ -97,7 +97,6 @@ export const CaloriesModal: React.FC<CaloriesModalProps> = ({
               Update your daily target calories and today's calories burned.
             </Text>
 
-            {/* Target Goal Input */}
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Target Calories Goal (kcal)</Text>
               <TextInput
@@ -110,7 +109,6 @@ export const CaloriesModal: React.FC<CaloriesModalProps> = ({
               />
             </View>
 
-            {/* Today's Calories Input */}
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Today's Calories (kcal)</Text>
               <TextInput
@@ -123,7 +121,6 @@ export const CaloriesModal: React.FC<CaloriesModalProps> = ({
               />
             </View>
 
-            {/* Save Button */}
             <TouchableOpacity
               style={[styles.saveBtn, saving && { opacity: 0.7 }]}
               onPress={handleSave}

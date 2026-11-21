@@ -2,7 +2,6 @@ import { Platform } from 'react-native';
 import type { SQLiteDatabase } from 'expo-sqlite';
 import { HealthRecord } from '../types';
 
-// Safely require expo-sqlite at runtime to prevent crash if native module is unavailable in Expo Go
 let SQLite: typeof import('expo-sqlite') | null = null;
 try {
   SQLite = require('expo-sqlite');
