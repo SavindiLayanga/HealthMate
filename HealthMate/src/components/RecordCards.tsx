@@ -5,39 +5,7 @@ import { THEME } from '../constants/theme';
 import { HealthRecord } from '../types';
 import { formatDisplayDate, getTodayDateString } from '../utils/validation';
 
-export const CUTE_COLORS = {
-  steps: {
-    icon: '#b910a5',
-    bg: '#ffffff',
-    iconBg: '#f7eaf5',
-    border: '#FBCFE8',
-    text: '#9D174D',
-  },
-  calories: {
-    icon: '#F59E0B',
-    bg: '#ffffff',
-    iconBg: '#fdf8e7',
-    border: '#FDE68A',
-    text: '#B45309',
-  },
-  water: {
-    icon: '#0EA5E9',
-    bg: '#ffffff',
-    iconBg: '#ebf5fc',
-    border: '#BAE6FD',
-    text: '#0369A1',
-  },
-  calendar: {
-    icon: '#10B981',
-    bg: '#f5fffa',
-    border: '#A7F3D0',
-    text: '#065F46',
-  },
-  editBtn: '#bdeaff',
-  deleteBtnBg: '#FEE2E2',
-  deleteBtnText: '#EF4444',
-  deleteBtnBorder: '#FECACA',
-};
+export const CUTE_COLORS = THEME.cute;
 
 type RecordCardProps = {
   record: HealthRecord;

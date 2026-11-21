@@ -49,6 +49,7 @@ export function getInitialSampleData(): HealthRecord[] {
   ];
 }
 
+//create health_records table
 export async function initDatabase(): Promise<void> {
   if (Platform.OS === 'web' || !SQLite) {
     if (webRecords.length === 0) {

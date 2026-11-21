@@ -9,39 +9,7 @@ import { THEME } from '../constants/theme';
 import { validateHealthRecordForm, getTodayDateString, formatDisplayDate } from '../utils/validation';
 import { FormErrors } from '../types';
 
-const CUTE_COLORS = {
-  steps: {
-    icon: '#b910a5',
-    iconBg: '#efd3eb',
-    tint: '#FDF2F8',
-    border: '#FBCFE8',
-    text: '#9D174D',
-  },
-  calories: {
-    icon: '#F59E0B',
-    iconBg: '#FEF3C7',
-    tint: '#FFFBEB',
-    border: '#FDE68A',
-    text: '#B45309',
-  },
-  water: {
-    icon: '#0EA5E9',
-    iconBg: '#E0F2FE',
-    tint: '#F0F9FF',
-    border: '#BAE6FD',
-    text: '#0369A1',
-  },
-  calendar: {
-    icon: '#10B981',
-    iconBg: '#ECFDF5',
-    tint: '#ECFDF5',
-    border: '#A7F3D0',
-    text: '#065F46',
-  },
-  saveBtn: '#10B981',
-  resetBtnBg: '#F3F4F6',
-  resetBtnText: '#6B7280',
-};
+const CUTE_COLORS = THEME.cute;
 
 type FormFieldProps = {
   label: string;
