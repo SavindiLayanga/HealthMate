@@ -27,11 +27,11 @@ export const THEME = {
     stepsLight: '#DCFCE7',
     stepsDark: 'rgb(128, 21, 91)',
   },
-  
+
   cute: {
     steps: {
       icon: '#b910a5',
-      bg: '#FDF2F8',
+      bg: '#ffffff',
       iconBg: '#efd3eb',
       tint: '#FDF2F8',
       border: '#FBCFE8',
@@ -39,7 +39,7 @@ export const THEME = {
     },
     calories: {
       icon: '#F59E0B',
-      bg: '#FFFBEB',
+      bg: '#ffffff',
       iconBg: '#FEF3C7',
       tint: '#FFFBEB',
       border: '#FDE68A',
@@ -47,7 +47,7 @@ export const THEME = {
     },
     water: {
       icon: '#0EA5E9',
-      bg: '#F0F9FF',
+      bg: '#ffffff',
       iconBg: '#E0F2FE',
       tint: '#F0F9FF',
       border: '#BAE6FD',
