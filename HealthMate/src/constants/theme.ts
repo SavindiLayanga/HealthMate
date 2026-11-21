@@ -51,7 +51,7 @@ export const THEME = {
       iconBg: '#eef8ff',
       tint: '#F0F9FF',
       border: '#BAE6FD',
-      text: '#0369A1',
+      text: '#058ed8',
     },
     calendar: {
       icon: '#10B981',
