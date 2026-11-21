@@ -35,7 +35,7 @@ export const THEME = {
       iconBg: '#ffeffd',
       tint: '#FDF2F8',
       border: '#FBCFE8',
-      text: '#9D174D',
+      text: '#dd1163',
     },
     calories: {
       icon: '#F59E0B',
