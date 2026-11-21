@@ -3,11 +3,10 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, KeyboardAv
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { useHealth } from '../context/HealthContext';
+import { useAddRecordViewModel } from '../viewmodels/useAddRecordViewModel';
 import { CalendarModal } from '../components/CalendarModal';
 import { THEME } from '../constants/theme';
-import { validateHealthRecordForm, getTodayDateString, formatDisplayDate } from '../utils/validation';
-import { FormErrors } from '../types';
+import { formatDisplayDate } from '../utils/validation';
 
 const CUTE_COLORS = THEME.cute;
 
@@ -90,141 +89,26 @@ function FormField({
 
 export default function AddRecordScreen() {
   const {
-    addRecord,
-    updateRecord,
-    selectedRecord,
     setSelectedRecord,
     records,
-    setSelectedDate,
-  } = useHealth();
-
-  const isEditMode = selectedRecord !== null;
-
-  const [date, setDate] = useState<string>('');
-  const [calendarModalVisible, setCalendarModalVisible] = useState<boolean>(false);
-  const [steps, setSteps] = useState<string>('');
-  const [calories, setCalories] = useState<string>('');
-  const [water, setWater] = useState<string>('');
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (selectedRecord) {
-      setDate(selectedRecord.date);
-      setSteps(selectedRecord.steps.toString());
-      setCalories(selectedRecord.calories.toString());
-      setWater(selectedRecord.water.toString());
-    } else {
-      const today = getTodayDateString();
-      setDate(today);
-
-      const existingToday = records.find((r) => r.date === today);
-      if (existingToday) {
-        setSteps(existingToday.steps.toString());
-        setCalories(existingToday.calories.toString());
-        setWater(existingToday.water.toString());
-      } else {
-        setSteps('');
-        setCalories('');
-        setWater('');
-      }
-    }
-    setErrors({});
-  }, [selectedRecord]);
-
-  const handleSetToday = () => {
-    const today = getTodayDateString();
-    setDate(today);
-    if (errors.date) setErrors((prev) => ({ ...prev, date: undefined }));
-
-    const existing = records.find((r) => r.date === today);
-    if (existing) {
-      setSteps(existing.steps.toString());
-      setCalories(existing.calories.toString());
-      setWater(existing.water.toString());
-    }
-  };
-
-  const handleResetForm = () => {
-    if (isEditMode && selectedRecord) {
-      setDate(selectedRecord.date);
-      setSteps(selectedRecord.steps.toString());
-      setCalories(selectedRecord.calories.toString());
-      setWater(selectedRecord.water.toString());
-    } else {
-      setDate(getTodayDateString());
-      setSteps('');
-      setCalories('');
-      setWater('');
-    }
-    setErrors({});
-  };
-
-  const handleSubmit = async () => {
-    const { isValid, errors: validationErrors } = validateHealthRecordForm({
-      date,
-      steps,
-      calories,
-      water,
-    });
-
-    if (!isValid) {
-      setErrors(validationErrors);
-      Alert.alert('Validation Error', 'Please check the highlighted fields.');
-      return;
-    }
-
-    setErrors({});
-    setIsSubmitting(true);
-
-    try {
-      const targetDate = date.trim();
-      const numSteps = parseInt(steps, 10);
-      const numCalories = parseInt(calories, 10);
-      const numWater = parseInt(water, 10);
-      const existingRecord =
-        isEditMode && selectedRecord
-          ? selectedRecord
-          : records.find((r) => r.date === targetDate);
-
-      let success = false;
-      if (existingRecord) {
-        success = await updateRecord({
-          id: existingRecord.id,
-          date: targetDate,
-          steps: numSteps,
-          calories: numCalories,
-          water: numWater,
-        });
-      } else {
-        success = await addRecord({
-          date: targetDate,
-          steps: numSteps,
-          calories: numCalories,
-          water: numWater,
-        });
-      }
-
-      if (success) {
-        setSelectedDate(targetDate);
-        Alert.alert(
-          'Success',
-          `Health record for ${formatDisplayDate(targetDate)} saved successfully!`,
-          [
-            { text: 'View Records', onPress: () => router.push('/records') },
-            { text: 'OK', style: 'cancel' },
-          ]
-        );
-      } else {
-        Alert.alert('Error', 'Failed to save health record.');
-      }
-    } catch (error) {
-      console.error('Submit error:', error);
-      Alert.alert('Error', 'An error occurred while saving.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    isEditMode,
+    date,
+    setDate,
+    calendarModalVisible,
+    setCalendarModalVisible,
+    steps,
+    setSteps,
+    calories,
+    setCalories,
+    water,
+    setWater,
+    errors,
+    setErrors,
+    isSubmitting,
+    handleSetToday,
+    handleResetForm,
+    handleSubmit,
+  } = useAddRecordViewModel();
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>

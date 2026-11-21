@@ -1,48 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, FlatList, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { THEME } from '../constants/theme';
-import { useHealth } from '../context/HealthContext';
-import { HealthRecord } from '../types';
-import { getInitialSampleData } from '../database/database';
+import { useRecordsViewModel } from '../viewmodels/useRecordsViewModel';
 import { RecordCard, CUTE_COLORS } from '../components/RecordCards';
 
 export default function RecordsScreen() {
-  const router = useRouter();
-
   const {
-    records,
-    filteredRecords,
     searchQuery,
     setSearchQuery,
     isLoading,
-    refreshRecords,
     deleteRecord,
-    setSelectedRecord,
     resetWithDummyData,
-  } = useHealth();
-
-  const [refreshing, setRefreshing] = useState(false);
-
-  const displayRecords =
-    searchQuery.trim().length > 0
-      ? filteredRecords
-      : records.length > 0
-      ? records
-      : getInitialSampleData();
-
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await refreshRecords();
-    setRefreshing(false);
-  };
-
-  const handleEdit = (record: HealthRecord) => {
-    setSelectedRecord(record);
-    router.push('/add');
-  };
+    refreshing,
+    displayRecords,
+    onRefresh,
+    handleEdit,
+    handleAdd,
+  } = useRecordsViewModel();
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
@@ -56,10 +32,7 @@ export default function RecordsScreen() {
 
         <TouchableOpacity
           style={styles.addButton}
-          onPress={() => {
-            setSelectedRecord(null);
-            router.push('/add');
-          }}
+          onPress={handleAdd}
           activeOpacity={0.8}
         >
           <Ionicons name="add" size={22} color="#FFFFFF" />

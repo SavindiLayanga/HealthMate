@@ -4,8 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { THEME } from '../constants/theme';
-import { useHealth } from '../context/HealthContext';
-import { StatCard } from '../components/StatCard';
+import { useDashboardViewModel } from '../viewmodels/useDashboardViewModel';
+import { StatCard } from '../components/statCard';
 import { CalendarModal } from '../components/CalendarModal';
 import { BmiModal } from '../components/BmiModal';
 import { StepsModal } from '../components/StepModal';
@@ -17,49 +17,36 @@ export default function DashboardScreen() {
   const {
     selectedDate,
     setSelectedDate,
-    selectedDateSummary,
-    todaySummary,
     records,
     goals,
-    quickAddWater,
     updateGoals,
     updateSteps,
     updateTodayCalories,
     updateTodayWater,
-  } = useHealth();
-
-  const [calendarModalVisible, setCalendarModalVisible] = useState(false);
-  const [bmiModalVisible, setBmiModalVisible] = useState(false);
-  const [stepsModalVisible, setStepsModalVisible ] = useState(false);
-  const [caloriesModalVisible, setCaloriesModalVisible] = useState(false);
-  const [waterModalVisible, setWaterModalVisible] = useState(false);
-  const [bmiValue, setBmiValue] = useState<number>(22.4);
-  const [bmiCategory, setBmiCategory] = useState<string>('Normal');
-
-  const todayDate = getTodayDateString();
-
-  const currentSummary = selectedDateSummary || todaySummary;
-
-  const stepsGoal = goals?.stepsGoal || 10000;
-  const caloriesGoal = goals?.caloriesGoal || 2200;
-  const waterGoal = goals?.waterGoal || 2500;
-
-  const stepsPercent = Math.min(
-    Math.round(((currentSummary?.totalSteps || 0) / stepsGoal) * 100),
-    100
-  );
-  const caloriesPercent = Math.min(
-    Math.round(((currentSummary?.totalCalories || 0) / caloriesGoal) * 100),
-    100
-  );
-  const waterPercent = Math.min(
-    Math.round(((currentSummary?.totalWater || 0) / waterGoal) * 100),
-    100
-  );
-
-  const handleQuickWater = async () => {
-    await quickAddWater(250);
-  };
+    calendarModalVisible,
+    setCalendarModalVisible,
+    bmiModalVisible,
+    setBmiModalVisible,
+    stepsModalVisible,
+    setStepsModalVisible,
+    caloriesModalVisible,
+    setCaloriesModalVisible,
+    waterModalVisible,
+    setWaterModalVisible,
+    bmiValue,
+    setBmiValue,
+    bmiCategory,
+    setBmiCategory,
+    todayDate,
+    currentSummary,
+    stepsGoal,
+    caloriesGoal,
+    waterGoal,
+    stepsPercent,
+    caloriesPercent,
+    waterPercent,
+    handleQuickWater,
+  } = useDashboardViewModel();
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
