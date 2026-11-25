@@ -109,8 +109,8 @@ export const WaterModal: React.FC<WaterModalProps> = ({
                 style={styles.textInput}
                 placeholder="e.g. 250"
                 placeholderTextColor={THEME.colors.textMuted}
-                value={water}
-                onChangeText={setWater}
+                value={cupSize}
+                onChangeText={setCupSize}
                 keyboardType="numeric"
               />
             </View>
