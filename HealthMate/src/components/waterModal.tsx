@@ -114,6 +114,7 @@ export const WaterModal: React.FC<WaterModalProps> = ({
                 keyboardType="numeric"
               />
             </View>
+          </View>
 
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Today's Water Intake (ml)</Text>
