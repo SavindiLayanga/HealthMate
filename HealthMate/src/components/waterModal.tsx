@@ -1,17 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Modal,
-  TextInput,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Alert,
-  ActivityIndicator,
-  Platform,
-} from 'react-native';
+import { View, Text, StyleSheet, Modal, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Alert, ActivityIndicator, Platform} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { THEME } from '../constants/theme';
 
@@ -51,6 +39,7 @@ export const WaterModal: React.FC<WaterModalProps> = ({
   const handleSave = async () => {
     const w = parseInt(water, 10);
     const g = parseInt(goal, 10);
+    const c = parseInt(cupSize, 10);
 
     if (isNaN(w) || w < 0) {
       showAlert('Please enter a valid number for today\'s water intake.');
