@@ -94,12 +94,12 @@ export default function DashboardScreen() {
             style={styles.quickWaterBtn}
             onPress={(e) => {
               e.stopPropagation();
-              handleQuickWater();
+              handleQuickWater(waterCupSize);
             }}
             activeOpacity={0.8}
           >
             <Ionicons name="water" size={16} color="#FFFFFF" />
-            <Text style={styles.quickWaterBtnText}>+250 ml</Text>
+            <Text style={styles.quickWaterBtnText}> +{waterCupSize} ml</Text>
           </TouchableOpacity>
         </TouchableOpacity>
 
@@ -222,9 +222,10 @@ export default function DashboardScreen() {
         onClose={() => setWaterModalVisible(false)}
         currentWater={currentSummary?.totalWater || 0}
         currentGoal={waterGoal}
-        onSave={async (newWater, newGoal) => {
+        onSave={async (newWater, newGoal, newCupSize) => {
           updateGoals({ ...goals, waterGoal: newGoal });
           await updateTodayWater(newWater, selectedDate);
+          setWaterCupSize(newCupSize);
         }}
       />
     </SafeAreaView>

@@ -41,8 +41,8 @@ export function useDashboardViewModel() {
     ? Math.min((currentSummary.totalWater / waterGoal) * 100, 100)
     : 0;
 
-  const handleQuickWater = () => {
-    quickAddWater(250, selectedDate);
+  const handleQuickWater = async (cupSize: number = 250) => {
+    await quickAddWater(cupSize);
   };
 
   return {
