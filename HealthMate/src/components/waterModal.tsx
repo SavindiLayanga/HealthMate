@@ -32,6 +32,7 @@ export const WaterModal: React.FC<WaterModalProps> = ({
 }) => {
   const [water, setWater] = useState('');
   const [goal, setGoal] = useState('');
+  const [cupSize, setCupSize] = useState('250');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
