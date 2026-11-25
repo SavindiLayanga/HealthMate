@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useAddRecordViewModel } from '../viewmodels/useAddRecordViewModel';
-import { CalendarModal } from '../components/CalendarModal';
+import { CalendarModal } from '../components/calendarModal';
 import { THEME } from '../constants/theme';
 import { formatDisplayDate } from '../utils/validation';
 

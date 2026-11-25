@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { THEME } from '../constants/theme';
 import { useRecordsViewModel } from '../viewmodels/useRecordsViewModel';
-import { RecordCard, CUTE_COLORS } from '../components/RecordCards';
+import { RecordCard, CUTE_COLORS } from '../components/recordCards';
 
 export default function RecordsScreen() {
   const {

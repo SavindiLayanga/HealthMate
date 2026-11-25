@@ -6,11 +6,11 @@ import { router } from 'expo-router';
 import { THEME } from '../constants/theme';
 import { useDashboardViewModel } from '../viewmodels/useDashboardViewModel';
 import { StatCard } from '../components/statCard';
-import { CalendarModal } from '../components/CalendarModal';
-import { BmiModal } from '../components/BmiModal';
-import { StepsModal } from '../components/StepModal';
-import { CaloriesModal } from '../components/CaloriesModal';
-import { WaterModal } from '../components/WaterModal';
+import { CalendarModal } from '../components/calendarModal';
+import { BmiModal } from '../components/bmiModal';
+import { StepsModal } from '../components/stepModal';
+import { CaloriesModal } from '../components/caloriesModal';
+import { WaterModal } from '../components/waterModal';
 import { formatDateWithWeekday, getDateRelativeBadge, getTodayDateString,} from '../utils/validation';
 
 export default function DashboardScreen() {

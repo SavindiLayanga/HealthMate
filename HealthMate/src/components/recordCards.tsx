@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 9,
     borderRadius: 10,
-    borderColor: CUTE_COLORS.water.icon,
+    borderColor: CUTE_COLORS.editBtnBorder,
     gap: 4,
     shadowColor: CUTE_COLORS.editBtn,
     shadowOffset: { width: 0, height: 2 },
