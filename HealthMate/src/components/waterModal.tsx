@@ -50,10 +50,14 @@ export const WaterModal: React.FC<WaterModalProps> = ({
       showAlert('Please enter a valid target goal greater than 0.');
       return;
     }
+    if (isNaN(c) || c <= 0) {
+      showAlert('Please enter a valid water cup size.');
+      return;
+    }
 
     try {
       setSaving(true);
-      await onSave(w, g);
+      await onSave(w, g, c);
       onClose();
     } catch {
       showAlert('Failed to save water intake.');
