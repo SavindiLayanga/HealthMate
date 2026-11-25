@@ -14,6 +14,7 @@ import { WaterModal } from '../components/waterModal';
 import { formatDateWithWeekday, getDateRelativeBadge, getTodayDateString,} from '../utils/validation';
 
 export default function DashboardScreen() {
+  const [ waterCupSize, setWaterCupSize] = useState(250);
   const {
     selectedDate,
     setSelectedDate,
