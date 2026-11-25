@@ -57,7 +57,7 @@ export const WaterModal: React.FC<WaterModalProps> = ({
 
     try {
       setSaving(true);
-      await onSave(w, g, c);
+      await onSave(w, g);
       onClose();
     } catch {
       showAlert('Failed to save water intake.');
@@ -90,7 +90,8 @@ export const WaterModal: React.FC<WaterModalProps> = ({
               Update your daily target water and today's water intake.
             </Text>
 
-            <View style={styles.inputGroup}>
+          <View style={styles.inputRow}>
+            <View style={styles.halfInputGroup}>
               <Text style={styles.inputLabel}>Target Water Goal (ml)</Text>
               <TextInput
                 style={styles.textInput}
@@ -98,6 +99,18 @@ export const WaterModal: React.FC<WaterModalProps> = ({
                 placeholderTextColor={THEME.colors.textMuted}
                 value={goal}
                 onChangeText={setGoal}
+                keyboardType="numeric"
+              />
+            </View>
+          
+           <View style={styles.halfInputGroup}>
+              <Text style={styles.inputLabel}>Water Cup Size (ml) </Text>
+              <TextInput
+                style={styles.textInput}
+                placeholder="e.g. 250"
+                placeholderTextColor={THEME.colors.textMuted}
+                value={water}
+                onChangeText={setWater}
                 keyboardType="numeric"
               />
             </View>
@@ -126,6 +139,7 @@ export const WaterModal: React.FC<WaterModalProps> = ({
               )}
             </TouchableOpacity>
           </View>
+        </View>
         </View>
       </TouchableWithoutFeedback>
     </Modal>
@@ -171,6 +185,14 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: THEME.colors.textSecondary,
     marginBottom: 16,
+  },
+  inputRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 14,
+  },
+  halfInputGroup: {
+    flex: 1,
   },
   inputGroup: {
     marginBottom: 14,
