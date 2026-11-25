@@ -8,7 +8,7 @@ interface WaterModalProps {
   onClose: () => void;
   currentWater: number;
   currentGoal: number;
-  onSave: (newWater: number, newGoal: number) => Promise<void> | void;
+  onSave: (newWater: number, newGoal: number, newCupSize: number) => Promise<void> | void;
 }
 
 export const WaterModal: React.FC<WaterModalProps> = ({
@@ -57,7 +57,7 @@ export const WaterModal: React.FC<WaterModalProps> = ({
 
     try {
       setSaving(true);
-      await onSave(w, g);
+      await onSave(w, g, c);
       onClose();
     } catch {
       showAlert('Failed to save water intake.');
@@ -140,7 +140,6 @@ export const WaterModal: React.FC<WaterModalProps> = ({
             </TouchableOpacity>
           </View>
         </View>
-        </View>
       </TouchableWithoutFeedback>
     </Modal>
   );
@@ -193,6 +192,7 @@ const styles = StyleSheet.create({
   },
   halfInputGroup: {
     flex: 1,
+    minWidth: 0,
   },
   inputGroup: {
     marginBottom: 14,
