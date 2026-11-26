@@ -105,6 +105,8 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         await refreshRecords();
       }catch (err) {
         console.error('Database setup failed:', err);
+      } finally {
+        setIsInitializing(false);
       }
     }
     setup();
