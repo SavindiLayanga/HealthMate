@@ -28,11 +28,19 @@ function AppNavigation () {
                         const screens = ['/','/records','/add'];
                         router.navigate(screens[currentScreen.current] as any);
                     }
+                }else if (gestureState.dx > 60) {
+                    if (currentScreen.current > 0) {
+                        currentScreen.current -= 1;
+
+                        const screens = ['/','/records','/add'];
+                        router.navigate(screens[currentScreen.current] as any);
+                    }
                 }
 
-            }
+            },
         })
-    )
+    ).current;
+    
     if (isInitializing){
         return <SplashScreen />
     }
