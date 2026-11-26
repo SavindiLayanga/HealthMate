@@ -1,6 +1,6 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { HealthProvider} from '../context/HealthContext';
+import { HealthProvider, useHealth} from '../context/HealthContext';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { AppHeader } from '../components/appHeader';
