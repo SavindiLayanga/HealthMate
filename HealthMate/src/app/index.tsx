@@ -13,6 +13,11 @@ import { CaloriesModal } from '../components/caloriesModal';
 import { WaterModal } from '../components/waterModal';
 import { formatDateWithWeekday, getDateRelativeBadge, getTodayDateString,} from '../utils/validation';
 
+const CIRCLE_SIZE = 170;
+const CIRCLE_STOKE = 12;
+const CIRCLE_RADIUS = (CIRCLE_SIZE - CIRCLE_STOKE) / 2;
+const CIRCLE__CIRCUMFERENCE = 2 * Math.PI * CIRCLE_RADIUS;
+
 export default function DashboardScreen() {
   const [ waterCupSize, setWaterCupSize] = useState(250);
   const {
