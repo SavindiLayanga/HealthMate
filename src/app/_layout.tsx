@@ -7,7 +7,9 @@ import { AppHeader } from '../components/appHeader';
 import { SplashScreen } from '../components/splashScreen';
 
 function AppNavigation () {
-    const { isInitializing } = useHealth();
+    const { isInitializing } = useHealth() as ReturnType<typeof useHealth> & {
+        isInitializing: boolean;
+    };
     if (isInitializing){
         return <SplashScreen />
     }
