@@ -5,6 +5,7 @@ import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { AppHeader } from '../components/appHeader';
 import { SplashScreen } from '../components/splashScreen';
+import { PanResponder } from 'react-native';
 
 function AppNavigation () {
     const { isInitializing } = useHealth() as ReturnType<typeof useHealth> & {
