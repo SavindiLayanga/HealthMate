@@ -62,6 +62,7 @@ export const HealthProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     recordCount: 0,
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isInitializing, setIsInitializing] = useState<boolean>(true);
   const [selectedRecord, setSelectedRecord] = useState<HealthRecord | null>(null);
   const [goals, setGoals] = useState<DailyGoals>(DEFAULT_GOALS);  
 
