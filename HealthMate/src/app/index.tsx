@@ -205,7 +205,15 @@ export default function DashboardScreen() {
             </View>
           </View>
 
+          <View style={styles.progressHeaderIcon}>
+            <Ionicons
+              name="heart"
+              size={20}
+              color="#10B981"
+            />
+          </View>
         </View>
+
       </ScrollView>
 
       {/* Calendar modal */}
@@ -392,5 +400,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#9CA3AF',
     marginTop: 4,
+  },
+  progressHeaderIcon: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    backgroundColor: '#ECFDFS',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
