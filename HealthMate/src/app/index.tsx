@@ -197,6 +197,11 @@ export default function DashboardScreen() {
 
         {/* daily health progress */}
         <View style={styles.dailyProgressCard}>
+          <View style={styles.progressHeader}>
+            <View>
+              <Text style={styles.progressTitle}> Daily Health Progress </Text>
+            </View>
+          </View>
 
         </View>
       </ScrollView>
@@ -369,5 +374,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 2,
+  },
+  progressHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 18,
+  },
+  progressTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#1F2937',
   },
 });
