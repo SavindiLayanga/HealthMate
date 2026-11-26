@@ -32,7 +32,7 @@ function AppNavigation () {
                 },
              }}
             >
-            {/*Dashboard tab*/}
+
             <Tabs.Screen
                 name='index'
                 options={{
@@ -43,7 +43,6 @@ function AppNavigation () {
                 }}
             />
 
-            {/*Record tab*/}
             <Tabs.Screen
                 name='records'
                 options={{
@@ -54,7 +53,6 @@ function AppNavigation () {
                 }}
             />
 
-            {/*Add Entry tab*/}
             <Tabs.Screen
                 name='add'
                 options={{
