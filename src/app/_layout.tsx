@@ -14,7 +14,17 @@ function AppNavigation () {
     };
 
     const currentScreen = useRef(0);
-    
+    const panResponder = useRef(
+        PanResponder.create({
+            onMoveShouldSetPanResponder: ( , gestureState) =>
+                Math.abs(GestureState.dx) > 40 &&
+                Math.abs(GestureState.dx) > Math.abs(GestureState.dy) * 1.5,
+
+            onPanResponderRelease: (_,gestureState) => {
+                
+            }
+        })
+    )
     if (isInitializing){
         return <SplashScreen />
     }
