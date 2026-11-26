@@ -1,12 +1,14 @@
+
 import { Platform } from 'react-native';
 import type { SQLiteDatabase } from 'expo-sqlite';
 import { HealthRecord } from '../types';
 
 let SQLite: typeof import('expo-sqlite') | null = null;
+
 try {
   SQLite = require('expo-sqlite');
 } catch (e) {
-  console.warn('ExpoSQLite native module not available, using in-memory storage.');
+  console.warn('ExpoSQLite native module not available.');
 }
 
 let dbInstance: SQLiteDatabase | null = null;
@@ -16,45 +18,20 @@ export async function getDatabase(): Promise<SQLiteDatabase | null> {
   if (Platform.OS === 'web' || !SQLite) {
     return null;
   }
+
   try {
     if (!dbInstance) {
       dbInstance = await SQLite.openDatabaseAsync('healthmate.db');
     }
     return dbInstance;
   } catch (err) {
-    console.warn('Could not open SQLite database, falling back to memory:', err);
+    console.warn('Could not open SQLite database:', err);
     return null;
   }
 }
 
-export function getDateNDaysAgo(daysAgo: number): string {
-  const d = new Date();
-  d.setDate(d.getDate() - daysAgo);
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
-
-// Dummy data
-export function getInitialSampleData(): HealthRecord[] {
-  return [
-    { id: 1, date: getDateNDaysAgo(0), steps: 7850, calories: 420, water: 2000 }, 
-    { id: 2, date: getDateNDaysAgo(1), steps: 9400, calories: 510, water: 2500 }, 
-    { id: 3, date: getDateNDaysAgo(2), steps: 6200, calories: 340, water: 1800 },
-    { id: 4, date: getDateNDaysAgo(3), steps: 8100, calories: 450, water: 2200 },
-    { id: 5, date: getDateNDaysAgo(4), steps: 10500, calories: 600, water: 3000 },
-    { id: 6, date: getDateNDaysAgo(5), steps: 5300, calories: 290, water: 1500 },
-    { id: 7, date: getDateNDaysAgo(6), steps: 7200, calories: 390, water: 2100 },
-  ];
-}
-
-//create health_records table
 export async function initDatabase(): Promise<void> {
   if (Platform.OS === 'web' || !SQLite) {
-    if (webRecords.length === 0) {
-      webRecords.push(...getInitialSampleData());
-    }
     return;
   }
 
@@ -64,6 +41,7 @@ export async function initDatabase(): Promise<void> {
 
     await db.execAsync(`
       PRAGMA journal_mode = WAL;
+
       CREATE TABLE IF NOT EXISTS health_records (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         date TEXT NOT NULL,
@@ -73,66 +51,13 @@ export async function initDatabase(): Promise<void> {
       );
     `);
 
-    const countResult = await db.getFirstAsync<{ count: number }>(
-      'SELECT COUNT(*) as count FROM health_records'
-    );
-
-    if (countResult && countResult.count === 0) {
-      await seedDummyRecords();
-    }
   } catch (err) {
-    console.warn('Native SQLite init fallback:', err);
-    webRecords.length = 0;
-    webRecords.push(...getInitialSampleData());
-  }
-}
-
-export async function seedDummyRecords(): Promise<void> {
-  if (Platform.OS === 'web' || !SQLite) {
-    webRecords.length = 0;
-    webRecords.push(...getInitialSampleData());
-    return;
-  }
-
-  try {
-    const db = await getDatabase();
-    if (!db) return;
-
-    const dummyRecords = getInitialSampleData();
-
-    for (const record of dummyRecords) {
-      await db.runAsync(
-        'INSERT INTO health_records (date, steps, calories, water) VALUES (?, ?, ?, ?)',
-        [record.date, record.steps, record.calories, record.water]
-      );
-    }
-  } catch (err) {
-    console.warn('Native seed fallback:', err);
-    webRecords.length = 0;
-    webRecords.push(...getInitialSampleData());
+    console.error('Database initialization failed:', err);
   }
 }
 
 export async function resetDatabaseWithDummyData(): Promise<void> {
-  if (Platform.OS === 'web' || !SQLite) {
-    webRecords.length = 0;
-    webRecords.push(...getInitialSampleData());
-    return;
-  }
-
-  try {
-    const db = await getDatabase();
-    if (!db) {
-      webRecords.length = 0;
-      webRecords.push(...getInitialSampleData());
-      return;
-    }
-    await db.runAsync('DELETE FROM health_records');
-    await seedDummyRecords();
-  } catch {
-    webRecords.length = 0;
-    webRecords.push(...getInitialSampleData());
-  }
+  console.warn('Dummy data is disabled.');
 }
 
 export { webRecords };
