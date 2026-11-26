@@ -41,7 +41,7 @@ export function AppHeader ({ showBack = false, onBackPress, rightElement }: AppH
 
                 <View style={styles.logoContainer}>
                     <View style={styles.heartIconWrapper}>
-                        <Ionicons name="heart" size={22} color="#EF4444"/>
+                        <Ionicons name="heart" size={22} color="#11c476"/>
                     </View>
                 </View>
                 <View>
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
         width: 38,
         height: 38,
         borderRadius: 10,
-        backgroundColor: '#FEE2E2',
+        backgroundColor: '#e4fff8',
         justifyContent: 'center',
         alignItems: 'center',
     },
