@@ -61,7 +61,17 @@ export default function DashboardScreen() {
   const safeStepsPercent = clampPercent (stepsPercent);
   const safeCaloriesPercent = clampPercent (caloriesPercent);
   const safeWaterPercent = clampPercent (waterPercent);
+
+  //average of overall progress
+  const overallProgress = Math.round(
+    (safeStepsPercent +
+      safeCaloriesPercent +
+      safeWaterPercent ) / 3
+  );
   
+  //circle progress animation
+  const circleDashOffset = CIRCLE__CIRCUMFERENCE * (1- overallProgress / 100);
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false}>
