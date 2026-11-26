@@ -16,6 +16,7 @@ interface HealthContextType {
   setSelectedDate: (date: string) =>void;
   selectedDateSummary: HealthSummary;
   isLoading: boolean;
+  isInitializing: boolean;
   selectedRecord: HealthRecord | null;
   setSelectedRecord: (react: HealthRecord | null) => void;
   goals: DailyGoals;
