@@ -18,6 +18,9 @@ const CIRCLE_STOKE = 12;
 const CIRCLE_RADIUS = (CIRCLE_SIZE - CIRCLE_STOKE) / 2;
 const CIRCLE__CIRCUMFERENCE = 2 * Math.PI * CIRCLE_RADIUS;
 
+const clampPercent = (value: number) =>
+  Math.min(100, Math.max(0, Number(value) || 0 ));
+
 export default function DashboardScreen() {
   const [ waterCupSize, setWaterCupSize] = useState(250);
   const {
