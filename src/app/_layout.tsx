@@ -1,16 +1,20 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { HealthProvider, useHealth} from '../context/HealthContext';
-import { Tabs } from 'expo-router';
+import { Tabs, useRoute } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { AppHeader } from '../components/appHeader';
 import { SplashScreen } from '../components/splashScreen';
 import { PanResponder } from 'react-native';
 
 function AppNavigation () {
+    const router = useRouter();
     const { isInitializing } = useHealth() as ReturnType<typeof useHealth> & {
         isInitializing: boolean;
     };
+
+    const currentScreen = useRef(0);
+    
     if (isInitializing){
         return <SplashScreen />
     }
