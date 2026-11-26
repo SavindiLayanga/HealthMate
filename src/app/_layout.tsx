@@ -6,9 +6,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { AppHeader } from '../components/appHeader';
 import { SplashScreen } from '../components/splashScreen';
 
-export default function RootLayout() {
+function AppNavigation () {
+    const { isInitializing } = useHealth();
+    if (isInitializing){
+        return <SplashScreen />
+    }
     return (
-        <HealthProvider>
+        <>
             <StatusBar style="dark" />
             <Tabs
              screenOptions={{
@@ -61,6 +65,15 @@ export default function RootLayout() {
     
             </Tabs>
             
-        </HealthProvider>
+        </>
+
     );
+}
+
+export default function RootLayout (){
+     return (
+        <HealthProvider>
+            <AppNavigation/>
+        </HealthProvider>
+    )
 }
