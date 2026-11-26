@@ -200,6 +200,8 @@ export default function DashboardScreen() {
           <View style={styles.progressHeader}>
             <View>
               <Text style={styles.progressTitle}> Daily Health Progress </Text>
+
+              <Text style={styles.progressSubtitle}> Your overall daily activity summary </Text>
             </View>
           </View>
 
@@ -385,5 +387,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     color: '#1F2937',
+  },
+  progressSubtitle: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    marginTop: 4,
   },
 });
