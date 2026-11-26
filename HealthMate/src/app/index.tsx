@@ -57,6 +57,11 @@ export default function DashboardScreen() {
     handleQuickWater,
   } = useDashboardViewModel();
 
+  //calculate overall daily progress
+  const safeStepsPercent = clampPercent (stepsPercent);
+  const safeCaloriesPercent = clampPercent (caloriesPercent);
+  const safeWaterPercent = clampPercent (waterPercent);
+  
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView showsVerticalScrollIndicator={false}>
