@@ -246,6 +246,7 @@ return (
       setSelectedDate,
       selectedDateSummary,
       isLoading,
+      isInitializing,
       selectedRecord,
       setSelectedRecord,
       goals,
