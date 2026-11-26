@@ -21,7 +21,15 @@ function AppNavigation () {
                 Math.abs(GestureState.dx) > Math.abs(GestureState.dy) * 1.5,
 
             onPanResponderRelease: (_,gestureState) => {
-                
+                if(gestureState.dx < -60) {
+                     if (currentScreen.current < 2) {
+                        currentScreen.current += 1;
+
+                        const screens = ['/','/records','/add'];
+                        router.navigate(screens[currentScreen.current] as any);
+                    }
+                }
+
             }
         })
     )
