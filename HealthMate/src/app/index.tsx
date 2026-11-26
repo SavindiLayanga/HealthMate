@@ -68,7 +68,7 @@ export default function DashboardScreen() {
       safeCaloriesPercent +
       safeWaterPercent ) / 3
   );
-  
+
   //circle progress animation
   const circleDashOffset = CIRCLE__CIRCUMFERENCE * (1- overallProgress / 100);
 
@@ -193,6 +193,11 @@ export default function DashboardScreen() {
               onPress={() => setBmiModalVisible(true)}
             />
           </View>
+        </View>
+
+        {/* daily health progress */}
+        <View style={styles.dailyProgressCard}>
+
         </View>
       </ScrollView>
 
@@ -346,5 +351,23 @@ const styles = StyleSheet.create({
   gridRow: {
     flexDirection: 'row',
     gap: 12,
+  },
+  dailyProgressCard: {
+    backgroundColor: '#FFFFFF',
+    marginHorizontal: 20,
+    marginTop: 2,
+    marginBottom: 10,
+    padding: 18,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#E%E&EB',
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
   },
 });
